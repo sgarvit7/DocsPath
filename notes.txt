@@ -1,0 +1,38 @@
+import { Geist, Geist_Mono } from "next/font/google";  --> This line brings in two fonts – Geist and Geist Mono – from Google Fonts using Next.js’s built-in support.
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+        - Geist(...) → Loads the Geist Sans font.
+        - variable: "--font-geist-sans" → Saves the font into a CSS variable so we can use it later in styles.
+        - subsets: ["latin"] → Only loads letters used in English and similar languages to reduce size.
+
+className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        - Adds the Geist Sans font via CSS variable.
+        - Adds the Geist Mono font via CSS variable.
+        - antialiased → Makes text smoother and easier to read.
+
+
+
+
+In TypeScript, Readonly is a utility type that makes all the properties of an object immutable, meaning they cannot be changed after they are set. It ensures that the object is treated as read-only, which helps prevent accidental modifications.
+
+    Why is it used here?
+        In your code, Readonly<{ children: React.ReactNode }> is used to make the children property immutable. This means that inside the RootLayout component, you cannot accidentally reassign or modify the children prop. It enforces the idea that props passed to a React component should not be changed.
+
+    Example to clarify:
+    Why is this useful?
+        Immutability: It ensures that props or objects are not accidentally modified, which aligns with React's principle of immutability.
+        
+        Code Safety: It makes your code safer and easier to debug by preventing unintended side effects.
+        In your case, using Readonly ensures that the children prop passed to RootLayout remains unchanged, which is a good practice for React components.
+
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+        ** you need to add an output property since starting with Prisma 7.0.0, specifying this path will be mandatory. 
+        ** The path "../node_modules/.prisma/client" is the default location where Prisma generates its client, so this change just makes it explicit rather than relying on the default behavior.
