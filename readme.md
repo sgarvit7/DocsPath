@@ -119,14 +119,3 @@
 - 🔍 Activity Audits
 
 ---
-
-## 📦 Architecture Overview
-
-```mermaid
-graph TD
-A[Frontend (Next.js)] -->|Calls| B[API Routes / Backend]
-B --> C[Database (PostgreSQL / MongoDB)]
-B --> D[AWS S3 Storage]
-B --> E[OpenAI / LangChain AI Services]
-B --> F[Payment Gateway (Razorpay)]
-B --> G[Socket.IO / WebRTC Server]
