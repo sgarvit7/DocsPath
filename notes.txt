@@ -36,3 +36,69 @@ generator client {
 }
         ** you need to add an output property since starting with Prisma 7.0.0, specifying this path will be mandatory. 
         ** The path "../node_modules/.prisma/client" is the default location where Prisma generates its client, so this change just makes it explicit rather than relying on the default behavior.
+
+
+what is difference between .env and .env.local file ?
+    .env	    --> Shared config for all devs/envs
+    .env.local	--> Dev-specific or secret overrides. It overrides values in .env
+
+
+**  In Next.js, using the NEXT_PUBLIC_ prefix in your .env variables is not always necessary, but it is required if you want to access the variable in the browser (client-side). If you want to use the environment variable on the frontend (in React components, etc.), you must prefix it with NEXT_PUBLIC_
+
+
+
+const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth)
+        createUserWithEmailAndPassword → a function to create a user with email + password
+        user → info about the signed-up user (if successful)
+        loading → true while the request is in progress
+        error → any error that happens during signup
+
+
+** OAuth (short for Open Authorization) is an open standard authorization protocol that allows one application to access data from another application without exposing user credentials (like username or password).
+OAuth lets you log into one app using another app safely.
+
+        Example:
+        When you click "Sign in with Google" on a website — that website doesn’t get your Google password.
+        Instead, Google verifies you and tells the website:
+        ✅ "Yes, this user is valid, and here’s some basic info (like name and email)."
+
+        🔐 Key Roles in OAuth:
+
+                -> User	                - The person using the app
+                -> Client               - The app requesting access (like your website)
+                -> Authorization Server	- The system that checks the user (e.g., Google, Facebook)
+                -> Resource Server      - Where the data lives (e.g., user’s email, profile, etc.)
+                -> Access Token	        - A temporary key that gives access to protected data without a password
+
+
+-----
+
+const sendOtp = async () => {
+  if (!recaptchaRef.current) {
+    recaptchaRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      size: 'invisible',
+      callback: () => {
+        console.log('reCAPTCHA solved')
+      },
+    })
+  }
+}
+                Checks if reCAPTCHA is already created (!recaptchaRef.current)
+                If not, it creates a new RecaptchaVerifier from Firebase.
+                        - auth                  : your Firebase auth instance.
+                        - 'recaptcha-container' : the HTML element where reCAPTCHA attaches.
+                        - size: 'invisible'     : means the reCAPTCHA won't be shown visually (it runs silently).
+                        - callback              : runs once the reCAPTCHA is successfully solved.
+
+                Firebase requires reCAPTCHA before sending OTPs for security reasons:
+                        - 🛡️ Prevents abuse	Stops bots from spamming OTP requests.
+                        - ⚠️ Cost control	OTPs cost money. reCAPTCHA helps make sure only real users trigger them.
+
+
+const result = await signInWithPhoneNumber(auth, phone, recaptchaRef.current)
+        - auth                  : your Firebase authentication instance.
+        - phone                 : the phone number you entered (e.g., +91xxxxxxxxxx).
+        - recaptchaRef.current  : the reCAPTCHA verifier that ensures it's a human.
+
+        It returns a confirmationResult object.
+        This object contains a method called .confirm(userOTP), which you use later to verify the OTP entered by the user.
