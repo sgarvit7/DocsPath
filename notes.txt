@@ -144,3 +144,27 @@ How it works step by step:
 
                 -{ inputRefs.current[index] = el; } uses block syntax to make sure the function doesn't return anything
                 -This addresses TypeScript's requirements for ref callbacks to have a void return type
+
+----
+import { fetchSignInMethodsForEmail } from 'firebase/auth'
+const methods = await fetchSignInMethodsForEmail(auth, email)
+
+
+        - fetchSignInMethodsForEmail is a method from the firebase/auth module in Firebase that lets you check which sign-in methods are available for a given email address.
+
+        It's useful in scenarios like:
+                - Determining whether a user has already registered.
+                - Checking if a user signed up using Google/Facebook instead of email/password.
+                - Preventing duplicate sign-ups and guiding users correctly.
+
+        Parameters:
+                - auth: The initialized Firebase auth object.
+                - email: A string containing the user’s email address.
+
+        Returns:
+                A Promise<string[]> that resolves to an array of sign-in method identifiers like:
+                        "password" – Email/Password
+                        "google.com" – Google sign-in
+                        "facebook.com" – Facebook sign-in
+                        "twitter.com", "github.com", etc.
+
