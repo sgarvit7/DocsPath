@@ -102,3 +102,45 @@ const result = await signInWithPhoneNumber(auth, phone, recaptchaRef.current)
 
         It returns a confirmationResult object.
         This object contains a method called .confirm(userOTP), which you use later to verify the OTP entered by the user.
+
+-------
+
+The line ref={(el) => { inputRefs.current[index] = el; }} is using React's ref system to create references to DOM elements. Let me break it down in detail:
+
+What it does:
+        This code creates a direct reference to each input field in your OTP form, storing these references in an array so you can access and manipulate them programmatically.
+
+How it works step by step:
+
+        1. React's ref prop:
+
+                - The ref prop in React lets you get a reference to the actual DOM element that gets rendered
+                - Instead of passing a ref object directly, you're using a callback function approach
+
+
+        2. Callback function:
+
+                (el) => { inputRefs.current[index] = el; } is a callback function that React calls when:
+
+                        - The component is mounted (with the actual DOM element as el)
+                        - The component is unmounted (with null as el)
+
+        3. Parameter el:
+
+                - el is the actual DOM element (an <input> in this case) when the component renders
+                - el becomes null when the component unmounts
+
+
+        4. Storage in inputRefs:
+
+                - inputRefs is a React useRef object created earlier with:
+                        const inputRefs = useRef<(HTMLInputElement | null)[]>([null, null, null, null, null, null])
+
+                - inputRefs.current is the mutable array that persists between renders
+                - inputRefs.current[index] = el stores each input element at its corresponding index position
+
+
+        5. The curly braces:
+
+                -{ inputRefs.current[index] = el; } uses block syntax to make sure the function doesn't return anything
+                -This addresses TypeScript's requirements for ref callbacks to have a void return type
