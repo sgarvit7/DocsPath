@@ -168,3 +168,178 @@ const methods = await fetchSignInMethodsForEmail(auth, email)
                         "facebook.com" – Facebook sign-in
                         "twitter.com", "github.com", etc.
 
+
+-------
+createAsyncThunk:
+        createAsyncThunk is a function that helps you handle async operations (like API calls) in Redux, without writing tons of boilerplate.
+
+        Why do we need it?
+                Normally in Redux, handling something like fetching data from an API means:
+                        - Dispatching a "loading" action.
+                        - Then dispatching a "success" or "error" action depending on the result.
+                        - Writing reducers for each step.
+
+        But that’s a lot of work!
+                With createAsyncThunk, Redux Toolkit automates all of this for you.
+
+
+
+        getState():
+
+                What is getState()?
+                        getState() is a function you get inside Redux Thunks (like createAsyncThunk) that lets you read the current state of your Redux store.
+
+
+                Simple Analogy:
+                        Think of Redux as a big storage box holding all your app's data (like form inputs, user info, etc.).
+
+                        getState() is like saying:
+                        👉 “Hey Redux, show me what’s in the box right now.”
+
+
+                ** getState() gives you the entire Redux state — meaning all slices.
+                getState() gives you access to your current Redux state.
+
+
+                const state = getState() as { admin: AdminState };
+                        You're telling TypeScript:
+                                "Hey, out of the whole Redux state, I'm only interested in the admin slice right now."
+
+
+                If you ever have multiple slices and want to access more than one, just grab them like:
+                        const state = getState();
+                        const adminData = state.admin;
+                        const userData = state.user;
+
+
+        rejectWithValue():
+
+                rejectWithValue is used in createAsyncThunk to send a custom error message when your async function fails.
+
+                Normally, when something goes wrong in a createAsyncThunk, it just throws a generic error. But with rejectWithValue, you can return a specific error message to the rejected case.
+
+                eg: 
+                export const fetchData = createAsyncThunk(
+                  'data/fetch',
+                  async (_, { rejectWithValue }) => {
+                    try {
+                      const res = await axios.get('/api/data');
+                      return res.data;
+                    } catch (err) {
+                      // Send custom error to reducer
+                      return rejectWithValue('Something went wrong while fetching data!');
+                    }
+                  }
+                );
+
+
+
+        here _ is for arg in : async (_, { rejectWithValue })
+                When you define a thunk using createAsyncThunk, the first parameter in the async function is called arg. It’s the value you pass when you call the thunk.
+
+                eg: 
+                export const fetchUser = createAsyncThunk(
+                  'user/fetchUser',
+                  async (userId, thunkAPI) => {
+                    const response = await axios.get(`/api/users/${userId}`);
+                    return response.data;
+                  }
+                );
+
+                When you call this thunk: 
+                        dispatch(fetchUser('123'));
+
+                arg will be '123' i.e userId (a.k.a. arg) will be '123'
+
+
+        What is thunkAPI in createAsyncThunk?
+                When you write a thunk using createAsyncThunk, the second parameter in the async function is called thunkAPI.
+
+                It gives you some built-in tools that you can use inside the thunk.
+                The thunkAPI object includes:
+
+                        - dispatch        	: Dispatch other actions from inside the thunk
+                        - getState        	: Access the current Redux state
+                        - rejectWithValue 	: Return a custom error when something goes wrong
+                        - extra           	: For injecting dependencies (advanced use)
+                        - requestId       	: Unique ID for the thunk request
+                        - signal  	        : Used for cancelling requests (like aborting fetch calls)
+
+        
+        ** fetchUser('123') is an async thunk, and async thunks return a function, not just plain data. Redux doesn’t automatically run functions — it only works with actions. So we have to dispatch that thunk manually.
+
+        ** When you return something from the createAsyncThunk async function like this:
+                return response.data;
+                That value gets automatically passed to your Redux slice's fulfilled case.
+
+---------
+What is “Serializable”?
+        Serializable means:
+                Data that can be safely converted to JSON and stored in Redux or sent over a network.
+
+        🔹 Examples of serializable data:
+
+                Strings ("hello")
+                Numbers (123)
+                Booleans (true/false)
+
+        Plain objects ({ name: "Anish" })
+
+        🔹 Examples of non-serializable data:
+
+                JavaScript File objects (like images, PDFs, etc.)
+                Functions
+                DOM elements
+                Dates (sometimes)
+
+        - Redux expects all state and actions to be serializable so it can debug and track them safely.
+        - You can’t store the actual File object in Redux because it’s non-serializable.
+        - So instead, you extract basic info (name, size, type) from the file and store that in Redux.
+
+
+
+** fileType as keyof typeof formErrors : 
+        1. typeof formErrors - This gives you the type of the formErrors object
+                eg:     {
+                          name: string;
+                          email: string;
+                          password: string;
+                        }
+
+        2. keyof (typeof formErrors) - This extracts all the keys from that type.
+                eg: 'name' | 'email' | 'password'
+        
+        3. as (keyof (typeof formErrors)) - This part is a type assertion. You're telling TypeScript: "I know this variable is one of the valid keys in formErrors, so treat it as such."
+
+                eg: fileType as 'name' | 'email' | 'password'
+
+        You're just assuring TypeScript that:
+                - fileType really is one of the keys: 'name' | 'email' | 'password'
+                - And it's safe to use it as a key.
+
+
+
+----
+Are we allowed to dispatch actual File objects using createAsyncThunk?
+        ✅ Yes, but only with one important condition:
+        👉 You should not store them in Redux state.
+
+
+Object.entries() --> this method returns an array of the key/value pairs of an object.
+
+
+----
+Files Can't Be Sent as JSON
+Normally when you send data via axios.post('/api', data), you send it as JSON:
+
+{
+  name: "Anish",
+  profilePicture: someFile // ❌ This will break if it's a File object
+}
+But JSON cannot handle binary data like images or PDFs. So if you try to send a File in a JSON object, it either:
+
+throws an error,
+
+or silently fails (the file doesn’t arrive at the server).
+
+

@@ -1,0 +1,28 @@
+{
+  "managementType": "admin",
+  "personalInfo": {
+    "fullName": "Anish Singh Chandel",
+    "email": "wayak46058@ikumaru.com",
+    "phone": "+918572252454",
+    "designation": "fasdf"
+  },
+  "clinicInfo": {
+    "clinicName": "gfdg",
+    "clinicType": "Specialty Clinic",
+    "registrationNumber": "85465748454",
+    "establishmentYear": "1985",
+    "address": "vidya nagar colony,ernakullam"
+  },
+  "documents": {
+    "departments": "fasdfa",
+    "doctorsCount": "4353543535",
+    "communicationMode": "Phone",
+    "governmentIdPath": "3cdfe3c9-0d68-4b75-9663-1e55270c9c28-Group 48095772.png",
+    "governmentIdOriginalName": "Group 48095772.png",
+    "registrationCertificatePath": "d7501e0c-4fdf-4d0c-a0ed-ca44fdb95685-Group 48095772.png",
+    "registrationCertificateOriginalName": "Group 48095772.png",
+    "accreditationPath": "dfb2b5b7-cb18-4a61-b0c4-60132b374aa0-Group 48095772.png",
+    "accreditationOriginalName": "Group 48095772.png"
+  },
+  "submittedAt": "2025-04-18T11:19:19.499Z"
+}

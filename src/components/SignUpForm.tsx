@@ -82,7 +82,7 @@ export default function SignUpPage() {
   }
 
   const handleSignIn = () => {
-    router.push('/signin')
+    router.push('/sign-in')
   }
 
   return (
