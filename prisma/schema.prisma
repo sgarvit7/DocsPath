@@ -9,19 +9,52 @@ datasource db {
 }
 
 // models
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  posts     Post[]
-}
+// model User {
+//   id        Int      @id @default(autoincrement())
+//   email     String   @unique
+//   name      String?
+//   createdAt DateTime @default(now())
+//   posts     Post[]
+// }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+// model Post {
+//   id        Int     @id @default(autoincrement())
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User    @relation(fields: [authorId], references: [id])
+//   authorId  Int
+// }
+
+// schema.prisma
+model Admin {
+  id             String   @id @default(uuid())
+  managementType String
+  submittedAt    DateTime @default(now())
+
+  // Personal Info
+  fullName    String
+  email       String
+  phone       String
+  designation String
+
+  // Clinic Info
+  clinicName         String
+  clinicType         String
+  registrationNumber String
+  establishmentYear  String
+  address            String
+
+  // Documents Info
+  departments       String
+  doctorsCount      String
+  communicationMode String
+
+  // File Paths
+  governmentIdPath                    String?
+  governmentIdOriginalName            String?
+  registrationCertificatePath         String?
+  registrationCertificateOriginalName String?
+  accreditationPath                   String?
+  accreditationOriginalName           String?
 }

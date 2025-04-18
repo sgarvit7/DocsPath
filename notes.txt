@@ -342,4 +342,11 @@ throws an error,
 
 or silently fails (the file doesn’t arrive at the server).
 
+-----
+If you want to use an env variable in middleware.ts then move it to a NEXT_PUBLIC_ one.
+
+        Next.js middleware runs on the Edge Runtime, not Node.js. That means:
+                - It runs in a lightweight isolated environment.
+                - Only specific environment variables are available — and only if they're prefixed with NEXT_PUBLIC_ and set at build time.
+
 

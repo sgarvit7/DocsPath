@@ -115,7 +115,7 @@ const ClinicInfo = () => {
 
   const handleBack = () => {
     dispatch(setCurrentStep(0));
-    router.push('/admin-onboarding/personal-info');
+    router.push('/clinic-management/admin-onboarding/personal-info');
   };
   
   return (

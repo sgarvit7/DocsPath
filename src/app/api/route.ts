@@ -1,39 +1,9 @@
-// import { NextRequest, NextResponse } from 'next/server';
-// import prisma from '@/lib/prisma';
-
-// export async function GET() {
-//   try {
-//     const users = await prisma.user.findMany({
-//       include: { posts: true },
-//     });
-//     return NextResponse.json({ users });
-//   } catch (error) {
-//     console.log(error)
-//     return NextResponse.json({ error: 'Error fetching users' }, { status: 500 });
-//   }
-// }
-
-
-// export async function POST(request: Request) {
-//   try {
-//     const { name, email } = await request.json();
-//     const user = await prisma.user.create({
-//       data: { name, email },
-//     });
-//     console.log(user)
-//     return NextResponse.json({ user }, { status: 201 });
-//   } catch (error) {
-//     console.log(error)
-//     return NextResponse.json({ error: 'Error creating user' }, { status: 500 });
-//   }
-// }
-
-
-// app/api/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import prisma from '@/lib/prisma';
+
 
 // Define directory for storing uploaded files
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
@@ -41,15 +11,20 @@ const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
 // Helper function to ensure upload directory exists
 async function ensureUploadDir() {
   try {
-    await fs.access(UPLOAD_DIR);
+    await fs.access(UPLOAD_DIR);// This checks if the folder exists and is accessible. If it does NOT exist, it throws an error.
   } catch (error) {
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
+    /*
+      - The option { recursive: true } means:
+      - If the parent folders in the path also don't exist, it creates them too.
+      - Example: if path is 'uploads/images/temp', it will create all missing parts.
+    */
   }
 }
 
 // Helper function to save a file from the form data
 async function saveFile(file: File): Promise<string> {
-  const fileBuffer = Buffer.from(await file.arrayBuffer());
+  const fileBuffer = Buffer.from(await file.arrayBuffer());// This reads the uploaded file and converts it into a binary format (buffer) that can be written to your system. file.arrayBuffer() gets the content of the file. Buffer.from(...) prepares it for saving.  
   const fileName = `${uuidv4()}-${file.name}`;
   const filePath = path.join(UPLOAD_DIR, fileName);
   
@@ -116,35 +91,39 @@ export async function POST(request: NextRequest) {
       documents.accreditationOriginalName = accreditationFile.name;
     }
     
-    // Construct complete admin data object
-    const adminData = {
-      managementType,
-      personalInfo,
-      clinicInfo,
-      documents,
-      submittedAt: new Date().toISOString(),
-    };
-    
-    // Here you would typically save this data to your database
-    // For example: await db.collection('admins').insertOne(adminData);
-    
-    // For demonstration purposes, let's save it to a JSON file
-    const adminDataFile = path.join(process.cwd(), 'data', `admin-${uuidv4()}.json`);
-    
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), 'data');
-    try {
-      await fs.access(dataDir);
-    } catch (error) {
-      await fs.mkdir(dataDir, { recursive: true });
-    }
-    
-    await fs.writeFile(adminDataFile, JSON.stringify(adminData, null, 2));
+    // Save admin data to the database using Prisma
+    const savedAdmin = await prisma.admin.create({
+      data: {
+        managementType,
+        // Personal info
+        fullName: personalInfo.fullName,
+        email: personalInfo.email,
+        phone: personalInfo.phone,
+        designation: personalInfo.designation,
+        // Clinic info
+        clinicName: clinicInfo.clinicName,
+        clinicType: clinicInfo.clinicType,
+        registrationNumber: clinicInfo.registrationNumber,
+        establishmentYear: clinicInfo.establishmentYear,
+        address: clinicInfo.address,
+        // Documents info
+        departments: documents.departments,
+        doctorsCount: documents.doctorsCount,
+        communicationMode: documents.communicationMode,
+        // File paths
+        governmentIdPath: documents.governmentIdPath,
+        governmentIdOriginalName: documents.governmentIdOriginalName,
+        registrationCertificatePath: documents.registrationCertificatePath,
+        registrationCertificateOriginalName: documents.registrationCertificateOriginalName,
+        accreditationPath: documents.accreditationPath,
+        accreditationOriginalName: documents.accreditationOriginalName
+      }
+    });
     
     return NextResponse.json({ 
       success: true, 
       message: 'Admin registration completed successfully',
-      adminId: path.basename(adminDataFile, '.json')
+      adminId: savedAdmin.id
     }, { status: 201 });
     
   } catch (error) {

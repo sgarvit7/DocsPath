@@ -81,7 +81,7 @@ export const submitAdminData = createAsyncThunk(
   ) => {
     try {
       const state = getState() as { admin: AdminState };
-      console.log(state);
+
       const formData = new FormData();
       
       // Add management type
@@ -115,12 +115,13 @@ export const submitAdminData = createAsyncThunk(
       formData.append('documents.doctorsCount', state.admin.documents.doctorsCount);
       formData.append('documents.communicationMode', state.admin.documents.communicationMode);
       
-      const response = await axios.post('http://localhost:3000/api', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       
+      console.log(response.data)
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
