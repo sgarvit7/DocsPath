@@ -151,7 +151,8 @@ const adminSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
-    resetForm: (state) => {
+    // resetForm: (state) => {
+    resetForm: () => {
       return initialState;
     },
   },

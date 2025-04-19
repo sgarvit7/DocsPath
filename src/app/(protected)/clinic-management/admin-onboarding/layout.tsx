@@ -21,7 +21,7 @@ export default function AdminOnboardingLayout({
 
 function AdminOnboardingWrapper({ children }: { children: React.ReactNode }) {
   const currentStep = useSelector((state: RootState) => state.admin.currentStep);
-  const steps = ['Personal Info', 'Clinic Info', 'Documents'];
+  // const steps = ['Personal Info', 'Clinic Info', 'Documents'];
   
   const getProgressPercentage = () => {
     const stepPercentages = [10, 65, 99];

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  console.log("hello")
   // Get the response
   const response = NextResponse.next(); // NextResponse.next() tells Next.js to continue processing the request as usual. You're using response to modify the outgoing headers before continuing.
 

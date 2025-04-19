@@ -12,6 +12,7 @@ import { auth } from '../../firebase/config'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+// import {useAuthState} from "react-firebase-hooks/auth"
 
 interface FormState {
   email: string;
@@ -42,8 +43,13 @@ export default function SignInForm() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-      router.push('/')
+      const authenticatedUser =  await signInWithEmailAndPassword(auth, email, password)
+      console.log(authenticatedUser.user)
+      const idToken = await authenticatedUser.user.getIdToken()
+      // console.log("idToken: ", idToken);
+      // Store in cookie
+      document.cookie = `token=${idToken}; path=/;`;
+      // router.push('/')
     } catch (err) {
       console.error(err)
       const authError = err as AuthError
@@ -54,6 +60,8 @@ export default function SignInForm() {
       } else {
         setError('Sign in failed. Please try again.')
       }
+      setLoading(false)
+    }finally{
       setLoading(false)
     }
   }
@@ -237,7 +245,7 @@ export default function SignInForm() {
 
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/sign-up" className="text-teal-600 font-medium hover:text-teal-800">
                 Sign Up
               </Link>

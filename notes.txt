@@ -350,3 +350,9 @@ If you want to use an env variable in middleware.ts then move it to a NEXT_PUBLI
                 - Only specific environment variables are available — and only if they're prefixed with NEXT_PUBLIC_ and set at build time.
 
 
+-----
+const response = NextResponse.next(); // NextResponse.next() tells Next.js to continue processing the request as usual. You're using response to modify the outgoing headers before continuing.
+
+export const config = {
+  matcher: '/api/:path*', // This means: The middleware only runs for any API route, like: /api/something,  /api/users/123,  etc.
+};

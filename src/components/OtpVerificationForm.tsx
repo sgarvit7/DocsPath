@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { auth } from '../../firebase/config'
-import { RecaptchaVerifier, PhoneAuthProvider, linkWithCredential } from 'firebase/auth'
+import { RecaptchaVerifier, PhoneAuthProvider, linkWithCredential, ApplicationVerifier } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 
 export default function VerifyPhone() {
@@ -13,7 +13,7 @@ export default function VerifyPhone() {
   const [verificationId, setVerificationId] = useState('')
   const [countdown, setCountdown] = useState(60)
   const [phone, setPhone] = useState('')
-  const recaptchaRef = useRef<any>(null)
+  const recaptchaRef = useRef<RecaptchaVerifier | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([null, null, null, null, null, null])
   const router = useRouter()
 
@@ -55,7 +55,15 @@ export default function VerifyPhone() {
       const { phone } = JSON.parse(userData)
       
       const provider = new PhoneAuthProvider(auth)
-      const id = await provider.verifyPhoneNumber(phone, recaptchaRef.current)
+      
+      // Add null check for recaptchaRef.current
+      if (!recaptchaRef.current) {
+        throw new Error('reCAPTCHA not initialized')
+      }
+      
+      const verifier = recaptchaRef.current as ApplicationVerifier
+      const id = await provider.verifyPhoneNumber(phone, verifier)
+      
       setVerificationId(id)
       setCountdown(60)
       setSuccess('OTP sent to your phone.')
@@ -63,8 +71,9 @@ export default function VerifyPhone() {
       // Reset OTP inputs
       setOtp(['', '', '', '', '', ''])
       inputRefs.current[0]?.focus()
-    } catch (err: any) {
+    } catch (error: unknown) {
       setError('Failed to send OTP. Please try again.')
+      console.error('Send OTP error:', error)
     }
   }
 
@@ -121,16 +130,17 @@ export default function VerifyPhone() {
       } else {
         setError('No user found. Please sign up again.')
       }
-    } catch (err: any) {
+    } catch (error: unknown) {
       setError('Invalid OTP. Please try again.')
+      console.error('Verification error:', error)
     }
   }
 
-  const handleResend = () => {
-    if (countdown === 0) {
-      sendOtp()
-    }
-  }
+  // const handleResend = () => {
+  //   if (countdown === 0) {
+  //     sendOtp()
+  //   }
+  // }
 
   const handleEmailSignup = () => {
     router.push('/sign-up/email')

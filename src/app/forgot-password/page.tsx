@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  fetchSignInMethodsForEmail
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
+import { FirebaseError } from "firebase/app"; // Import from firebase/app instead
 import { auth } from "../../../firebase/config";
 import { useRouter } from "next/navigation";
 
@@ -44,9 +45,13 @@ export default function ForgotPassword() {
       await sendPasswordResetEmail(auth, email);
       setEmailSent(true);
       setSuccessMessage("Password reset email sent successfully!");
-    } catch (err: any) {
-      if (err.code === "auth/invalid-email") {
-        setError("Please enter a valid email address");
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        if (err.code === "auth/invalid-email") {
+          setError("Please enter a valid email address");
+        } else {
+          setError("Failed to send password reset email. Please try again.");
+        }
       } else {
         setError("Failed to send password reset email. Please try again.");
       }
@@ -66,13 +71,19 @@ export default function ForgotPassword() {
       await signInWithEmailAndPassword(auth, email, newPassword);
       // Redirect to dashboard or home page after successful login
       router.push("/dashboard"); // Change this to your app's home route
-    } catch (err: any) {
-      if (err.code === "auth/wrong-password") {
-        setError(
-          "Incorrect password. Please make sure you entered the new password from your email."
-        );
-      } else if (err.code === "auth/too-many-requests") {
-        setError("Too many failed login attempts. Please try again later.");
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        if (err.code === "auth/wrong-password") {
+          setError(
+            "Incorrect password. Please make sure you entered the new password from your email."
+          );
+        } else if (err.code === "auth/too-many-requests") {
+          setError("Too many failed login attempts. Please try again later.");
+        } else {
+          setError(
+            "Failed to sign in. Please check your credentials and try again."
+          );
+        }
       } else {
         setError(
           "Failed to sign in. Please check your credentials and try again."

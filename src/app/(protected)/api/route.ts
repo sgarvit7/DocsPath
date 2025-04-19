@@ -13,6 +13,7 @@ async function ensureUploadDir() {
   try {
     await fs.access(UPLOAD_DIR);// This checks if the folder exists and is accessible. If it does NOT exist, it throws an error.
   } catch (error) {
+    console.log(error)
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
     /*
       - The option { recursive: true } means:
@@ -30,6 +31,19 @@ async function saveFile(file: File): Promise<string> {
   
   await fs.writeFile(filePath, fileBuffer);
   return fileName;
+}
+
+// Interface for document information
+interface DocumentInfo {
+  departments: string;
+  doctorsCount: string;
+  communicationMode: string;
+  governmentIdPath?: string;
+  governmentIdOriginalName?: string;
+  registrationCertificatePath?: string;
+  registrationCertificateOriginalName?: string;
+  accreditationPath?: string;
+  accreditationOriginalName?: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -61,7 +75,7 @@ export async function POST(request: NextRequest) {
     };
     
     // Handle file uploads and store metadata
-    const documents: Record<string, any> = {
+    const documents: DocumentInfo = {
       departments: formData.get('documents.departments') as string,
       doctorsCount: formData.get('documents.doctorsCount') as string,
       communicationMode: formData.get('documents.communicationMode') as string,

@@ -7,12 +7,13 @@ import {
   updateProfile,
   signInWithPopup,
   GoogleAuthProvider,
-  FacebookAuthProvider
+  FacebookAuthProvider,
+  AuthError
 } from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useRouter } from 'next/navigation'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import Image from 'next/image'
+// import Image from 'next/image'
 
 export default function SignUpPage() {
   const [form, setForm] = useState({
@@ -48,13 +49,18 @@ export default function SignUpPage() {
       // Store phone temporarily for OTP linking
       window.sessionStorage.setItem('userData', JSON.stringify({ phone }))
       router.push('/sign-up/verify-otp')
-    } catch (err: any) {
-      if (err.code === 'auth/email-already-in-use') {
-        setError('Email is already in use')
-      } else if (err.code === 'auth/invalid-email') {
-        setError('Invalid email format')
-      } else if (err.code === 'auth/weak-password') {
-        setError('Password should be at least 6 characters')
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        const authError = err as AuthError;
+        if (authError.code === 'auth/email-already-in-use') {
+          setError('Email is already in use')
+        } else if (authError.code === 'auth/invalid-email') {
+          setError('Invalid email format')
+        } else if (authError.code === 'auth/weak-password') {
+          setError('Password should be at least 6 characters')
+        } else {
+          setError('Something went wrong. Please try again.')
+        }
       } else {
         setError('Something went wrong. Please try again.')
       }
@@ -66,7 +72,8 @@ export default function SignUpPage() {
       const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
       router.push('/')
-    } catch (err: any) {
+    } catch (err: unknown) {
+      console.log(err)
       setError('Google Sign-in failed')
     }
   }
@@ -76,7 +83,8 @@ export default function SignUpPage() {
       const provider = new FacebookAuthProvider()
       await signInWithPopup(auth, provider)
       router.push('/')
-    } catch (err: any) {
+    } catch (error) {
+      console.log(error)
       setError('Facebook Sign-in failed')
     }
   }
