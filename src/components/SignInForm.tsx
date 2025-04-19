@@ -9,9 +9,10 @@ import {
   AuthError
 } from 'firebase/auth'
 import { auth } from '../../firebase/config'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams  } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+
 // import {useAuthState} from "react-firebase-hooks/auth"
 
 interface FormState {
@@ -25,6 +26,8 @@ export default function SignInForm() {
   const [loading, setLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const router = useRouter()
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -46,10 +49,10 @@ export default function SignInForm() {
       const authenticatedUser =  await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
       const idToken = await authenticatedUser.user.getIdToken()
-      // console.log("idToken: ", idToken);
       // Store in cookie
       document.cookie = `token=${idToken}; path=/;`;
-      router.push('/')
+      console.log("returnUrl: ",returnUrl);
+      router.push(returnUrl ?? '/')
     } catch (err) {
       console.error(err)
       const authError = err as AuthError

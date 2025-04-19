@@ -8,7 +8,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app"; // Import from firebase/app instead
-import { auth } from "../../../firebase/config";
+import { auth } from "../../../../firebase/config";
 import { useRouter } from "next/navigation";
 
 export default function ForgotPassword() {

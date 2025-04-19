@@ -43,6 +43,12 @@ export default function SignUpPage() {
     if (password !== confirmPassword) return setError('Passwords do not match')
 
     try {
+      // Check if phone is already registered
+      const isPhoneRegistered = await checkIfPhoneExists(phone)
+      if (isPhoneRegistered) {
+        return setError('Phone number is already registered')
+      }
+
       const res = await createUserWithEmailAndPassword(auth, email, password)
       await updateProfile(res.user, { displayName: name })
 
@@ -64,6 +70,29 @@ export default function SignUpPage() {
       } else {
         setError('Something went wrong. Please try again.')
       }
+    }
+  }
+
+  // Function to check if phone number exists using the API
+  const checkIfPhoneExists = async (phone: string) => {
+    try {
+      const response = await fetch('/api/check-phone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phoneNumber: phone })
+      })
+      
+      const data = await response.json()
+      
+      if (!data.success) {
+        console.error("API error:", data.error)
+        return false
+      }
+      
+      return data.exists
+    } catch (error) {
+      console.error("Error checking phone:", error)
+      return false
     }
   }
 
