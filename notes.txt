@@ -356,3 +356,64 @@ const response = NextResponse.next(); // NextResponse.next() tells Next.js to co
 export const config = {
   matcher: '/api/:path*', // This means: The middleware only runs for any API route, like: /api/something,  /api/users/123,  etc.
 };
+
+
+-----
+**create or write to a folder is not allowed in vercel since vercel’s serverless functions are read-only — except for the /tmp directory.
+
+
+-------
+What is createContext?
+
+        createContext is a React function used to share data (like auth state, theme, language, etc.) across many components without passing props manually at every level.
+
+
+        Imagine you have a big React app with many components.
+        Normally, to pass data (like a logged-in user or theme) to a child component, you'd use props like this:
+
+                        <App user="Anish">
+                          <Page>
+                            <Header>
+                              <UserInfo user="Anish" />
+                            </Header>
+                          </Page>
+                        </App>
+
+        This is called prop drilling — passing props through many layers. It gets messy. createContext helps avoid that With Context, you can do:
+
+                        <App>
+                          <Page>
+                            <Header>
+                              <UserInfo />
+                            </Header>
+                          </Page>
+                        </App>
+        But UserInfo can still access the user, without needing it passed down! 🎉
+
+        - What does createContext do?
+        It lets you:
+                - Create a "box" to hold some shared data.
+                - Wrap parts of your app in a Provider to give access to that data.
+                - Use a hook (useContext) to read the data from anywhere inside that box.
+
+
+        Syntax:
+                const MyContext = createContext(defaultValue);
+
+        - Provide the context value:
+                We now wrap our app (or part of it) in a Provider and pass the user:
+
+                        <UserContext.Provider value={user}>
+                          <Dashboard />
+                        </UserContext.Provider>
+
+        - Use the context value:
+                        function Dashboard() {
+                          const user = useContext(UserContext);
+                          return <h1>Welcome, {user}!</h1>;  // Will show: Welcome, Anish!
+                        }
+
+
+        createContext()      :   Creates a shared box for data
+        Provider             :   Lets you put data into the box
+        useContext()         :   Lets you take data out of the box in child components

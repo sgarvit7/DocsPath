@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import StoreProvider from "@/components/StoreProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Medmin",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

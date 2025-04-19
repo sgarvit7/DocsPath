@@ -49,7 +49,7 @@ export default function SignInForm() {
       // console.log("idToken: ", idToken);
       // Store in cookie
       document.cookie = `token=${idToken}; path=/;`;
-      // router.push('/')
+      router.push('/')
     } catch (err) {
       console.error(err)
       const authError = err as AuthError
