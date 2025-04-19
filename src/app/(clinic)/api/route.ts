@@ -3,25 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '@/lib/prisma';
-
-
-// // Define directory for storing uploaded files
-// const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
-
-// // Helper function to ensure upload directory exists
-// async function ensureUploadDir() {
-//   try {
-//     await fs.access(UPLOAD_DIR);// This checks if the folder exists and is accessible. If it does NOT exist, it throws an error.
-//   } catch (error) {
-//     console.log(error)
-//     await fs.mkdir(UPLOAD_DIR, { recursive: true });
-//     /*
-//       - The option { recursive: true } means:
-//       - If the parent folders in the path also don't exist, it creates them too.
-//       - Example: if path is 'uploads/images/temp', it will create all missing parts.
-//     */
-//   }
-// }
+import { uploadFileToCloudinary } from '../../../../cloudinary/uploadImageToCloudinary'; // Adjust import path as needed
 
 // Use /tmp/uploads on Vercel, and local folder in development
 const UPLOAD_DIR =
@@ -39,15 +21,33 @@ async function ensureUploadDir() {
   }
 }
 
-
-// Helper function to save a file from the form data
-async function saveFile(file: File): Promise<string> {
-  const fileBuffer = Buffer.from(await file.arrayBuffer());// This reads the uploaded file and converts it into a binary format (buffer) that can be written to your system. file.arrayBuffer() gets the content of the file. Buffer.from(...) prepares it for saving.  
+// Helper function to save a file from the form data, upload to Cloudinary, and delete local file
+async function processFile(file: File): Promise<{ cloudinaryUrl: string; originalName: string }> {
+  const fileBuffer = Buffer.from(await file.arrayBuffer());
   const fileName = `${uuidv4()}-${file.name}`;
   const filePath = path.join(UPLOAD_DIR, fileName);
   
+  // Save file locally first
   await fs.writeFile(filePath, fileBuffer);
-  return fileName;
+  
+  // Upload to Cloudinary
+  const cloudinaryUrl = await uploadFileToCloudinary(filePath);
+  
+  // Delete local file after successful upload
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    console.error('Error deleting local file:', error);
+  }
+  
+  if (!cloudinaryUrl) {
+    throw new Error('Failed to upload file to Cloudinary');
+  }
+  
+  return {
+    cloudinaryUrl,
+    originalName: file.name
+  };
 }
 
 // Interface for document information
@@ -55,11 +55,11 @@ interface DocumentInfo {
   departments: string;
   doctorsCount: string;
   communicationMode: string;
-  governmentIdPath?: string;
+  governmentIdUrl?: string;
   governmentIdOriginalName?: string;
-  registrationCertificatePath?: string;
+  registrationCertificateUrl?: string;
   registrationCertificateOriginalName?: string;
-  accreditationPath?: string;
+  accreditationUrl?: string;
   accreditationOriginalName?: string;
 }
 
@@ -101,25 +101,25 @@ export async function POST(request: NextRequest) {
     // Process government ID file
     const governmentIdFile = formData.get('documents.governmentId') as File | null;
     if (governmentIdFile && governmentIdFile instanceof File) {
-      const fileName = await saveFile(governmentIdFile);
-      documents.governmentIdPath = fileName;
-      documents.governmentIdOriginalName = governmentIdFile.name;
+      const { cloudinaryUrl, originalName } = await processFile(governmentIdFile);
+      documents.governmentIdUrl = cloudinaryUrl;
+      documents.governmentIdOriginalName = originalName;
     }
     
     // Process registration certificate file
     const registrationCertFile = formData.get('documents.registrationCertificate') as File | null;
     if (registrationCertFile && registrationCertFile instanceof File) {
-      const fileName = await saveFile(registrationCertFile);
-      documents.registrationCertificatePath = fileName;
-      documents.registrationCertificateOriginalName = registrationCertFile.name;
+      const { cloudinaryUrl, originalName } = await processFile(registrationCertFile);
+      documents.registrationCertificateUrl = cloudinaryUrl;
+      documents.registrationCertificateOriginalName = originalName;
     }
     
     // Process accreditation file (optional)
     const accreditationFile = formData.get('documents.accreditation') as File | null;
     if (accreditationFile && accreditationFile instanceof File) {
-      const fileName = await saveFile(accreditationFile);
-      documents.accreditationPath = fileName;
-      documents.accreditationOriginalName = accreditationFile.name;
+      const { cloudinaryUrl, originalName } = await processFile(accreditationFile);
+      documents.accreditationUrl = cloudinaryUrl;
+      documents.accreditationOriginalName = originalName;
     }
     
     // Save admin data to the database using Prisma
@@ -141,12 +141,12 @@ export async function POST(request: NextRequest) {
         departments: documents.departments,
         doctorsCount: documents.doctorsCount,
         communicationMode: documents.communicationMode,
-        // File paths
-        governmentIdPath: documents.governmentIdPath,
+        // File URLs (cloudinary links now instead of local paths)
+        governmentIdPath: documents.governmentIdUrl,
         governmentIdOriginalName: documents.governmentIdOriginalName,
-        registrationCertificatePath: documents.registrationCertificatePath,
+        registrationCertificatePath: documents.registrationCertificateUrl,
         registrationCertificateOriginalName: documents.registrationCertificateOriginalName,
-        accreditationPath: documents.accreditationPath,
+        accreditationPath: documents.accreditationUrl,
         accreditationOriginalName: documents.accreditationOriginalName
       }
     });
