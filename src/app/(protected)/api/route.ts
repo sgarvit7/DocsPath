@@ -5,23 +5,40 @@ import { v4 as uuidv4 } from 'uuid';
 import prisma from '@/lib/prisma';
 
 
-// Define directory for storing uploaded files
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+// // Define directory for storing uploaded files
+// const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+
+// // Helper function to ensure upload directory exists
+// async function ensureUploadDir() {
+//   try {
+//     await fs.access(UPLOAD_DIR);// This checks if the folder exists and is accessible. If it does NOT exist, it throws an error.
+//   } catch (error) {
+//     console.log(error)
+//     await fs.mkdir(UPLOAD_DIR, { recursive: true });
+//     /*
+//       - The option { recursive: true } means:
+//       - If the parent folders in the path also don't exist, it creates them too.
+//       - Example: if path is 'uploads/images/temp', it will create all missing parts.
+//     */
+//   }
+// }
+
+// Use /tmp/uploads on Vercel, and local folder in development
+const UPLOAD_DIR =
+  process.env.VERCEL === '1'
+    ? path.join('/tmp', 'uploads')
+    : path.join(process.cwd(), '/tmp/uploads');
 
 // Helper function to ensure upload directory exists
 async function ensureUploadDir() {
   try {
-    await fs.access(UPLOAD_DIR);// This checks if the folder exists and is accessible. If it does NOT exist, it throws an error.
+    await fs.access(UPLOAD_DIR);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    /*
-      - The option { recursive: true } means:
-      - If the parent folders in the path also don't exist, it creates them too.
-      - Example: if path is 'uploads/images/temp', it will create all missing parts.
-    */
   }
 }
+
 
 // Helper function to save a file from the form data
 async function saveFile(file: File): Promise<string> {
