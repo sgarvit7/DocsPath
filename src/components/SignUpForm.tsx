@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import axios from 'axios'
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -26,16 +27,34 @@ export default function SignUpPage() {
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isChecking, setIsChecking] = useState(false)
   const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
+    // Clear error when user starts typing again
+    if (error) setError('')
+  }
+
+  const checkPhoneExists = async (phoneNumber: string): Promise<boolean> => {
+    try {
+      setIsChecking(true)
+      const response = await axios.post('/api/check-phone', { phoneNumber })
+      return response.data.exists
+    } catch (err) {
+      console.error('Error checking phone number:', err)
+      setError('Error verifying phone number. Please try again.')
+      return false
+    } finally {
+      setIsChecking(false)
+    }
   }
 
   const handleSubmit = async () => {
     setError('')
     const { name, email, phone, password, confirmPassword } = form
 
+    // Validate form fields
     if (!name) return setError('Name is required')
     if (!email) return setError('Email is required')
     if (!phone) return setError('Phone number is required')
@@ -43,17 +62,18 @@ export default function SignUpPage() {
     if (password !== confirmPassword) return setError('Passwords do not match')
 
     try {
-      // Check if phone is already registered
-      const isPhoneRegistered = await checkIfPhoneExists(phone)
-      if (isPhoneRegistered) {
-        return setError('Phone number is already registered')
+      // Check if phone number already exists
+      const phoneExists = await checkPhoneExists(phone)
+      if (phoneExists) {
+        return setError('This phone number is already registered. Please use a different number or sign in.')
       }
 
+      // Proceed with user creation
       const res = await createUserWithEmailAndPassword(auth, email, password)
       await updateProfile(res.user, { displayName: name })
 
       // Store phone temporarily for OTP linking
-      window.sessionStorage.setItem('userData', JSON.stringify({ phone }))
+      window.sessionStorage.setItem('userData', JSON.stringify({ name, email, phone }))
       router.push('/sign-up/verify-otp')
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -73,34 +93,13 @@ export default function SignUpPage() {
     }
   }
 
-  // Function to check if phone number exists using the API
-  const checkIfPhoneExists = async (phone: string) => {
-    try {
-      const response = await fetch('/api/check-phone', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phoneNumber: phone })
-      })
-      
-      const data = await response.json()
-      
-      if (!data.success) {
-        console.error("API error:", data.error)
-        return false
-      }
-      
-      return data.exists
-    } catch (error) {
-      console.error("Error checking phone:", error)
-      return false
-    }
-  }
-
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider()
-      await signInWithPopup(auth, provider)
-      router.push('/')
+      const {user} = await signInWithPopup(auth, provider)
+      console.log( user.displayName,  user.email)
+      window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
+      router.push('/clinic-management')
     } catch (err: unknown) {
       console.log(err)
       setError('Google Sign-in failed')
@@ -110,8 +109,10 @@ export default function SignUpPage() {
   const handleFacebookSignIn = async () => {
     try {
       const provider = new FacebookAuthProvider()
-      await signInWithPopup(auth, provider)
-      router.push('/')
+      const {user} = await signInWithPopup(auth, provider)
+      window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
+      router.push('/clinic-management')
+      router.push('/clinic-management')
     } catch (error) {
       console.log(error)
       setError('Facebook Sign-in failed')
@@ -255,9 +256,10 @@ export default function SignUpPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSubmit}
-              className="w-full bg-teal-700 text-white py-3 rounded-lg font-medium transition duration-300"
+              disabled={isChecking}
+              className={`w-full ${isChecking ? 'bg-teal-500' : 'bg-teal-700'} text-white py-3 rounded-lg font-medium transition duration-300 ${isChecking ? 'cursor-not-allowed' : ''}`}
             >
-              Sign Up
+              {isChecking ? 'Checking...' : 'Sign Up'}
             </motion.button>
 
             <motion.button

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { auth } from '../../firebase/config'
 import { RecaptchaVerifier, PhoneAuthProvider, linkWithCredential, ApplicationVerifier } from 'firebase/auth'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function VerifyPhone() {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
@@ -16,10 +16,12 @@ export default function VerifyPhone() {
   const recaptchaRef = useRef<RecaptchaVerifier | null>(null)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([null, null, null, null, null, null])
   const router = useRouter()
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams.get('returnUrl');
 
   useEffect(() => {
     const userData = window.sessionStorage.getItem('userData')
-    if (!userData) return router.push('/signup')
+    if (!userData) return router.push('/sign-up')
 
     const { phone: userPhone } = JSON.parse(userData)
     setPhone(userPhone)
@@ -125,7 +127,7 @@ export default function VerifyPhone() {
         await linkWithCredential(user, cred)
         setSuccess('Phone number verified successfully!')
         setTimeout(() => {
-          router.push('/clinic-management')
+          router.push(returnUrl ?? '/clinic-management')
         }, 1500)
       } else {
         setError('No user found. Please sign up again.')
@@ -243,7 +245,7 @@ export default function VerifyPhone() {
               onClick={handleVerify}
               className="w-full bg-teal-700 text-white py-3 rounded-lg font-medium transition duration-300"
             >
-              Sign Up
+              Verify
             </motion.button>
 
             <div className="text-center">

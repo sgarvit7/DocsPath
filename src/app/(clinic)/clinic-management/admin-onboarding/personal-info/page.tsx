@@ -1,17 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePersonalInfo, setCurrentStep } from '@/store/adminSlice';
 import { RootState } from '@/store/store';
+import axios from 'axios';
+import Link from 'next/link';
 
 const PersonalInfo = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnURL = searchParams.get('returnURL') || '/clinic-management/admin-onboarding/clinic-info';
   const dispatch = useDispatch();
   const personalInfo = useSelector((state: RootState) => state.admin.personalInfo);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [isCheckingPhone, setIsCheckingPhone] = useState(false);
   
   const [formData, setFormData] = useState({
     fullName: personalInfo.fullName || '',
@@ -26,7 +32,31 @@ const PersonalInfo = () => {
     phone: '',
     designation: '',
   });
-  
+
+  // Load data from sessionStorage on component mount
+  useEffect(() => {
+    try {
+      const userDataString = window.sessionStorage.getItem('userData');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        
+        setFormData(prev => ({
+          ...prev,
+          fullName: userData.name || prev.fullName,
+          email: userData.email || prev.email,
+          phone: userData.phone || prev.phone,
+        }));
+        
+        // If phone exists in sessionStorage, it's already verified
+        if (userData.phone) {
+          setIsPhoneVerified(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user data from sessionStorage:', error);
+    }
+  }, []);
+
   const validateForm = () => {
     let isValid = true;
     const errors = {
@@ -58,6 +88,12 @@ const PersonalInfo = () => {
       errors.designation = 'Designation is required';
       isValid = false;
     }
+
+    // Check if phone is verified
+    if (!isPhoneVerified) {
+      errors.phone = 'Phone number needs to be verified';
+      isValid = false;
+    }
     
     setFormErrors(errors);
     return isValid;
@@ -71,6 +107,49 @@ const PersonalInfo = () => {
     if (formErrors[name as keyof typeof formErrors]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
+
+    // If phone number is changed, set isPhoneVerified to false
+    if (name === 'phone') {
+      setIsPhoneVerified(false);
+    }
+  };
+
+  const handleCheckPhone = async () => {
+    if (!formData.phone.trim()) {
+      setFormErrors(prev => ({ ...prev, phone: 'Phone number is required' }));
+      return;
+    }
+
+    setIsCheckingPhone(true);
+    try {
+      const response = await axios.post('/api/check-phone', {
+        phoneNumber: formData.phone
+      });
+
+      if (response.data.exists) {
+        setFormErrors(prev => ({ 
+          ...prev, 
+          phone: 'This phone number is already registered. Please use a different number.'
+        }));
+      } else {
+        // Store phone in sessionStorage
+        const userDataString = window.sessionStorage.getItem('userData');
+        const userData = userDataString ? JSON.parse(userDataString) : {};
+        userData.phone = formData.phone;
+        window.sessionStorage.setItem('userData', JSON.stringify(userData));
+        
+        // Navigate to OTP verification
+        router.push(`/sign-up/verify-otp?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
+      }
+    } catch (error) {
+      console.error('Error checking phone:', error);
+      setFormErrors(prev => ({ 
+        ...prev, 
+        phone: 'Error checking phone number. Please try again.' 
+      }));
+    } finally {
+      setIsCheckingPhone(false);
+    }
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,6 +160,14 @@ const PersonalInfo = () => {
     setIsLoading(true);
     
     try {
+      // Save all data to sessionStorage
+      const userDataString = window.sessionStorage.getItem('userData');
+      const userData = userDataString ? JSON.parse(userDataString) : {};
+      userData.name = formData.fullName;
+      userData.email = formData.email;
+      // Phone is already in sessionStorage
+      window.sessionStorage.setItem('userData', JSON.stringify(userData));
+      
       // Save data to Redux
       dispatch(updatePersonalInfo(formData));
       dispatch(setCurrentStep(1));
@@ -93,6 +180,21 @@ const PersonalInfo = () => {
       setIsLoading(false);
     }
   };
+
+  // Check if user is coming back from OTP verification
+  useEffect(() => {
+    const verificationStatus = searchParams.get('verified');
+    if (verificationStatus === 'true') {
+      setIsPhoneVerified(true);
+    }
+  }, [searchParams]);
+
+  // Determine if fields should be readonly based on sessionStorage data
+  const userDataString = typeof window !== 'undefined' ? window.sessionStorage.getItem('userData') : null;
+  const userData = userDataString ? JSON.parse(userDataString) : {};
+  const isFullNameReadOnly = !!userData.name;
+  const isEmailReadOnly = !!userData.email;
+  const isPhoneReadOnly = !!userData.phone;
   
   return (
     <motion.form
@@ -109,9 +211,12 @@ const PersonalInfo = () => {
           value={formData.fullName}
           onChange={handleChange}
           placeholder="Full Name"
+          readOnly={isFullNameReadOnly}
           className={`w-full px-4 py-3 rounded-full border ${
             formErrors.fullName ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
+          } focus:outline-none focus:ring-2 focus:ring-[#00665B] ${
+            isFullNameReadOnly ? 'bg-gray-100 cursor-not-allowed' : ''
+          }`}
         />
         {formErrors.fullName && (
           <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.fullName}</p>
@@ -125,26 +230,47 @@ const PersonalInfo = () => {
           value={formData.email}
           onChange={handleChange}
           placeholder="Email Address"
+          readOnly={isEmailReadOnly}
           className={`w-full px-4 py-3 rounded-full border ${
             formErrors.email ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
+          } focus:outline-none focus:ring-2 focus:ring-[#00665B] ${
+            isEmailReadOnly ? 'bg-gray-100 cursor-not-allowed' : ''
+          }`}
         />
         {formErrors.email && (
           <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.email}</p>
         )}
       </div>
       
-      <div>
+      <div className="relative">
         <input
           type="tel"
           name="phone"
           value={formData.phone}
           onChange={handleChange}
           placeholder="Phone Number"
+          readOnly={isPhoneReadOnly}
           className={`w-full px-4 py-3 rounded-full border ${
             formErrors.phone ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
+          } focus:outline-none focus:ring-2 focus:ring-[#00665B] ${
+            isPhoneReadOnly ? 'bg-gray-100 cursor-not-allowed' : ''
+          } ${!isPhoneReadOnly && formData.phone ? 'pr-24' : ''}`}
         />
+        {!isPhoneReadOnly && formData.phone && !isPhoneVerified && (
+          <button
+            type="button"
+            onClick={handleCheckPhone}
+            disabled={isCheckingPhone}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-[#00665B] font-medium hover:text-[#005249] focus:outline-none"
+          >
+            {isCheckingPhone ? 'Checking...' : 'Verify Phone'}
+          </button>
+        )}
+        {!isPhoneReadOnly && isPhoneVerified && (
+          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-green-600 font-medium">
+            Verified
+          </span>
+        )}
         {formErrors.phone && (
           <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.phone}</p>
         )}

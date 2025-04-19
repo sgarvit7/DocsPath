@@ -46,25 +46,43 @@ export default function SignInForm() {
     }
 
     try {
-      const authenticatedUser =  await signInWithEmailAndPassword(auth, email, password)
+      const authenticatedUser = await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
       const idToken = await authenticatedUser.user.getIdToken()
       // Store in cookie
-      document.cookie = `token=${idToken}; path=/;`;
-      console.log("returnUrl: ",returnUrl);
+      // console.log("returnUrl: ", returnUrl);
       router.push(returnUrl ?? '/')
     } catch (err) {
       console.error(err)
       const authError = err as AuthError
-      if (authError.code === 'auth/user-not-found' || authError.code === 'auth/wrong-password') {
-        setError('Invalid email or password')
-      } else if (authError.code === 'auth/too-many-requests') {
-        setError('Too many failed login attempts. Please try again later.')
-      } else {
-        setError('Sign in failed. Please try again.')
+      
+      // Properly handle different Firebase auth error codes
+      switch (authError.code) {
+        case 'auth/user-not-found':
+          setError('No account found with this email address')
+          break
+        case 'auth/wrong-password':
+          setError('Invalid password')
+          break
+        case 'auth/invalid-email':
+          setError('Invalid email format')
+          break
+        case 'auth/invalid-credential':
+          setError('Invalid email or password')
+          break
+        case 'auth/too-many-requests':
+          setError('Too many failed login attempts. Please try again later')
+          break
+        case 'auth/user-disabled':
+          setError('This account has been disabled')
+          break
+        case 'auth/network-request-failed':
+          setError('Network error. Please check your connection')
+          break
+        default:
+          setError('Sign in failed. Please try again')
       }
-      setLoading(false)
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
