@@ -48,7 +48,7 @@ export default function SignInForm() {
     try {
       const authenticatedUser = await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
-      const idToken = await authenticatedUser.user.getIdToken()
+      // const idToken = await authenticatedUser.user.getIdToken()
       // Store in cookie
       // console.log("returnUrl: ", returnUrl);
       router.push(returnUrl ?? '/')

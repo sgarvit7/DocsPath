@@ -7,12 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updatePersonalInfo, setCurrentStep } from '@/store/adminSlice';
 import { RootState } from '@/store/store';
 import axios from 'axios';
-import Link from 'next/link';
 
 const PersonalInfo = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnURL = searchParams.get('returnURL') || '/clinic-management/admin-onboarding/clinic-info';
+  // const returnURL = searchParams.get('returnURL') || '/clinic-management/admin-onboarding/clinic-info';
   const dispatch = useDispatch();
   const personalInfo = useSelector((state: RootState) => state.admin.personalInfo);
   const [isLoading, setIsLoading] = useState(false);
