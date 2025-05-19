@@ -126,7 +126,7 @@ const RoomPage = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold">Room: {roomName}</h1>
       <div className="grid grid-cols-2 gap-4 mt-4">
-        <video ref={localVideoRef} autoPlay playsInline muted className="w-full rounded shadow" />
+        <video ref={localVideoRef} autoPlay playsInline muted className="w-full rounded shadow scale-x-[-1]" />
         <video ref={remoteVideoRef} autoPlay playsInline className="w-full rounded shadow" />
       </div>
     </div>
