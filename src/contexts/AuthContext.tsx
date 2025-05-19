@@ -17,7 +17,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Public routes that don't require authentication
-const publicRoutes = ['/sign-in', '/sign-up'];
+const publicRoutes = ['/sign-in', '/sign-up', '/clinic-management/teleconsultation', '/clinic-management/teleconsultation/*'];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -33,7 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       
       // Check if the current route is protected and redirect if necessary
-      const isPublicRoute = publicRoutes.includes(pathname || '');
+      // const isPublicRoute = publicRoutes.includes(pathname || '');
+      const isPublicRoute = publicRoutes.some((route) =>
+        route.endsWith('/*')
+          ? (pathname || '').startsWith(route.replace('/*', ''))
+          : route === pathname
+      );
+      
       
       // console.log(isPublicRoute)
       // console.log(pathname)

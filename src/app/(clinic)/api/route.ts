@@ -4,6 +4,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '@/lib/prisma';
 import { uploadFileToCloudinary } from '../../../../cloudinary/uploadImageToCloudinary'; // Adjust import path as needed
+import axios from 'axios';
 
 // Use /tmp/uploads on Vercel, and local folder in development
 const UPLOAD_DIR =
@@ -151,6 +152,27 @@ export async function POST(request: NextRequest) {
       }
     });
     
+
+const options = {
+  method: 'POST',
+  url: 'https://doctor-verification.p.rapidapi.com/',
+  headers: {
+    'x-rapidapi-key': 'd2c00ff55amsha5d6bf399bb7601p10be96jsn6c78a162bcf3',
+    'x-rapidapi-host': 'doctor-verification.p.rapidapi.com',
+    'Content-Type': 'application/json'
+  },
+  data: {
+    registrationNo: '117419'
+  }
+};
+
+try {
+	const response = await axios.request(options);
+	console.log("wow --> ",response.data);
+} catch (error) {
+	console.error(error);
+}
+
     return NextResponse.json({ 
       success: true, 
       message: 'Admin registration completed successfully',

@@ -1,6 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 
 const firebaseConfig = {
@@ -9,7 +10,8 @@ const firebaseConfig = {
   projectId:process.env.NEXT_PUBLIC_PROJECTID,
   storageBucket:process.env.NEXT_PUBLIC_STORAGEBUCKET,
   messagingSenderId:process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
-  appId:process.env.NEXT_PUBLIC_APPID
+  appId:process.env.NEXT_PUBLIC_APPID,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DB_URL,
 };
 
 
@@ -27,5 +29,5 @@ getApp() --> It returns the default initialized app — the one you initialized 
 const auth = getAuth(app) // This line gets the Firebase Authentication instance associated with your initialized Firebase app (app) — so you can use it to log in users, send OTPs, sign out, etc.
 
 const db = getFirestore(app) // This is your Firestore database instance
-
-export {app, auth, db}
+const realtimeDB = getDatabase(app);
+export {app, auth, db, realtimeDB}
