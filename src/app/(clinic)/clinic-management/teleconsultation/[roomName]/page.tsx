@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import {
   ref,
   set,
   onValue,
   push,
-  remove,
   onDisconnect,
   serverTimestamp,
   DataSnapshot
@@ -25,7 +24,7 @@ const RoomPage = () => {
 
   useEffect(() => {
     const roomRef = ref(realtimeDB, `rooms/${roomName}`);
-    const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
+    // const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
     const answerRef = ref(realtimeDB, `rooms/${roomName}/answer`);
     const callerCandidatesRef = ref(realtimeDB, `rooms/${roomName}/callerCandidates`);
     const calleeCandidatesRef = ref(realtimeDB, `rooms/${roomName}/calleeCandidates`);

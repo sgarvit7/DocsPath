@@ -2,7 +2,7 @@
 import { useSignal } from "@/contexts/SignalContext";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   const onlineUsers = useSignal().onlineUsers
   console.log(onlineUsers);
   return (

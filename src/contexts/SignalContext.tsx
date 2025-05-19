@@ -2,7 +2,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { realtimeDB } from "../../firebase/config"; // Import your auth instance
-import { ref, set, onValue, onDisconnect } from "firebase/database";
+import { ref, set, onValue, onDisconnect, DataSnapshot } from "firebase/database";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useAuth } from "./AuthContext";
 
@@ -39,7 +39,7 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
 
       // setUserReference(usersRef)
 
-      const handleConnection = (snap: any) => {
+      const handleConnection = (snap: DataSnapshot) => {
         // This callback runs every time the connection status changes.
         if (snap.val() === true) {
           // snap.val() --> returns the value stored at the Firebase location you're listening to.
@@ -98,10 +98,10 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Create the value for our context
-  const value = {};
+  const value = {onlineUsers: onlineUsers};
 
   return (
-    <SignalContext.Provider value={{ onlineUsers: onlineUsers }}>
+    <SignalContext.Provider value={value}>
       {loading ? <LoadingScreen /> : children}
     </SignalContext.Provider>
   );
