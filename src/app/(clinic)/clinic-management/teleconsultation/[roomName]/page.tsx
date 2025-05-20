@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ref,
   set,
@@ -9,9 +9,10 @@ import {
   push,
   onDisconnect,
   serverTimestamp,
-  DataSnapshot
+  DataSnapshot,
 } from "firebase/database";
 import { realtimeDB } from "../../../../../../firebase/config";
+import { useSignal } from "@/contexts/SignalContext";
 
 const RoomPage = () => {
   const { roomName } = useParams();
@@ -22,98 +23,137 @@ const RoomPage = () => {
   const remoteStream = useRef(new MediaStream());
   const isInitiator = useRef(false);
 
+  const { callResponse, updateCallStatus } = useSignal();
+  const router = useRouter();
+
   useEffect(() => {
-    const roomRef = ref(realtimeDB, `rooms/${roomName}`);
-    // const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
-    const answerRef = ref(realtimeDB, `rooms/${roomName}/answer`);
-    const callerCandidatesRef = ref(realtimeDB, `rooms/${roomName}/callerCandidates`);
-    const calleeCandidatesRef = ref(realtimeDB, `rooms/${roomName}/calleeCandidates`);
+    if (
+      callResponse === "rejected" ||
+      callResponse === "disconnected" ||
+      callResponse === null
+    ) {
+      console.log(callResponse ? callResponse : "No connection established");
+      router.push(`/clinic-management/teleconsultation`);
+    } else {
+      console.log(callResponse)
+      const roomRef = ref(realtimeDB, `rooms/${roomName}`);
+      // const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
+      const answerRef = ref(realtimeDB, `rooms/${roomName}/answer`);
+      const callerCandidatesRef = ref(
+        realtimeDB,
+        `rooms/${roomName}/callerCandidates`
+      );
+      const calleeCandidatesRef = ref(
+        realtimeDB,
+        `rooms/${roomName}/calleeCandidates`
+      );
 
-    const setupConnection = async () => {
-      peerConnection.current = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-      });
+      const setupConnection = async () => {
+        peerConnection.current = new RTCPeerConnection({
+          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        });
 
-      peerConnection.current.onicecandidate = (event) => {
-        if (event.candidate) {
-          const candidatesRef = isInitiator.current ? callerCandidatesRef : calleeCandidatesRef;
-          push(candidatesRef, event.candidate.toJSON());
+        peerConnection.current.onicecandidate = (event) => {
+          if (event.candidate) {
+            const candidatesRef = isInitiator.current
+              ? callerCandidatesRef
+              : calleeCandidatesRef;
+            push(candidatesRef, event.candidate.toJSON());
+          }
+        };
+
+        peerConnection.current.ontrack = (event) => {
+          event.streams[0].getTracks().forEach((track) => {
+            remoteStream.current.addTrack(track);
+          });
+        };
+
+        if (remoteVideoRef.current) {
+          remoteVideoRef.current.srcObject = remoteStream.current;
         }
       };
 
-      peerConnection.current.ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-          remoteStream.current.addTrack(track);
+      const openUserMedia = async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        localStream.current = stream;
+        if (localVideoRef.current) {
+          localVideoRef.current.srcObject = stream;
+        }
+        stream.getTracks().forEach((track) => {
+          peerConnection.current?.addTrack(track, stream);
         });
       };
 
-      if (remoteVideoRef.current) {
-        remoteVideoRef.current.srcObject = remoteStream.current;
-      }
-    };
+      const start = async () => {
+        const snapshot: DataSnapshot = await new Promise((resolve) =>
+          onValue(roomRef, resolve, { onlyOnce: true })
+        );
 
-    const openUserMedia = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      localStream.current = stream;
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
-      stream.getTracks().forEach((track) => {
-        peerConnection.current?.addTrack(track, stream);
-      });
-    };
+        if (!snapshot.exists()) {
+          isInitiator.current = true;
 
-    const start = async () => {
-      const snapshot: DataSnapshot = await new Promise((resolve) => onValue(roomRef, resolve, { onlyOnce: true }));
+          await setupConnection();
+          await openUserMedia();
 
-      if (!snapshot.exists()) {
-        isInitiator.current = true;
+          const offer = await peerConnection.current!.createOffer();
+          await peerConnection.current!.setLocalDescription(offer);
+          await set(roomRef, {
+            offer,
+            createdAt: serverTimestamp(),
+          });
 
-        await setupConnection();
-        await openUserMedia();
+          onValue(answerRef, async (answerSnap) => {
+            if (
+              answerSnap.exists() &&
+              peerConnection.current?.signalingState !== "closed"
+            ) {
+              const answer = new RTCSessionDescription(answerSnap.val());
+              await peerConnection.current?.setRemoteDescription(answer);
+            }
+          });
+        } else {
+          await setupConnection();
+          await openUserMedia();
+          const roomData = snapshot.val();
+          const offer = roomData.offer;
+          await peerConnection.current!.setRemoteDescription(
+            new RTCSessionDescription(offer)
+          );
+          const answer = await peerConnection.current!.createAnswer();
+          await peerConnection.current!.setLocalDescription(answer);
+          await set(answerRef, answer);
+        }
 
-        const offer = await peerConnection.current!.createOffer();
-        await peerConnection.current!.setLocalDescription(offer);
-        await set(roomRef, {
-          offer,
-          createdAt: serverTimestamp(),
+        onValue(callerCandidatesRef, (snapshot) => {
+          snapshot.forEach((child) => {
+            const candidate = new RTCIceCandidate(child.val());
+            peerConnection.current?.addIceCandidate(candidate);
+          });
         });
 
-        onValue(answerRef, async (answerSnap) => {
-          if (answerSnap.exists() && peerConnection.current?.signalingState !== "closed") {
-            const answer = new RTCSessionDescription(answerSnap.val());
-            await peerConnection.current?.setRemoteDescription(answer);
+        onValue(calleeCandidatesRef, (snapshot) => {
+          snapshot.forEach((child) => {
+            const candidate = new RTCIceCandidate(child.val());
+            peerConnection.current?.addIceCandidate(candidate);
+          });
+        });
+
+        onDisconnect(roomRef).remove();
+
+        onValue(roomRef, (snapshot) => {
+          if (!snapshot.exists()) {
+            console.log("Room was removed (disconnected).");
+            updateCallStatus("disconnected");
+            // router.push(`/clinic-management/teleconsultation`);
           }
         });
-      } else {
-        await setupConnection();
-        await openUserMedia();
-        const roomData = snapshot.val();
-        const offer = roomData.offer;
-        await peerConnection.current!.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.current!.createAnswer();
-        await peerConnection.current!.setLocalDescription(answer);
-        await set(answerRef, answer);
-      }
+      };
 
-      onValue(callerCandidatesRef, (snapshot) => {
-        snapshot.forEach((child) => {
-          const candidate = new RTCIceCandidate(child.val());
-          peerConnection.current?.addIceCandidate(candidate);
-        });
-      });
-
-      onValue(calleeCandidatesRef, (snapshot) => {
-        snapshot.forEach((child) => {
-          const candidate = new RTCIceCandidate(child.val());
-          peerConnection.current?.addIceCandidate(candidate);
-        });
-      });
-
-      onDisconnect(roomRef).remove();
-    };
-
-    start();
+      start();
+    }
 
     return () => {
       peerConnection.current?.close();
@@ -125,9 +165,21 @@ const RoomPage = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">Room: {roomName}</h1>
+      <h1>call response: {callResponse}</h1>
       <div className="grid grid-cols-2 gap-4 mt-4">
-        <video ref={localVideoRef} autoPlay playsInline muted className="w-full rounded shadow scale-x-[-1]" />
-        <video ref={remoteVideoRef} autoPlay playsInline className="w-full rounded shadow" />
+        <video
+          ref={localVideoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full rounded shadow scale-x-[-1]"
+        />
+        <video
+          ref={remoteVideoRef}
+          autoPlay
+          playsInline
+          className="w-full rounded shadow"
+        />
       </div>
     </div>
   );
