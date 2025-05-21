@@ -30,6 +30,7 @@ interface SignalContextType {
   updateCallStatus: (calleeAnswer: string) => void;
   roomName: string | null;
   callResponse: string | null;
+  ringingCallee: (roomName: string) => void;
 }
 
 // Create the context
@@ -117,7 +118,7 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
         if (snapshot.exists()) {
           console.log("incoming call");
           const data = snapshot.val();
-          setCallResponse(data.callStatus)
+          setCallResponse(data.callStatus);
           setCallCredentials(data);
           setRoomName(data.roomName);
         }
@@ -134,6 +135,19 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // ringing user
+  const ringingCallee = (roomName: string) => {
+    const caller = roomName.split("-")[0];
+    const callee = roomName.split("-")[1];
+    const userCallRef = ref(realtimeDB, `/status/${callee}/call`);
+    set(userCallRef, {
+      callStatus: "ringing",
+      caller,
+      roomName,
+      callInitiatedAt: new Date().toLocaleString(),
+    });
+  };
+
   // calling a user
   const call = (uid: string) => {
     const caller = auth.user?.uid;
@@ -143,7 +157,7 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
     setRoomName(roomName);
 
     set(userCallRef, {
-      callStatus: "ringing",
+      callStatus: "initiated",
       caller,
       roomName,
       callInitiatedAt: new Date().toLocaleString(),
@@ -156,7 +170,7 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
       if (snapshot.exists()) {
         const callStatus = snapshot.val().callStatus;
         setCallResponse(callStatus);
-        console.log(callStatus);
+        // console.log(callStatus);
         if (callStatus === "rejected" || callStatus === "disconnected") {
           router.push(`/clinic-management/teleconsultation`);
           setRoomName(null);
@@ -207,6 +221,7 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
     roomName,
     updateCallStatus,
     callResponse,
+    ringingCallee
   };
 
   return (

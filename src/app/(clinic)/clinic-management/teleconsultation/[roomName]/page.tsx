@@ -47,7 +47,7 @@ const RoomPage: React.FC = () => {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<BlobPart[]>([]);
 
-  const { callResponse, updateCallStatus } = useSignal();
+  const { callResponse, updateCallStatus, ringingCallee } = useSignal();
   const router = useRouter();
 
   // Show alert function
@@ -82,7 +82,7 @@ const RoomPage: React.FC = () => {
       console.log(callResponse ? callResponse : "No connection established");
       router.push(`/clinic-management/teleconsultation`);
     } else {
-      console.log(callResponse);
+      // console.log(callResponse);
       const roomRef = ref(realtimeDB, `rooms/${roomName}`);
       setRoomRef(roomRef);
       // const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
@@ -111,9 +111,9 @@ const RoomPage: React.FC = () => {
         };
 
         peerConnection.current.ontrack = (event) => {
-          console.log("Remote track received:", event.streams[0]);
+          // console.log("Remote track received:", event.streams[0]);
           event.streams[0].getTracks().forEach((track) => {
-            console.log("Adding remote track to stream:", track.kind);
+            // console.log("Adding remote track to stream:", track.kind);
             remoteStream.current.addTrack(track);
           });
           setIsRemoteConnected(true);
@@ -177,6 +177,8 @@ const RoomPage: React.FC = () => {
               await peerConnection.current?.setRemoteDescription(answer);
             }
           });
+          ringingCallee(roomName)
+          console.log("ready")
         } else {
           await setupConnection();
           await openUserMedia();
