@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ref,
@@ -10,6 +10,8 @@ import {
   onDisconnect,
   serverTimestamp,
   DataSnapshot,
+  remove,
+  DatabaseReference,
 } from "firebase/database";
 import { realtimeDB } from "../../../../../../firebase/config";
 import { useSignal } from "@/contexts/SignalContext";
@@ -22,6 +24,9 @@ const RoomPage = () => {
   const localStream = useRef<MediaStream | null>(null);
   const remoteStream = useRef(new MediaStream());
   const isInitiator = useRef(false);
+  const [roomRef, setRoomRef] = useState<DatabaseReference | null>(null);
+  const [isAudioMuted, setIsAudioMuted] = useState(false);
+  const [isVideoOff, setIsVideoOff] = useState(false);
 
   const { callResponse, updateCallStatus } = useSignal();
   const router = useRouter();
@@ -35,8 +40,9 @@ const RoomPage = () => {
       console.log(callResponse ? callResponse : "No connection established");
       router.push(`/clinic-management/teleconsultation`);
     } else {
-      console.log(callResponse)
+      console.log(callResponse);
       const roomRef = ref(realtimeDB, `rooms/${roomName}`);
+      setRoomRef(roomRef);
       // const offerRef = ref(realtimeDB, `rooms/${roomName}/offer`);
       const answerRef = ref(realtimeDB, `rooms/${roomName}/answer`);
       const callerCandidatesRef = ref(
@@ -162,6 +168,68 @@ const RoomPage = () => {
     };
   }, [roomName]);
 
+  const handleEndCall = () => {
+    console.log("Room was removed (disconnected).");
+    updateCallStatus("disconnected");
+    if (roomRef) {
+      remove(roomRef);
+    }
+  };
+
+  const toggleAudio = () => {
+    if (localStream.current) {
+      const audioTracks = localStream.current.getAudioTracks();
+      
+      // Get the new state (opposite of current state)
+      const newMuteState = !isAudioMuted;
+      
+      // Enable/disable the tracks based on mute state
+      audioTracks.forEach(track => {
+        track.enabled = !newMuteState; // enabled = true when not muted
+      });
+      
+      // Update the state
+      setIsAudioMuted(newMuteState);
+      
+      // Find the sender in the peer connection that corresponds to the audio track
+      if (peerConnection.current) {
+        const senders = peerConnection.current.getSenders();
+        senders.forEach(sender => {
+          if (sender.track && sender.track.kind === 'audio') {
+            sender.track.enabled = !newMuteState; // enabled = true when not muted
+          }
+        });
+      }
+    }
+  };
+
+  const toggleVideo = () => {
+    if (localStream.current) {
+      const videoTracks = localStream.current.getVideoTracks();
+      
+      // Get the new state (opposite of current state)
+      const newVideoOffState = !isVideoOff;
+      
+      // Enable/disable the tracks based on video off state
+      videoTracks.forEach(track => {
+        track.enabled = !newVideoOffState; // enabled = true when video is on
+      });
+      
+      // Update the state
+      setIsVideoOff(newVideoOffState);
+      
+      // Find the sender in the peer connection that corresponds to the video track
+      if (peerConnection.current) {
+        const senders = peerConnection.current.getSenders();
+        senders.forEach(sender => {
+          if (sender.track && sender.track.kind === 'video') {
+            sender.track.enabled = !newVideoOffState; // enabled = true when video is on
+          }
+        });
+      }
+    }
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold">Room: {roomName}</h1>
@@ -180,6 +248,33 @@ const RoomPage = () => {
           playsInline
           className="w-full rounded shadow"
         />
+      </div>
+      <div className="flex gap-2 mt-4">
+        <button
+          type="button"
+          onClick={toggleAudio}
+          className={`focus:outline-none text-white ${
+            isAudioMuted ? "bg-green-700 hover:bg-green-800" : "bg-red-700 hover:bg-red-800"
+          } focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2`}
+        >
+          {isAudioMuted ? "Unmute Audio" : "Mute Audio"}
+        </button>
+        <button
+          type="button"
+          onClick={toggleVideo}
+          className={`focus:outline-none text-white ${
+            isVideoOff ? "bg-green-700 hover:bg-green-800" : "bg-red-700 hover:bg-red-800"
+          } focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2`}
+        >
+          {isVideoOff ? "Turn On Camera" : "Turn Off Camera"}
+        </button>
+        <button
+          type="button"
+          onClick={handleEndCall}
+          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+        >
+          End call
+        </button>
       </div>
     </div>
   );
