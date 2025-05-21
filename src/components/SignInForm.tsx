@@ -48,8 +48,6 @@ export default function SignInForm() {
     try {
       const authenticatedUser = await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
-      // const idToken = await authenticatedUser.user.getIdToken()
-      // Store in cookie
       // console.log("returnUrl: ", returnUrl);
       router.push(returnUrl ?? '/')
     } catch (err) {
@@ -93,7 +91,7 @@ export default function SignInForm() {
     try {
       const provider = new GoogleAuthProvider()
       await signInWithPopup(auth, provider)
-      router.push('/')
+      router.push(returnUrl ?? '/')
     } catch (err) {
       console.error(err)
       setError('Google sign-in failed')
@@ -107,7 +105,7 @@ export default function SignInForm() {
     try {
       const provider = new FacebookAuthProvider()
       await signInWithPopup(auth, provider)
-      router.push('/')
+      router.push(returnUrl ?? '/')
     } catch (err) {
       console.error(err)
       setError('Facebook sign-in failed')
