@@ -17,7 +17,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Public routes that don't require authentication
-const publicRoutes = ['/sign-in', '/sign-up', '/clinic-management/teleconsultation', '/clinic-management/teleconsultation/*'];
+// const publicRoutes = ['/sign-in', '/sign-up', '/clinic-management/teleconsultation', '/clinic-management/teleconsultation/*'];
+const publicRoutes = ['/sign-in', '/sign-up'];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
