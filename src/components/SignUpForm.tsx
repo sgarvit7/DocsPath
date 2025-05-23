@@ -99,7 +99,7 @@ export default function SignUpPage() {
       const {user} = await signInWithPopup(auth, provider)
       console.log( user.displayName,  user.email)
       window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
-      router.push('/clinic-management')
+      router.push('/clinic-onboarding')
     } catch (err: unknown) {
       console.log(err)
       setError('Google Sign-in failed')
@@ -111,8 +111,8 @@ export default function SignUpPage() {
       const provider = new FacebookAuthProvider()
       const {user} = await signInWithPopup(auth, provider)
       window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
-      router.push('/clinic-management')
-      router.push('/clinic-management')
+      router.push('/clinic-onboarding')
+      router.push('/clinic-onboarding')
     } catch (error) {
       console.log(error)
       setError('Facebook Sign-in failed')
