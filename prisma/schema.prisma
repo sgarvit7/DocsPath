@@ -58,3 +58,46 @@ model Admin {
   accreditationPath                   String?
   accreditationOriginalName           String?
 }
+
+// Doctor onboarding data
+model Doctor {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Personal Information
+  fullName     String
+  emailAddress String @unique
+  phoneNumber  String
+  dateOfBirth  String
+  gender       String
+  
+  // Profile Photo - Cloudinary URL only
+  profilePhoto String?
+
+  // Professional Details
+  medicalLicenseNumber         String
+  specialization              String
+  yearsOfExperience           String
+  associatedClinicHospitalName String
+  consultationType            String
+
+  // Verification Documents - Cloudinary URLs only
+  governmentIssuedId                    String?
+  medicalDegreeCertificate              String?
+  medicalCouncilRegistrationCertificate String?
+  experienceCertificate                 String?
+
+  // Work Schedule Preferences
+  availableConsultationHours  String
+  preferredModeOfConsultation String
+  languageSpoken             String
+  additionalInformation      String?
+  emergencyContactDetails    String
+  personalBio                String?
+
+  // Status and Verification
+  // isVerified Boolean @default(false)
+  // isActive   Boolean @default(true)
+  @@map("doctors")
+}

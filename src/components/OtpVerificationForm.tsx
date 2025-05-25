@@ -127,7 +127,7 @@ export default function VerifyPhone() {
         await linkWithCredential(user, cred)
         setSuccess('Phone number verified successfully!')
         setTimeout(() => {
-          router.push(returnUrl ?? '/clinic-management')
+          router.push(returnUrl ?? '/clinic-onboarding')
         }, 1500)
       } else {
         setError('No user found. Please sign up again.')

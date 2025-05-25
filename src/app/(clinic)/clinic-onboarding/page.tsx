@@ -12,7 +12,7 @@ const ClinicManagement = () => {
 
   const handleSelection = (type: 'admin' | 'doctor') => {
     dispatch(setManagementType(type));
-    router.push('/clinic-management/admin-onboarding/personal-info');
+    router.push('/clinic-onboarding/admin-onboarding/personal-info');
   };
 
   const containerVariants = {

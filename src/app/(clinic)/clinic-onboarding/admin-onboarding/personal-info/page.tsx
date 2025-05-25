@@ -11,7 +11,7 @@ import axios from 'axios';
 const PersonalInfo = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const returnURL = searchParams.get('returnURL') || '/clinic-management/admin-onboarding/clinic-info';
+  // const returnURL = searchParams.get('returnURL') || '/clinic-onboarding/admin-onboarding/clinic-info';
   const dispatch = useDispatch();
   const personalInfo = useSelector((state: RootState) => state.admin.personalInfo);
   const [isLoading, setIsLoading] = useState(false);
@@ -172,7 +172,7 @@ const PersonalInfo = () => {
       dispatch(setCurrentStep(1));
       
       // Navigate to next step
-      router.push('/clinic-management/admin-onboarding/clinic-info');
+      router.push('/clinic-onboarding/admin-onboarding/clinic-info');
     } catch (error) {
       console.error('Error saving personal info:', error);
     } finally {

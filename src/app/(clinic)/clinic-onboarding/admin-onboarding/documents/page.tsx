@@ -168,7 +168,7 @@ const DocumentUpload = () => {
   
   const handleBack = () => {
     dispatch({ type: 'admin/setCurrentStep', payload: 1 });
-    router.push('/clinic-management/admin-onboarding/clinic-info');
+    router.push('/clinic-onboarding/admin-onboarding/clinic-info');
   };
   
   const getFileName = (fileData: FileMetadata | null) => {

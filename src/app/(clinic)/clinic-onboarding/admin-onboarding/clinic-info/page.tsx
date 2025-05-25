@@ -105,7 +105,7 @@ const ClinicInfo = () => {
       dispatch(setCurrentStep(2));
       
       // Navigate to next step
-      router.push('/clinic-management/admin-onboarding/documents');
+      router.push('/clinic-onboarding/admin-onboarding/documents');
     } catch (error) {
       console.error('Error saving clinic info:', error);
     } finally {
@@ -115,7 +115,7 @@ const ClinicInfo = () => {
 
   const handleBack = () => {
     dispatch(setCurrentStep(0));
-    router.push('/clinic-management/admin-onboarding/personal-info');
+    router.push('/clinic-onboarding/admin-onboarding/personal-info');
   };
   
   return (
