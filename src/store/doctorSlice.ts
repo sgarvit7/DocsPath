@@ -92,19 +92,19 @@ const initialState: DoctorOnboardingState = {
 };
 
 // Helper function to convert File to Base64
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result = reader.result as string;
-      // Remove the data:mime/type;base64, prefix
-      const base64 = result.split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = (error) => reject(error);
-  });
-};
+// const fileToBase64 = (file: File): Promise<string> => {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = () => {
+//       const result = reader.result as string;
+//       // Remove the data:mime/type;base64, prefix
+//       const base64 = result.split(',')[1];
+//       resolve(base64);
+//     };
+//     reader.onerror = (error) => reject(error);
+//   });
+// };
 
 // Helper function to convert Base64 back to File
 export const base64ToFile = (fileData: FileData): File => {

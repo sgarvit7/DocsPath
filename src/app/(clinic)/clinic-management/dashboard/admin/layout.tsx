@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Users,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
+import { LayoutContext } from "../../../../../contexts/AdminLayoutContext";
 
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -21,16 +22,7 @@ interface SidebarItem {
   link: string;
 }
 
-interface LayoutContextType {
-  adminName?: string;
-  setAdminName: (adminName: string) => void;
-  adminAvatar?: string;
-  setAdminAvatar: (adminAvatar: string) => void;
-}
-
-const LayoutContext = createContext<LayoutContextType | null>(null);
-
-let sidebarItems: SidebarItem[] = [
+const sidebarItems: SidebarItem[] = [
   { icon: BarChart3, label: "Dashboard", link: "/clinic-management/dashboard/admin" },
   { icon: Users, label: "Doctor Management", link: "/clinic-management/dashboard/admin/doctor-management" },
   { icon: Activity, label: "Patient Management", link: "/clinic-management/dashboard/admin" },
@@ -45,8 +37,8 @@ let sidebarItems: SidebarItem[] = [
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [adminName, setAdminName] = useState<string>();
   const [adminAvatar, setAdminAvatar] = useState<string>();
-  const router = useRouter()
-  const pathName = usePathname()
+  const router = useRouter();
+  const pathName = usePathname();
 
   const handleLogout = async () => {
     try {
@@ -86,7 +78,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  onClick={()=> router.push(item.link)}
+                  onClick={() => router.push(item.link)}
                   className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
                     (item.link === pathName) ? "bg-teal-700" : "hover:bg-teal-700"
                   }`}
@@ -148,12 +140,3 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default Layout;
-
-
-export function useLayout() {
-  const context = useContext(LayoutContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}

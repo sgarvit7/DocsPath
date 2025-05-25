@@ -4,7 +4,6 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 import { uploadFileToCloudinary } from "../../../../cloudinary/uploadImageToCloudinary"; // Adjust import path as needed
-import axios from "axios";
 
 // Use /tmp/uploads on Vercel, and local folder in development
 const UPLOAD_DIR =

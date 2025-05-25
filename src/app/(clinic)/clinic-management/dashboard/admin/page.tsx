@@ -8,15 +8,15 @@ import {
   XAxis, 
   YAxis, 
   ResponsiveContainer, 
-  LineChart, 
-  Line, 
+  // LineChart, 
+  // Line, 
   Area, 
   AreaChart 
 } from 'recharts';
 import {
   Calendar,
   Users,
-  Activity,
+  // Activity,
   FileText,
   BarChart3,
   Eye,
@@ -24,14 +24,14 @@ import {
   MessageCircle,
   Clock,
   UserCheck,
-  CalendarDays,
+  // CalendarDays,
   TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { useLayout } from './layout';
+import { useLayout } from '@/contexts/AdminLayoutContext';
 
 // Types for better type safety
 interface ChartDataPoint {
@@ -236,7 +236,7 @@ const dashboardData = {
 
 const AdminDashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const { adminName, setAdminName, adminAvatar, setAdminAvatar } = useLayout()
+  const { setAdminName, setAdminAvatar } = useLayout()
 
   useEffect(()=>{
       setAdminName(dashboardData.admin.name)
