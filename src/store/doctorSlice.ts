@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // Types
 export interface PersonalInfo {
@@ -26,7 +27,6 @@ export interface FileData {
   lastModified: number;
   base64: string; // Base64 encoded file content
 }
-
 export interface VerificationDocument {
   governmentIssuedId?: FileData | null;
   medicalDegreeCertificate?: FileData | null;
@@ -43,6 +43,42 @@ export interface WorkSchedulePreferences {
   personalBio: string;
 }
 
+// Type for a complete doctor record
+export interface Doctor {
+  id?: string;
+  personalInfo: {
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    dateOfBirth: string;
+    gender: string;
+    profilePhoto?: string;
+  };
+  professionalDetails: {
+    medicalLicenseNumber: string;
+    specialization: string;
+    yearsOfExperience: string;
+    associatedClinicHospitalName: string;
+    consultationType: string;
+  };
+  verificationDocument: {
+    governmentIssuedId?: string;
+    medicalDegreeCertificate?: string;
+    medicalCouncilRegistrationCertificate?: string;
+    experienceCertificate?: string;
+  };
+  workSchedulePreferences: {
+    availableConsultationHours: string;
+    preferredModeOfConsultation: string;
+    languageSpoken: string;
+    additionalInformation?: string;
+    emergencyContactDetails: string;
+    personalBio?: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface DoctorOnboardingState {
   currentStep: number;
   personalInfo: PersonalInfo;
@@ -52,25 +88,27 @@ export interface DoctorOnboardingState {
   isLoading: boolean;
   error: string | null;
   isSubmitted: boolean;
+  doctors: Doctor[];
+  isLoadingDoctors: boolean;
 }
 
 // Initial state
 const initialState: DoctorOnboardingState = {
   currentStep: 1,
   personalInfo: {
-    fullName: '',
-    emailAddress: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    gender: 'Male',
+    fullName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    gender: "Male",
     profilePhoto: null,
   },
   professionalDetails: {
-    medicalLicenseNumber: '',
-    specialization: '',
-    yearsOfExperience: '',
-    associatedClinicHospitalName: '',
-    consultationType: 'In-Person',
+    medicalLicenseNumber: "",
+    specialization: "",
+    yearsOfExperience: "",
+    associatedClinicHospitalName: "",
+    consultationType: "In-Person",
   },
   verificationDocument: {
     governmentIssuedId: null,
@@ -79,16 +117,18 @@ const initialState: DoctorOnboardingState = {
     experienceCertificate: null,
   },
   workSchedulePreferences: {
-    availableConsultationHours: '',
-    preferredModeOfConsultation: '',
-    languageSpoken: '',
-    additionalInformation: '',
-    emergencyContactDetails: '',
-    personalBio: '',
+    availableConsultationHours: "",
+    preferredModeOfConsultation: "",
+    languageSpoken: "",
+    additionalInformation: "",
+    emergencyContactDetails: "",
+    personalBio: "",
   },
   isLoading: false,
   error: null,
   isSubmitted: false,
+  doctors: [],
+  isLoadingDoctors: false,
 };
 
 // Helper function to convert File to Base64
@@ -114,29 +154,34 @@ export const base64ToFile = (fileData: FileData): File => {
     byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
   const byteArray = new Uint8Array(byteNumbers);
-  return new File([byteArray], fileData.name, { 
+  return new File([byteArray], fileData.name, {
     type: fileData.type,
-    lastModified: fileData.lastModified 
+    lastModified: fileData.lastModified,
   });
 };
 
 // Async thunk for submitting data
 export const submitDoctorOnboarding = createAsyncThunk(
-  'doctorOnboarding/submit',
+  "doctorOnboarding/submit",
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState() as { doctorOnboarding: DoctorOnboardingState };
-      const { personalInfo, professionalDetails, verificationDocument, workSchedulePreferences } = state.doctorOnboarding;
+      const {
+        personalInfo,
+        professionalDetails,
+        verificationDocument,
+        workSchedulePreferences,
+      } = state.doctorOnboarding;
 
       // Create FormData for file uploads
       const formData = new FormData();
-      
+
       // Add personal info
       Object.entries(personalInfo).forEach(([key, value]) => {
-        if (key === 'profilePhoto' && value) {
+        if (key === "profilePhoto" && value) {
           const file = base64ToFile(value as FileData);
-          formData.append('profilePhoto', file);
-        } else if (key !== 'profilePhoto') {
+          formData.append("profilePhoto", file);
+        } else if (key !== "profilePhoto") {
           formData.append(key, value as string);
         }
       });
@@ -159,35 +204,61 @@ export const submitDoctorOnboarding = createAsyncThunk(
         formData.append(key, value);
       });
 
-      const response = await fetch('http://localhost:3000/api/doctorOnboarding', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/doctorOnboarding",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to submit onboarding data');
+        throw new Error("Failed to submit onboarding data");
       }
 
       const result = await response.json();
-      
+
       // Clear session storage on successful submission
-      if (typeof window !== 'undefined') {
-        sessionStorage.removeItem('doctorOnboardingData');
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("doctorOnboardingData");
       }
-      
+
       return result;
     } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Unknown error occurred');
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+    }
+  }
+);
+
+// Async thunk for getting doctor data
+export const getDoctors = createAsyncThunk(
+  "doctorOnboarding/getDoctors",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctorOnboarding`
+      );
+      console.log(data);
+      return data as Doctor[];
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data?.message || error.message);
+      }
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
     }
   }
 );
 
 // Helper function to load from session storage
 const loadFromSessionStorage = (): Partial<DoctorOnboardingState> => {
-  if (typeof window === 'undefined') return {};
-  
+  if (typeof window === "undefined") return {};
+
   try {
-    const saved = sessionStorage.getItem('doctorOnboardingData');
+    const saved = sessionStorage.getItem("doctorOnboardingData");
     return saved ? JSON.parse(saved) : {};
   } catch {
     return {};
@@ -196,18 +267,18 @@ const loadFromSessionStorage = (): Partial<DoctorOnboardingState> => {
 
 // Helper function to save to session storage
 const saveToSessionStorage = (state: DoctorOnboardingState) => {
-  if (typeof window === 'undefined') return;
-  
+  if (typeof window === "undefined") return;
+
   try {
-    sessionStorage.setItem('doctorOnboardingData', JSON.stringify(state));
+    sessionStorage.setItem("doctorOnboardingData", JSON.stringify(state));
   } catch (error) {
-    console.error('Failed to save to session storage:', error);
+    console.error("Failed to save to session storage:", error);
   }
 };
 
 // Create slice
 const doctorOnboardingSlice = createSlice({
-  name: 'doctorOnboarding',
+  name: "doctorOnboarding",
   initialState: {
     ...initialState,
     ...loadFromSessionStorage(),
@@ -216,43 +287,64 @@ const doctorOnboardingSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
-    
-    updatePersonalInfo: (state, action: PayloadAction<Partial<PersonalInfo>>) => {
+
+    updatePersonalInfo: (
+      state,
+      action: PayloadAction<Partial<PersonalInfo>>
+    ) => {
       state.personalInfo = { ...state.personalInfo, ...action.payload };
     },
-    
-    updateProfessionalDetails: (state, action: PayloadAction<Partial<ProfessionalDetails>>) => {
-      state.professionalDetails = { ...state.professionalDetails, ...action.payload };
+
+    updateProfessionalDetails: (
+      state,
+      action: PayloadAction<Partial<ProfessionalDetails>>
+    ) => {
+      state.professionalDetails = {
+        ...state.professionalDetails,
+        ...action.payload,
+      };
     },
-    
-    updateVerificationDocument: (state, action: PayloadAction<Partial<VerificationDocument>>) => {
-      state.verificationDocument = { ...state.verificationDocument, ...action.payload };
+
+    updateVerificationDocument: (
+      state,
+      action: PayloadAction<Partial<VerificationDocument>>
+    ) => {
+      state.verificationDocument = {
+        ...state.verificationDocument,
+        ...action.payload,
+      };
     },
-    
-    updateWorkSchedulePreferences: (state, action: PayloadAction<Partial<WorkSchedulePreferences>>) => {
-      state.workSchedulePreferences = { ...state.workSchedulePreferences, ...action.payload };
+
+    updateWorkSchedulePreferences: (
+      state,
+      action: PayloadAction<Partial<WorkSchedulePreferences>>
+    ) => {
+      state.workSchedulePreferences = {
+        ...state.workSchedulePreferences,
+        ...action.payload,
+      };
     },
-    
+
     nextStep: (state) => {
       if (state.currentStep < 4) {
         state.currentStep += 1;
       }
       saveToSessionStorage(state);
     },
-    
+
     previousStep: (state) => {
       if (state.currentStep > 1) {
         state.currentStep -= 1;
       }
     },
-    
+
     resetForm: (state) => {
       Object.assign(state, initialState);
-      if (typeof window !== 'undefined') {
-        sessionStorage.removeItem('doctorOnboardingData');
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("doctorOnboardingData");
       }
     },
-    
+
     clearError: (state) => {
       state.error = null;
     },
@@ -270,6 +362,20 @@ const doctorOnboardingSlice = createSlice({
       })
       .addCase(submitDoctorOnboarding.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getDoctors.pending, (state) => {
+        state.isLoadingDoctors = true;
+        state.error = null;
+      })
+      .addCase(getDoctors.fulfilled, (state, action) => {
+        state.isLoadingDoctors = false;
+        console.log(action.payload)
+        state.doctors = action.payload;
+        state.error = null;
+      })
+      .addCase(getDoctors.rejected, (state, action) => {
+        state.isLoadingDoctors = false;
         state.error = action.payload as string;
       });
   },

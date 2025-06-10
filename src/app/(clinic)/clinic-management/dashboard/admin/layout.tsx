@@ -25,13 +25,13 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   { icon: BarChart3, label: "Dashboard", link: "/clinic-management/dashboard/admin" },
   { icon: Users, label: "Doctor Management", link: "/clinic-management/dashboard/admin/doctor-management" },
-  { icon: Activity, label: "Patient Management", link: "/clinic-management/dashboard/admin" },
-  { icon: FileText, label: "Discharge Summary", link: "/clinic-management/dashboard/admin" },
-  { icon: FileText, label: "Lab Reports", link: "/clinic-management/dashboard/admin" },
-  { icon: CreditCard, label: "Billing & Payment", link: "/clinic-management/dashboard/admin" },
-  { icon: BarChart3, label: "AI Analytic & Reports", link: "/clinic-management/dashboard/admin" },
-  { icon: Shield, label: "User Access Control", link: "/clinic-management/dashboard/admin" },
-  { icon: Settings, label: "Settings", link: "/clinic-management/dashboard/admin" },
+  { icon: Activity, label: "Patient Management", link: "/clinic-management/dashboard/admin/patient-management" },
+  { icon: FileText, label: "Discharge Summary", link: "/clinic-management/dashboard/admin/discharge-summary" },
+  { icon: FileText, label: "Lab Reports", link: "/clinic-management/dashboard/admin/lab-reports" },
+  { icon: CreditCard, label: "Billing & Payment", link: "/clinic-management/dashboard/admin/billing-payment" },
+  { icon: BarChart3, label: "AI Analytic & Reports", link: "/clinic-management/dashboard/admin/analytic-reports" },
+  { icon: Shield, label: "User Access Control", link: "/clinic-management/dashboard/admin/user-access-control" },
+  { icon: Settings, label: "Settings", link: "/clinic-management/dashboard/admin/settings" },
 ];
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

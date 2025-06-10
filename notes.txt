@@ -479,3 +479,58 @@ Why unwrap() is used with dispatch(submitDoctorOnboarding())
           console.error('Thunk failed and threw:', err);
         }
 This is cleaner and avoids manual checking of action types or status fields.
+---------------------
+
+builder
+  .addCase(fetchOtherUsers.pending, (state) => { // fetchOtherUsers is a async thunk function
+    state.loading = true;
+  })
+  .addCase(fetchOtherUsers.fulfilled, (state, action) => {
+    state.otherUsers = action.payload;
+  })
+  .addCase(fetchOtherUsers.rejected, (state, action) => {
+    state.error = action.payload;
+  });
+
+
+✅ What is builder?
+        - In Redux Toolkit, builder is just a helper object that you use inside extraReducers to handle different cases of actions — especially async actions like those from createAsyncThunk.
+        - extraReducers is used in Redux Toolkit to handle actions that are not defined directly in the slice, like those created by createAsyncThunk.
+        - builder helps define how your state should respond to those different states of the async thunk (fetchOtherUsers).
+
+In your case, you're handling three states of the fetchOtherUsers thunk:
+        - pending → request is being made
+        - fulfilled → request succeeded
+        - rejected → request failed
+
+Think of it like this: 🧱 builder helps you "build" the logic for what happens when an action is:
+        - starting (pending)
+        - successful (fulfilled)
+        - failed (rejected)
+
+🔧 What does builder do?
+        It gives you methods like: .addCase(actionName, callback) — This lets you say: “When this action happens, do this to the state.”
+
+💡 Example:
+
+builder
+  .addCase(fetchOtherUsers.pending, (state) => { // fetchOtherUsers is a async thunk function
+    state.loading = true;
+  })
+  .addCase(fetchOtherUsers.fulfilled, (state, action) => {
+    state.otherUsers = action.payload;
+  })
+  .addCase(fetchOtherUsers.rejected, (state, action) => {
+    state.error = action.payload;
+  });
+
+Each .addCase(): Listens to a specific state of the fetchOtherUsers async thunk (pending, fulfilled, rejected) and Updates the state accordingly
+
+🧠 Why it's called builder?
+        Because you use it to build up your list of action handlers. It’s just a pattern that Redux Toolkit uses to keep things clean and organized — especially for async actions.
+
+🧱 What is addCase in Redux Toolkit?
+        In Redux Toolkit, .addCase() is a function used inside extraReducers to handle specific actions — especially useful when working with createAsyncThunk.
+
+🟢 In Simple Words:
+        addCase lets you tell Redux: “When this action happens, run this code to update the state.”

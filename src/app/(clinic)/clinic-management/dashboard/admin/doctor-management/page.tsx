@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Plus,
@@ -15,6 +15,9 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDoctors, Doctor } from '@/store/doctorSlice';
+import { AppDispatch, RootState } from '@/store/store';
 
 // Dummy data objects for easy modification
 const summaryStats = {
@@ -38,72 +41,6 @@ const summaryStats = {
   }
 };
 
-const doctorsData = [
-  {
-    id: '#0000',
-    name: 'Dr.ByeWind',
-    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Dermatologist',
-    contact: '+1234567890',
-    status: 'Vacation',
-    statusColor: 'bg-yellow-100 text-yellow-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.Andi Lane',
-    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Pediatry',
-    contact: '+1234567890',
-    status: 'Free day',
-    statusColor: 'bg-red-100 text-red-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.ByeWind',
-    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Cardiologist',
-    contact: '+1234567890',
-    status: 'Vacation',
-    statusColor: 'bg-yellow-100 text-yellow-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.Andi Lane',
-    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Dentist',
-    contact: '+1234567890',
-    status: 'Vacation',
-    statusColor: 'bg-yellow-100 text-yellow-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.ByeWind',
-    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Pediatry',
-    contact: '+1234567890',
-    status: 'In The House',
-    statusColor: 'bg-green-100 text-green-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.Andi Lane',
-    avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=40&h=40&fit=crop&crop=face',
-    specialty: 'Dermatologist',
-    contact: '+1234567890',
-    status: 'Free day',
-    statusColor: 'bg-red-100 text-red-800'
-  },
-  {
-    id: '#0000',
-    name: 'Dr.ByeWind',
-    avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=40&h=40&fit=crop&crop=face',
-    specialty: 'ENT',
-    contact: '+1234567890',
-    status: 'In The House',
-    statusColor: 'bg-green-100 text-green-800'
-  }
-];
-
 const calendarData = {
   currentMonth: 'November 2018',
   currentDate: 12,
@@ -112,15 +49,50 @@ const calendarData = {
   location: 'Mumbai'
 };
 
+// Helper function to determine status based on consultation type and availability
+const getStatusInfo = (doctor: Doctor) => {
+  const consultationType = doctor.professionalDetails?.consultationType;
+  console.log(consultationType)
+  const isAvailable = Math.random() > 0.5; // Random availability for demo
+  
+  if (consultationType === "Online") {
+    return isAvailable 
+      ? { status: "Online", statusColor: "bg-green-100 text-green-800" }
+      : { status: "Offline", statusColor: "bg-red-100 text-red-800" };
+  } else {
+    return isAvailable 
+      ? { status: "In The House", statusColor: "bg-green-100 text-green-800" }
+      : { status: "On Break", statusColor: "bg-yellow-100 text-yellow-800" };
+  }
+};
+
 const DoctorManagement: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorsData);
+  const dispatch = useDispatch<AppDispatch>()
+  const allDoctorList = useSelector<RootState>((store) => store.doctorOnboarding.doctors) as Doctor[]
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[] | null>(null);
+
+  useEffect(() => {
+    const getAllDoctors = async () => {
+      const doctors = await dispatch(getDoctors())
+      console.log(doctors.payload)
+    }
+    getAllDoctors()
+  }, [])
+
+  useEffect(() => {
+    if (allDoctorList) {
+      console.log("allDoctorList: ",allDoctorList)
+      setFilteredDoctors(allDoctorList)
+      console.log("filteredDoctors: ",filteredDoctors)
+    }
+  }, [allDoctorList])
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filtered = doctorsData.filter(doctor =>
-      doctor.name.toLowerCase().includes(query.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(query.toLowerCase())
+    const filtered = allDoctorList.filter(doctor =>
+      doctor.personalInfo.fullName.toLowerCase().includes(query.toLowerCase()) ||
+      doctor.professionalDetails.specialization.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredDoctors(filtered);
   };
@@ -152,7 +124,7 @@ const DoctorManagement: React.FC = () => {
           <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
             <Users className="w-4 h-4" />
           </div>
-          <span className="font-semibold">9 Doctors</span>
+          <span className="font-semibold">{allDoctorList.length} Doctors</span>
         </div>
       </motion.div>
 
@@ -264,61 +236,64 @@ const DoctorManagement: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredDoctors.map((doctor, index) => (
-                    <motion.tr
-                      key={`${doctor.id}-${index}`}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td className="py-4 px-6 text-gray-600 font-medium">{doctor.id}</td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={doctor.avatar}
-                            alt={doctor.name}
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                          <span className="font-medium text-gray-900">{doctor.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-gray-600">{doctor.specialty}</td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-teal-600" />
-                          <MessageCircle className="w-4 h-4 text-gray-400" />
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${doctor.statusColor}`}>
-                          {doctor.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleAction('info', doctor.id)}
-                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                          >
-                            <Eye className="w-3 h-3 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => handleAction('schedule', doctor.id)}
-                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                          >
-                            <Clock className="w-3 h-3 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => handleAction('remove', doctor.id)}
-                            className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors"
-                          >
-                            <X className="w-3 h-3 text-red-600" />
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))}
+                  {filteredDoctors && filteredDoctors.map((doctor, index) => {
+                    const statusInfo = getStatusInfo(doctor);
+                    return (
+                      <motion.tr
+                        key={`${doctor.id}-${index}`}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <td className="py-4 px-6 text-gray-600 font-medium">{doctor.professionalDetails?.medicalLicenseNumber}</td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={doctor.personalInfo?.profilePhoto}
+                              alt={doctor.personalInfo?.fullName}
+                              className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <span className="font-medium text-gray-900">{doctor.personalInfo?.fullName}</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6 text-gray-600">{doctor.professionalDetails?.specialization}</td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-2">
+                            <Phone className="w-4 h-4 text-teal-600" />
+                            <MessageCircle className="w-4 h-4 text-gray-400" />
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.statusColor}`}>
+                            {statusInfo.status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleAction('info', doctor.id as string)}
+                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                            >
+                              <Eye className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <button
+                              onClick={() => handleAction('schedule', doctor.id as string)}
+                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                            >
+                              <Clock className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <button
+                              onClick={() => handleAction('remove', doctor.id as string)}
+                              className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors"
+                            >
+                              <X className="w-3 h-3 text-red-600" />
+                            </button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
