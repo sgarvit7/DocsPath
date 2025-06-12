@@ -6,10 +6,11 @@ import { X, Award, Power } from 'lucide-react';
 import { Edit, Briefcase, GraduationCap, Lock } from 'lucide-react';
 import image from "./doctor-profile.jpg";
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import PhoneInput from '@/components/publicPageComponents/PhoneInput';
 
 interface ProfileItem {
   label: string;
-  value: string;
+  value: string | React.ReactNode; // Allow value to be a string or a React node
 }
 
 interface NotificationState {
@@ -33,7 +34,39 @@ interface ProfileData {
 interface ToggleSwitchProps {
   enabled: boolean;
   onToggle: () => void;
+  size?: 'sm' | 'md' | 'lg';
 }
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle, size = 'md' }) => {
+  // Define size classes
+  const sizeClasses = {
+    sm: {
+      container: 'h-4 w-8',
+      knob: 'h-3 w-3',
+      translate: enabled ? 'translate-x-5' : 'translate-x-1'
+    },
+    md: {
+      container: 'h-6 w-11',
+      knob: 'h-4 w-4',
+      translate: enabled ? 'translate-x-6' : 'translate-x-1'
+    },
+    lg: {
+      container: 'h-8 w-16',
+      knob: 'h-6 w-6',
+      translate: enabled ? 'translate-x-8' : 'translate-x-1'
+    }
+  }[size];
+
+  return (
+    <div
+      className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${sizeClasses.container} ${enabled ? 'bg-teal-600' : 'bg-gray-300'}`}
+      onClick={onToggle}
+    >
+      <span
+        className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
+      />
+    </div>
+  );
+};
 
 const ProfileSettings: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationState>({
@@ -67,8 +100,8 @@ const ProfileSettings: React.FC = () => {
       { label: "Last Name", value: "Jendob" },
       { label: "Field of practice", value: "Dermatology" },
       { label: "Email address", value: "Mira1229@gmail.com" },
-      { label: "Phone", value: "+91 123 456 456" },
-      { label: "Emergency Contact", value: "+91 123 456 456" }
+      { label: "Phone", value: <PhoneInput></PhoneInput> },
+      { label: "Emergency Contact", value: <PhoneInput></PhoneInput> },
     ],
     professionalInformation: [
       { label: "Medical registration number", value: "4000000000" },
@@ -115,20 +148,51 @@ const ProfileSettings: React.FC = () => {
 
   const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => (
     <div 
-      className={`relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors ${
+      className={`relative inline-flex h-4 w-8 items-center rounded-full cursor-pointer transition-colors ${
         enabled ? 'bg-teal-600' : 'bg-gray-300'
       }`}
       onClick={onToggle}
     >
       <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          enabled ? 'translate-x-6' : 'translate-x-1'
+        className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+          enabled ? 'translate-x-4' : 'translate-x-1'
         }`}
       />
     </div>
   );
 
   const renderSection = (
+    title: string, 
+    icon: React.ReactNode, 
+    data: ProfileItem[], 
+    columns: number = 3
+  ): React.ReactElement => (
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-2">
+          <div className="w-5 h-5 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs">{icon}</span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+        </div>
+        <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
+          <span>Edit</span>
+          <Edit className="w-4 h-4" />
+        </button>
+      </div>
+      
+      <div className={`grid grid-cols-${columns} gap-8`}>
+        {data.map((item, index) => (
+          <div key={index}>
+            <p className="text-sm font-medium text-teal-700 mb-1">{item.label}</p>
+            <p className="text-gray-800 font-medium">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderPersonalSection = (
     title: string, 
     icon: React.ReactNode, 
     data: ProfileItem[], 
@@ -256,7 +320,7 @@ const ProfileSettings: React.FC = () => {
       <div className="flex mt-10">
         {/* Sidebar */}
         <div className="w-80 bg-white h-screen shadow-sm fixed">
-          {/* Profile Section */}
+          {/* Profile Section */} 
           <div className="p-6">
   
             
@@ -265,7 +329,7 @@ const ProfileSettings: React.FC = () => {
                 <Image 
                   src={image}
                   alt="Dr. Mira Moreno"
-                  className="rounded-full object-cover h-50 w-50"
+                  className="rounded-full object-cover h-30 w-30"
                 />
                 <div className="absolute -bottom-1 -right-1 bg-teal-600 rounded-full p-1">
                   <Award className="w-4 h-4 text-white" />
@@ -275,21 +339,22 @@ const ProfileSettings: React.FC = () => {
           </div>
 
           {/* Navigation */}
-          <div className="p-4 h-auto txt-3xl">
-            <button className="flex w-50 p-1 justify-center mx-auto px-1 bg-teal-100 text-teal rounded-lg font-medium text-2xl">
+          <div className="p h-auto txt-2xl">
+            <button className="flex w-50 p-1 justify-center mx-auto px-1 bg-teal-100 text-teal rounded-lg font-medium text-xl">
               My Profile
             </button>
           </div>
 
           {/* Notifications Section */}
-          <div className="px-4 pb-4 ml-5 my-5">
-            <h4 className="font-bold text-gray-800 mb-4">Notifications</h4>
-            <div className="space-y-4">
+          <div className="px-4 ml-5 my-5">
+            <h4 className="font-bold text-medium text-gray-800 mb-4">Notifications</h4>
+            <div className="font-8 space-y-1 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">SMS Notifications</span>
                 <ToggleSwitch 
                   enabled={notifications.sms}
                   onToggle={() => toggleNotification('sms')}
+                  size='lg'
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -297,6 +362,7 @@ const ProfileSettings: React.FC = () => {
                 <ToggleSwitch 
                   enabled={notifications.email}
                   onToggle={() => toggleNotification('email')}
+                  size='md'
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -313,7 +379,7 @@ const ProfileSettings: React.FC = () => {
                   onToggle={() => toggleNotification('cancellations')}
                 />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between txt-sm">
                 <span className="text-gray-700">Appointment reminders</span>
                 <ToggleSwitch 
                   enabled={notifications.appointmentReminders}
@@ -324,21 +390,21 @@ const ProfileSettings: React.FC = () => {
           </div>
 
           {/* More Info Section */}
-          <div className="px-4 pb-6 my-10">
+          <div className="px-4">
             <h4 className="font-semibold text-gray-800 mb-3">More info Add</h4>
-            <div className="text-sm leading-relaxed border-2 rounded-lg p-4 h-50">
+            <div className="text-sm leading-relaxed border-2 rounded-lg p-2 h-auto">
               <p>Lorem ipsum dolor sit Lorem ipsum dolor sit Lorem ipsum dolor sit</p>
               <p className="mt-2">Lorem ipsum dolor sit Lorem ipsum dolor sit</p>
             </div>
           </div>
 
           {/* Log Out Button */}
-          <div className="px-4 pb-6 flex justify-center items-center">
-            <button className="flex px-6 py-3 items-center justify-center text-3xl space-x-2 font-medium border border-teal-600 rounded-full hover:bg-teal-50 transition-colors">
-              <span className="text-3xl bg-gradient-to-r from-teal-800 to-teal-600 text-transparent bg-clip-text">
+          <div className="px-4 pb-6 my-2 flex justify-center items-center">
+            <button className="flex px-4 py-2 items-center justify-center text-3xl space-x-2 font-medium border border-teal-600 rounded-full hover:bg-teal-50 transition-colors">
+              <span className="text-xl bg-gradient-to-r from-teal-800 to-teal-600 text-transparent bg-clip-text">
                 Log Out
               </span>
-              <Power className="w-8 h-8 text-red-500" />
+              <Power className="w-6 h-6 text-white p-1 bg-red-500 rounded-full" />
             </button>
           </div>
         </div>
@@ -347,6 +413,7 @@ const ProfileSettings: React.FC = () => {
 
         <div className="flex-1 p-8 ml-80 w">
           <div className="text-teal-900 text-left my-5 text-2xl font-semibold"> Profile & Settings</div>
+          <div><PhoneInput /></div>
           <div className="max-w-screen mx-auto space-y-6">
             <div className="shadow-sm p-6 bg-white rounded-lg mb-6">
               <h3 className="text-3xl font-semibold text-teal-800 py-10">DR. Mira Moreno</h3>

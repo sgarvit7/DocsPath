@@ -1,10 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Settings, Edit3, User, Briefcase } from 'lucide-react';
+import axios from 'axios';
+import { Admin } from '@prisma/client';
 
 export default function ProfileSettings() {
   const [darkMode, setDarkMode] = useState(false);
+  const [adminProfile, setAdminProfile] = useState<Admin | null>(null);
 
   const personalInfo = [
     { label: "Full Name", value: "Maya Jonson" },
@@ -27,6 +30,17 @@ export default function ProfileSettings() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+
+  useEffect(() => {
+    axios.get('/api/adminProfile')
+      .then(response => { 
+        // Handle the response data if needed
+        console.log('Admin profiles fetched:', response.data);
+      })
+      .catch(error => {     
+        console.error('Error fetching admin profiles:', error);
+      });
+  }, []);
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
