@@ -34,10 +34,13 @@ model Admin {
 
   // Personal Info
   fullName    String
-  email       String
+  email       String @unique
   phone       String
   designation String
-
+  
+  // Profile Photo - Cloudinary URL only
+  profilePhoto String?
+  
   // Clinic Info
   clinicName         String
   clinicType         String
@@ -57,6 +60,9 @@ model Admin {
   registrationCertificateOriginalName String?
   accreditationPath                   String?
   accreditationOriginalName           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Doctor onboarding data
@@ -100,4 +106,39 @@ model Doctor {
   // isVerified Boolean @default(false)
   // isActive   Boolean @default(true)
   @@map("doctors")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  phone       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  supabaseUid String    @unique
+
+  // Demographic Data (embedded in User model)
+  title         String?
+  name          String?
+  birthDate     DateTime?
+  gender        String?
+  bloodGroup    String?
+  height        Int?
+  weight        Int?
+  maritalStatus String?
+  contactNumber String?
+  alternateNumber String?
+
+  // Lifestyle Data (embedded in User model)
+  smokingHabit       String?
+  alcoholConsumption String?
+  activityLevel      String?
+  dietHabit          String?
+  occupation         String?
+
+  // Medical Data (embedded in User model)
+  allergies       String[] @default([])
+  medications     String[] @default([])
+  chronicDiseases String[] @default([])
+  injuries        String[] @default([])
+  surgeries       String[] @default([])
 }

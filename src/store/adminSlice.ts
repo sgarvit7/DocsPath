@@ -16,6 +16,7 @@ export interface AdminState {
     email: string;
     phone: string;
     designation: string;
+    
   };
   clinicInfo: {
     clinicName: string;
@@ -33,6 +34,8 @@ export interface AdminState {
     doctorsCount: string;
     communicationMode: string;
   };
+  createdAt?: string;
+  updatedAt?: string;
   currentStep: number;
   loading: boolean;
   error: string | null;
