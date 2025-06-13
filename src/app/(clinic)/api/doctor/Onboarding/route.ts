@@ -5,7 +5,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 import { uploadFileToCloudinary } from "../../../../../../cloudinary/uploadImageToCloudinary";
-import { Doctor } from "@/store/doctorSlice";
+import { Doctor } from "@/types/doctor";
 
 // Use /tmp/uploads on Vercel, and local folder in development
 const UPLOAD_DIR =
