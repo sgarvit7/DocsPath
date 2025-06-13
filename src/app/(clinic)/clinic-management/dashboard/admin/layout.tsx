@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutContext } from "../../../../../contexts/AdminLayoutContext";
+import Image from "next/image";
 
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -23,15 +24,51 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { icon: BarChart3, label: "Dashboard", link: "/clinic-management/dashboard/admin" },
-  { icon: Users, label: "Doctor Management", link: "/clinic-management/dashboard/admin/doctor-management" },
-  { icon: Activity, label: "Patient Management", link: "/clinic-management/dashboard/admin/patient-management" },
-  { icon: FileText, label: "Discharge Summary", link: "/clinic-management/dashboard/admin/discharge-summary" },
-  { icon: FileText, label: "Lab Reports", link: "/clinic-management/dashboard/admin/lab-reports" },
-  { icon: CreditCard, label: "Billing & Payment", link: "/clinic-management/dashboard/admin/billing-payment" },
-  { icon: BarChart3, label: "AI Analytic & Reports", link: "/clinic-management/dashboard/admin/analytic-reports" },
-  { icon: Shield, label: "User Access Control", link: "/clinic-management/dashboard/admin/user-access-control" },
-  { icon: Settings, label: "Settings", link: "/clinic-management/dashboard/admin/settings" },
+  {
+    icon: BarChart3,
+    label: "Dashboard",
+    link: "/clinic-management/dashboard/admin",
+  },
+  {
+    icon: Users,
+    label: "Doctor Management",
+    link: "/clinic-management/dashboard/admin/doctor-management",
+  },
+  {
+    icon: Activity,
+    label: "Patient Management",
+    link: "/clinic-management/dashboard/admin/patient-management",
+  },
+  {
+    icon: FileText,
+    label: "Discharge Summary",
+    link: "/clinic-management/dashboard/admin/discharge-summary",
+  },
+  {
+    icon: FileText,
+    label: "Lab Reports",
+    link: "/clinic-management/dashboard/admin/lab-reports",
+  },
+  {
+    icon: CreditCard,
+    label: "Billing & Payment",
+    link: "/clinic-management/dashboard/admin/billing-payment",
+  },
+  {
+    icon: BarChart3,
+    label: "AI Analytic & Reports",
+    link: "/clinic-management/dashboard/admin/analytic-reports",
+  },
+  {
+    icon: Shield,
+    label: "User Access Control",
+    link: "/clinic-management/dashboard/admin/user-access-control",
+  },
+  {
+    icon: Settings,
+    label: "Settings",
+    link: "/clinic-management/dashboard/admin/settings",
+  },
 ];
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -80,7 +117,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   transition={{ delay: index * 0.1 }}
                   onClick={() => router.push(item.link)}
                   className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                    (item.link === pathName) ? "bg-teal-700" : "hover:bg-teal-700"
+                    item.link === pathName ? "bg-teal-700" : "hover:bg-teal-700"
                   }`}
                 >
                   <item.icon className="w-5 h-5" />
@@ -111,10 +148,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             className="bg-white p-6 border-b flex items-center justify-between"
           >
             <div className="flex items-center gap-4">
-              <img
-                src={adminAvatar}
+              <Image
+                src={adminAvatar || "/placeholder.jpg"} 
                 alt="Admin"
-                className="w-16 h-16 rounded-xl object-cover"
+                width={64} 
+                height={64} 
+                className="rounded-xl object-cover"
               />
               <h2 className="text-2xl font-bold text-gray-800">
                 Welcome, {adminName}

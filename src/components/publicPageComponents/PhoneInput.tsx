@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { countries as countriesArray, Country } from "@/lib/countries";
 import Image from "next/image";
+import countriesArray from "../../app/assets/countries.json"; // Assuming you have a JSON file with country data
+import { Country } from "@/types/country";
 
 export default function CountrySelect() {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -36,9 +37,15 @@ export default function CountrySelect() {
         value={countryCode}
         onChange={(e) => setCountryCode(e.target.value)}
       >
-        {countries.map((countries) => (
-          <option key={countries.dial_code} value={countries.code}>
-            ({countries.dial_code}) {countries.name} 
+        {countries.map((countriesArray) => (
+          <option key={countriesArray.dial_code} value={countriesArray.code}>
+            <Image
+              src={`https://flagsapi.com/${countryCode}/flat/64.png`}
+              alt={`${countryCode} flag`}
+              width={32}
+              height={32}
+            ></Image>
+            {countriesArray.dial_code} {countriesArray.name}
           </option>
         ))}
       </select>

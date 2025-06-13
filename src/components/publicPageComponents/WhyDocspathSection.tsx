@@ -53,9 +53,9 @@ export default function WhyDocspathSection({ darkMode }: WhyDocspathSectionProps
                 darkMode ? 'text-gray-300' : 'text-gray-600'
               }`}
             >
-              Managing a clinic shouldn't feel like a second job. DocsPath gives you a powerful 
+              {`Managing a clinic shouldn't feel like a second job. DocsPath gives you a powerful 
               command center to control every part of your practice from the front desk to 
-              follow-ups—with zero hassle.
+              follow-ups—with zero hassle.`}
             </motion.p>
 
             <div className="space-y-6">

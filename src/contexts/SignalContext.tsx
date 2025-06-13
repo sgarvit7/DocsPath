@@ -23,6 +23,7 @@ interface CallCredentials {
   roomName: string;
   callInitiatedAt: string;
 }
+
 interface SignalContextType {
   onlineUsers: string[];
   call: (uid: string) => void;

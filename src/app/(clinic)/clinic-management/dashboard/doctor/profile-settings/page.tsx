@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { X, Award, Power } from 'lucide-react';
 import { Edit, Briefcase, GraduationCap, Lock } from 'lucide-react';
-import image from "./doctor-profile.jpg";
+import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import PhoneInput from '@/components/publicPageComponents/PhoneInput';
 
@@ -413,7 +413,6 @@ const ProfileSettings: React.FC = () => {
 
         <div className="flex-1 p-8 ml-80 w">
           <div className="text-teal-900 text-left my-5 text-2xl font-semibold"> Profile & Settings</div>
-          <div><PhoneInput /></div>
           <div className="max-w-screen mx-auto space-y-6">
             <div className="shadow-sm p-6 bg-white rounded-lg mb-6">
               <h3 className="text-3xl font-semibold text-teal-800 py-10">DR. Mira Moreno</h3>

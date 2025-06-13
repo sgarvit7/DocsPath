@@ -62,7 +62,7 @@ export default function AwardsSection({ darkMode }: AwardsSectionProps) {
           </motion.h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {awards.map((award, index) => (
+            {awards.map((award) => (
               <motion.div
                 key={award.id}
                 variants={itemVariants}

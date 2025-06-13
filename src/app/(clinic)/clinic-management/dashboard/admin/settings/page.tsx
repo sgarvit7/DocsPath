@@ -3,11 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { Settings, Edit3, User, Briefcase } from 'lucide-react';
 import axios from 'axios';
-import { Admin } from '@prisma/client';
 
 export default function ProfileSettings() {
   const [darkMode, setDarkMode] = useState(false);
-  const [adminProfile, setAdminProfile] = useState<Admin | null>(null);
 
   const personalInfo = [
     { label: "Full Name", value: "Maya Jonson" },
@@ -32,7 +30,7 @@ export default function ProfileSettings() {
   };
 
   useEffect(() => {
-    axios.get('/api/adminProfile')
+    axios.get('/api/admin')
       .then(response => { 
         // Handle the response data if needed
         console.log('Admin profiles fetched:', response.data);

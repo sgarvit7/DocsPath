@@ -3,7 +3,6 @@
 
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/publicPageComponents/Layout";
-import Image from "next/image";
 
 interface TeamMember {
   id: number;
