@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageCircle, Linkedin, Instagram, Smartphone } from 'lucide-react';
+import { MessageCircle, Linkedin, Instagram } from 'lucide-react';
 
 interface FooterProps {
   darkMode: boolean;

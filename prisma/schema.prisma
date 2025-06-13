@@ -142,3 +142,38 @@ model User {
   injuries        String[] @default([])
   surgeries       String[] @default([])
 }
+
+model Patient {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  phone       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  supabaseUid String    @unique
+
+  // Demographic Data (embedded in User model)
+  title         String?
+  name          String?
+  birthDate     DateTime?
+  gender        String?
+  bloodGroup    String?
+  height        Int?
+  weight        Int?
+  maritalStatus String?
+  contactNumber String?
+  alternateNumber String?
+
+  // Lifestyle Data (embedded in User model)
+  smokingHabit       String?
+  alcoholConsumption String?
+  activityLevel      String?
+  dietHabit          String?
+  occupation         String?
+
+  // Medical Data (embedded in User model)
+  allergies       String[] @default([])
+  medications     String[] @default([])
+  chronicDiseases String[] @default([])
+  injuries        String[] @default([])
+  surgeries       String[] @default([])
+}

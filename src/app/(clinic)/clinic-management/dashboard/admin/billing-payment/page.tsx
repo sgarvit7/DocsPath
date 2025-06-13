@@ -6,7 +6,7 @@ import { Search, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 export default function BillingPaymentDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 14)); // November 14, 2018
 
-  const [status, setStatus] = useState<string>("paid");
+  
   // Sample data for the chart (monthly revenue)
   const chartData = [
     { month: 'Jan', amount: 150 },
@@ -138,7 +138,7 @@ export default function BillingPaymentDashboard() {
     const today = new Date(2018, 10, 14); // November 14, 2018
     
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
     
