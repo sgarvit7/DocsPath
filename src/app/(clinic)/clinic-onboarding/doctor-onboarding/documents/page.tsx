@@ -2,7 +2,8 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateVerificationDocument, nextStep, previousStep, FileData } from '@/store/doctorSlice';
+import { updateVerificationDocument, nextStep, previousStep } from '@/store/doctorSlice';
+import { FileData } from '@/types/doctor';
 import { RootState } from '@/store/store';
 import OnboardingLayout from '../OnboardingLayout';
 import { useRouter } from 'next/navigation';

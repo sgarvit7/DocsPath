@@ -12,7 +12,7 @@ export async function GET() {
 }
 
 // POST: Create a new user
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 

@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { getDoctors, Doctor } from "@/store/doctorSlice";
+import { getDoctors } from "@/store/doctorSlice";
+import {Doctor} from "@/types/doctor";
 import { AppDispatch, RootState } from "@/store/store";
 import Image from "next/image";
 
