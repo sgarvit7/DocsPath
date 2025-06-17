@@ -10,6 +10,8 @@ import {
 } from 'firebase/auth'
 import { auth } from '../../firebase/config'
 import { useRouter, useSearchParams  } from 'next/navigation'
+import { useDispatch } from 'react-redux'
+import { setEmail } from '@/store/userSlice'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
@@ -26,6 +28,7 @@ export default function SignInForm() {
   const [loading, setLoading] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const router = useRouter()
+  const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl');
 
@@ -48,6 +51,7 @@ export default function SignInForm() {
     try {
       const authenticatedUser = await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
+      dispatch(setEmail(authenticatedUser.user.email || "priya.sharma@example.com"));
       // console.log("returnUrl: ", returnUrl);
       router.push(returnUrl ?? '/')
     } catch (err) {

@@ -5,7 +5,7 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@/lib/prisma";
 import { uploadFileToCloudinary } from "../../../../../../cloudinary/uploadImageToCloudinary";
-import { Doctor } from "@/types/doctor";
+import { Doctor, DoctorDB } from "@/types/doctor";
 
 // Use /tmp/uploads on Vercel, and local folder in development
 const UPLOAD_DIR =
@@ -271,40 +271,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export interface DoctorDB {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
 
-  // Personal Information
-  fullName: string;
-  emailAddress: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  gender: string;
-  profilePhoto: string | null;
-
-  // Professional Details
-  medicalLicenseNumber: string;
-  specialization: string;
-  yearsOfExperience: string;
-  associatedClinicHospitalName: string;
-  consultationType: string;
-
-  // Verification Documents
-  governmentIssuedId: string | null;
-  medicalDegreeCertificate: string | null;
-  medicalCouncilRegistrationCertificate: string | null;
-  experienceCertificate: string | null;
-
-  // Work Schedule Preferences
-  availableConsultationHours: string;
-  preferredModeOfConsultation: string;
-  languageSpoken: string;
-  additionalInformation: string | null;
-  emergencyContactDetails: string;
-  personalBio: string | null;
-}
 
 const formatDoctorDetails = (data: DoctorDB): Doctor => ({
   id: data.id,
@@ -338,8 +305,8 @@ const formatDoctorDetails = (data: DoctorDB): Doctor => ({
     emergencyContactDetails: data.emergencyContactDetails,
     personalBio: data.personalBio ?? undefined,
   },
-  createdAt: data.createdAt.toISOString() ?? undefined,
-  updatedAt: data.updatedAt.toISOString() ?? undefined,
+  createdAt: data.createdAt ?? undefined,
+  updatedAt: data.updatedAt ?? undefined,
 });
 
 export async function GET() {

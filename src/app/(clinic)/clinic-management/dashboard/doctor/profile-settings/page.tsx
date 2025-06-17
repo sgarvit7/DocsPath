@@ -1,12 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import Image from 'next/image';
 import { X, Award, Power } from 'lucide-react';
 import { Edit, Briefcase, GraduationCap, Lock } from 'lucide-react';
 import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import PhoneInput from '@/components/publicPageComponents/PhoneInput';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { Doctor} from '@/types/doctor'; // Adjust the import path as necessary
 
 interface ProfileItem {
   label: string;
@@ -76,6 +80,30 @@ const ProfileSettings: React.FC = () => {
     cancellations: false,
     appointmentReminders: true
   });
+
+  const email = useSelector((state: RootState) => state.user.email);
+    // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
+    const [userEmail, setUserEmail] = useState("");
+    const [doctorData, setDoctorData] = useState<Doctor | null>(null);
+    useEffect(() => {
+      setUserEmail(email || "priya.sharma@example.com");
+    }, []);
+  
+  
+    useEffect(() => {
+      console.log("Email: ", userEmail);
+      axios
+        .get(`/api/doctor?email=${encodeURIComponent(userEmail)}`)
+        .then((response) => {
+          setDoctorData(response.data.doctor);
+          console.log("Admin profiles fetched:", response.data);
+           // Assuming the response contains an array of admins
+          
+        })
+        .catch((error) => {
+          console.error("Error fetching admin profiles:", error);
+        });
+    }, [userEmail]);
 
   // Profile data as dictionary of arrays with label-value pairs
   const profileData: ProfileData = {
