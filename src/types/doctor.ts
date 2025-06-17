@@ -49,7 +49,7 @@ export interface Doctor {
     phoneNumber: string;
     dateOfBirth: string;
     gender: string;
-    profilePhoto?: string;
+    profilePhoto?: string | null;
   };
   professionalDetails: {
     medicalLicenseNumber: string;
@@ -59,21 +59,57 @@ export interface Doctor {
     consultationType: string;
   };
   verificationDocument: {
-    governmentIssuedId?: string;
-    medicalDegreeCertificate?: string;
-    medicalCouncilRegistrationCertificate?: string;
-    experienceCertificate?: string;
+    governmentIssuedId?: string | null;
+    medicalDegreeCertificate?: string | null;
+    medicalCouncilRegistrationCertificate?: string | null;
+    experienceCertificate?: string | null;
   };
   workSchedulePreferences: {
     availableConsultationHours: string;
     preferredModeOfConsultation: string;
     languageSpoken: string;
-    additionalInformation?: string;
-    emergencyContactDetails: string;
-    personalBio?: string;
+    additionalInformation?: string | null;
+    emergencyContactDetails: string | null;
+    personalBio?: string | null;
   };
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface DoctorDB {
+  id?: string;
+
+  // Personal Information
+  fullName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  gender: string;
+  profilePhoto?: string | null;
+
+  // Professional Details
+  medicalLicenseNumber: string;
+  specialization: string;
+  yearsOfExperience: string;
+  associatedClinicHospitalName: string;
+  consultationType: string;
+
+  // Verification Documents
+  governmentIssuedId?: string | null;
+  medicalDegreeCertificate?: string | null;
+  medicalCouncilRegistrationCertificate?: string | null;
+  experienceCertificate?: string | null;
+
+  // Work Schedule Preferences
+  availableConsultationHours: string;
+  preferredModeOfConsultation: string;
+  languageSpoken: string;
+  additionalInformation?: string | null;
+  emergencyContactDetails: string;
+  personalBio?: string | null;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface DoctorOnboardingState {

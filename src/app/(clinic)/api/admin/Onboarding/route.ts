@@ -67,143 +67,41 @@ interface DocumentInfo {
 
 export async function POST(request: NextRequest) {
   try {
-    // Ensure upload directory exists
-    await ensureUploadDir();
+    const body = await request.json();
 
-    // Parse the form data
-    const formData = await request.formData();
-
-    // Extract admin data
-    const managementType = formData.get("managementType") as string;
-
-    // Extract personal info
-    const personalInfo = {
-      fullName: formData.get("personalInfo.fullName") as string,
-      email: formData.get("personalInfo.email") as string,
-      phone: formData.get("personalInfo.phone") as string,
-      designation: formData.get("personalInfo.designation") as string,
-    };
-
-    // Extract clinic info
-    const clinicInfo = {
-      clinicName: formData.get("clinicInfo.clinicName") as string,
-      clinicType: formData.get("clinicInfo.clinicType") as string,
-      registrationNumber: formData.get(
-        "clinicInfo.registrationNumber"
-      ) as string,
-      establishmentYear: formData.get("clinicInfo.establishmentYear") as string,
-      address: formData.get("clinicInfo.address") as string,
-    };
-
-    // Handle file uploads and store metadata
-    const documents: DocumentInfo = {
-      departments: formData.get("documents.departments") as string,
-      doctorsCount: formData.get("documents.doctorsCount") as string,
-      communicationMode: formData.get("documents.communicationMode") as string,
-    };
-
-    // Process government ID file
-    const governmentIdFile = formData.get(
-      "documents.governmentId"
-    ) as File | null;
-    if (governmentIdFile && governmentIdFile instanceof File) {
-      const { cloudinaryUrl, originalName } = await processFile(
-        governmentIdFile
-      );
-      documents.governmentIdUrl = cloudinaryUrl;
-      documents.governmentIdOriginalName = originalName;
-    }
-
-    // Process registration certificate file
-    const registrationCertFile = formData.get(
-      "documents.registrationCertificate"
-    ) as File | null;
-    if (registrationCertFile && registrationCertFile instanceof File) {
-      const { cloudinaryUrl, originalName } = await processFile(
-        registrationCertFile
-      );
-      documents.registrationCertificateUrl = cloudinaryUrl;
-      documents.registrationCertificateOriginalName = originalName;
-    }
-
-    // Process accreditation file (optional)
-    const accreditationFile = formData.get(
-      "documents.accreditation"
-    ) as File | null;
-    if (accreditationFile && accreditationFile instanceof File) {
-      const { cloudinaryUrl, originalName } = await processFile(
-        accreditationFile
-      );
-      documents.accreditationUrl = cloudinaryUrl;
-      documents.accreditationOriginalName = originalName;
-    }
-
-    // Save admin data to the database using Prisma
     const savedAdmin = await prisma.admin.create({
       data: {
-        managementType,
-        // Personal info
-        fullName: personalInfo.fullName,
-        email: personalInfo.email,
-        phone: personalInfo.phone,
-        designation: personalInfo.designation,
-        // Clinic info
-        clinicName: clinicInfo.clinicName,
-        clinicType: clinicInfo.clinicType,
-        registrationNumber: clinicInfo.registrationNumber,
-        establishmentYear: clinicInfo.establishmentYear,
-        address: clinicInfo.address,
-        // Documents info
-        departments: documents.departments,
-        doctorsCount: documents.doctorsCount,
-        communicationMode: documents.communicationMode,
-        // File URLs (cloudinary links now instead of local paths)
-        governmentIdPath: documents.governmentIdUrl,
-        governmentIdOriginalName: documents.governmentIdOriginalName,
-        registrationCertificatePath: documents.registrationCertificateUrl,
-        registrationCertificateOriginalName:
-          documents.registrationCertificateOriginalName,
-        accreditationPath: documents.accreditationUrl,
-        accreditationOriginalName: documents.accreditationOriginalName,
+        managementType: body.managementType,
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        designation: body.designation,
+        clinicName: body.clinicName,
+        clinicType: body.clinicType,
+        registrationNumber: body.registrationNumber,
+        establishmentYear: body.establishmentYear,
+        address: body.address,
+        departments: body.departments,
+        doctorsCount: body.doctorsCount,
+        communicationMode: body.communicationMode // if profilePicture used on frontend
       },
     });
-
-    // const options = {
-    //   method: 'POST',
-    //   url: 'https://doctor-verification.p.rapidapi.com/',
-    //   headers: {
-    //     'x-rapidapi-key': 'd2c00ff55amsha5d6bf399bb7601p10be96jsn6c78a162bcf3',
-    //     'x-rapidapi-host': 'doctor-verification.p.rapidapi.com',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   data: {
-    //     registrationNo: '117419'
-    //   }
-    // };
-
-    // try {
-    // 	const response = await axios.request(options);
-    // 	console.log("wow --> ",response.data);
-    // } catch (error) {
-    // 	console.error(error);
-    // }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Admin registration completed successfully",
+        message: "Admin created successfully",
         adminId: savedAdmin.id,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error processing admin registration:", error);
-
+    console.error("Error saving admin:", error);
     return NextResponse.json(
       {
         success: false,
         message:
-          error instanceof Error ? error.message : "An unknown error occurred",
+          error instanceof Error ? error.message : "Something went wrong",
       },
       { status: 500 }
     );
