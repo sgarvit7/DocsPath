@@ -15,16 +15,28 @@ export default function ProfileSettings() {
     { label: "Full Name", value: adminData?.fullName || "Maya J." },
     { label: "Phone", value: adminData?.phone || "+91 123 456 7890" },
     { label: "Email address", value: adminData?.email || "Maya1223@gmail.com" },
-    { label: "Emergency Contact", value: adminData?.phone || "+91 323 123 456" },
-    { label: "Admin Med. ID", value: adminData?.registrationNumber || "#11111" },
-    { label: "Home Address", value: adminData?.address || "New Delhi / St.Patron 63" },
+    {
+      label: "Emergency Contact",
+      value: adminData?.phone || "+91 323 123 456",
+    },
+    {
+      label: "Admin Med. ID",
+      value: adminData?.registrationNumber || "#11111",
+    },
+    {
+      label: "Home Address",
+      value: adminData?.address || "New Delhi / St.Patron 63",
+    },
   ];
 
   const workSettings = [
     { label: "Location", value: adminData?.address || "Mumbai" },
-    { label: "Name of Hospital", value: adminData?.clinicName || "Saint Pavel Hospital" },
+    {
+      label: "Name of Hospital",
+      value: adminData?.clinicName || "Saint Pavel Hospital",
+    },
     { label: "Time Zone", value: "00:00:00+hv" },
-    { label: "Preferred Language", value:"No language chosen" },
+    { label: "Preferred Language", value: "No language chosen" },
     { label: "Add new Staff Member", value: "( Nurses, Admin, Staff, ect. )" },
     { label: "Change Payment Plan", value: "Change current plan" },
   ];
@@ -32,7 +44,6 @@ export default function ProfileSettings() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
-
 
   const email = useSelector((state: RootState) => state.user.email);
   // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
@@ -42,16 +53,15 @@ export default function ProfileSettings() {
     setUserEmail(email || "priya.sharma@example.com");
   }, []);
 
-
   useEffect(() => {
+    if (!userEmail) return;
+
     console.log("Email: ", userEmail);
     axios
-      .get(`/api/admin?email=${encodeURIComponent(userEmail)}`)
+      .post("/api/admin", { email: userEmail })
       .then((response) => {
         setAdminData(response.data.admin);
         console.log("Admin profiles fetched:", response.data);
-         // Assuming the response contains an array of admins
-        
       })
       .catch((error) => {
         console.error("Error fetching admin profiles:", error);

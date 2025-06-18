@@ -39,18 +39,21 @@ function unflattenDoctor(flat: DoctorDB): Doctor {
   };
 }
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const email = searchParams.get('email');
 
-  if (!email) {
-    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
-  }
 
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const email = body.email;
+
+    if (!email) {
+      const doctors = await prisma.doctor.findMany();
+      return NextResponse.json(doctors, { status: 200 });
+    }
+
     const doctor = await prisma.doctor.findFirst({
       where: {
-        emailAddress: email, // Adjust this if nested JSON structure
+        emailAddress: email,
       },
     });
 
@@ -59,6 +62,22 @@ export async function GET(req: NextRequest) {
     }
 
     const flattened = unflattenDoctor(doctor as DoctorDB);
+    return NextResponse.json(flattened, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching doctor:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const doctors = await prisma.doctor.findMany();
+
+    if (!doctors) {
+      return NextResponse.json({ error: 'Doctors not found' }, { status: 404 });
+    }
+
+    const flattened = doctors.map((doctor) => unflattenDoctor(doctor as DoctorDB));
     return NextResponse.json(flattened, { status: 200 });
   } catch (error) {
     console.error('Error fetching doctor:', error);

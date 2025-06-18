@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState , useEffect} from 'react';
-import Image from 'next/image';
-import { X, Award, Power } from 'lucide-react';
-import { Edit, Briefcase, GraduationCap, Lock } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { X, Award, Power } from "lucide-react";
+import { Edit, Briefcase, GraduationCap, Lock } from "lucide-react";
 import image from "./../../../../../assets/doctor-profile.jpg";
-import { FaMapMarkerAlt } from 'react-icons/fa';
-import PhoneInput from '@/components/publicPageComponents/PhoneInput';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { Doctor} from '@/types/doctor'; // Adjust the import path as necessary
+import { FaMapMarkerAlt } from "react-icons/fa";
+import PhoneInput from "@/components/publicPageComponents/PhoneInput";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { Doctor } from "@/types/doctor"; // Adjust the import path as necessary
 
 interface ProfileItem {
   label: string;
@@ -38,31 +38,37 @@ interface ProfileData {
 interface ToggleSwitchProps {
   enabled: boolean;
   onToggle: () => void;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle, size = 'md' }) => {
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
+  enabled,
+  onToggle,
+  size = "md",
+}) => {
   // Define size classes
   const sizeClasses = {
     sm: {
-      container: 'h-4 w-8',
-      knob: 'h-3 w-3',
-      translate: enabled ? 'translate-x-5' : 'translate-x-1'
+      container: "h-4 w-8",
+      knob: "h-3 w-3",
+      translate: enabled ? "translate-x-5" : "translate-x-1",
     },
     md: {
-      container: 'h-6 w-11',
-      knob: 'h-4 w-4',
-      translate: enabled ? 'translate-x-6' : 'translate-x-1'
+      container: "h-6 w-11",
+      knob: "h-4 w-4",
+      translate: enabled ? "translate-x-6" : "translate-x-1",
     },
     lg: {
-      container: 'h-8 w-16',
-      knob: 'h-6 w-6',
-      translate: enabled ? 'translate-x-8' : 'translate-x-1'
-    }
+      container: "h-8 w-16",
+      knob: "h-6 w-6",
+      translate: enabled ? "translate-x-8" : "translate-x-1",
+    },
   }[size];
 
   return (
     <div
-      className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${sizeClasses.container} ${enabled ? 'bg-teal-600' : 'bg-gray-300'}`}
+      className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
+        sizeClasses.container
+      } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
       onClick={onToggle}
     >
       <span
@@ -78,42 +84,48 @@ const ProfileSettings: React.FC = () => {
     email: true,
     newBookings: true,
     cancellations: false,
-    appointmentReminders: true
+    appointmentReminders: true,
   });
 
   const email = useSelector((state: RootState) => state.user.email);
-    // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
-    const [userEmail, setUserEmail] = useState("");
-    const [doctorData, setDoctorData] = useState<Doctor | null>(null);
-    useEffect(() => {
-      setUserEmail(email || "priya.sharma@example.com");
-    }, []);
-  
-  
-    useEffect(() => {
-      console.log("Email: ", userEmail);
-      axios
-        .get(`/api/doctor?email=${encodeURIComponent(userEmail)}`)
-        .then((response) => {
-          setDoctorData(response.data.doctor);
-          console.log("Admin profiles fetched:", response.data);
-           // Assuming the response contains an array of admins
-          
-        })
-        .catch((error) => {
-          console.error("Error fetching admin profiles:", error);
-        });
-    }, [userEmail]);
+  // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
+  const [userEmail, setUserEmail] = useState("");
+  const [doctorData, setDoctorData] = useState<Doctor | null>(null);
+  useEffect(() => {
+    setUserEmail(email || "ananya.sharma@example.com"); // Replace with actual email from Redux or context
+  }, []);
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    axios
+      .post(
+        "/api/doctor",
+        { email: userEmail },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        setDoctorData(response.data);
+        console.log("Doctor profile fetched:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctor profile:", error);
+      });
+  }, [userEmail]);
 
   // Profile data as dictionary of arrays with label-value pairs
   const profileData: ProfileData = {
     permanentAddress: [
       { label: "State/District", value: "Kerala" },
       { label: "Town / Village", value: "Leecia, East London" },
-      { label: "Street /Area/Locality", value: "Dermatology" },
+      { label: "Street /Area/Locality", value: doctorData?.professionalDetails?.specialization || "Dermatology" },
       { label: "Pin Code", value: "6834602" },
       { label: "Post Office", value: "EST 524" },
-      { label: "House No", value: "a 67M" }
+      { label: "House No", value: "a 67M" },
     ],
     currentAddress: [
       { label: "State/District", value: "South India" },
@@ -121,7 +133,7 @@ const ProfileSettings: React.FC = () => {
       { label: "Street /Area/Locality", value: "Dermatology" },
       { label: "Pin Code", value: "6834602" },
       { label: "Post Office", value: "EST 524" },
-      { label: "House No", value: "a 67M" }
+      { label: "House No", value: "a 67M" },
     ],
     personalInformation: [
       { label: "First Name", value: "Mira" },
@@ -139,7 +151,7 @@ const ProfileSettings: React.FC = () => {
       { label: "Specialization", value: "Dermatology" },
       { label: "Consultation type", value: "All type consulting" },
       { label: "Years of practice", value: "6" },
-      { label: "Languages", value: "English,Hindi" }
+      { label: "Languages", value: "English,Hindi" },
     ],
     professionalEducation: [
       { label: "1.Graduation - Medical College", value: "Name of Uni..." },
@@ -147,7 +159,7 @@ const ProfileSettings: React.FC = () => {
       { label: "Field of practice", value: "Acute Care" },
       { label: "Year of graduation", value: "2009" },
       { label: "Qualifications", value: "MBBS" },
-      { label: "Years of practice", value: "6" }
+      { label: "Years of practice", value: "6" },
     ],
     availabilityWorkingHours: [
       { label: "Emergency Availability", value: "Yes" },
@@ -155,7 +167,7 @@ const ProfileSettings: React.FC = () => {
       { label: "Working Days", value: "Mon-Wed-Fri" },
       { label: "Teleconsultation Availability", value: "✓" },
       { label: "Maximum Appointments Per Day", value: "5" },
-      { label: "Working Hours", value: "08:00 - 17:00 h every working day" }
+      { label: "Working Hours", value: "08:00 - 17:00 h every working day" },
     ],
     passwords: [
       { label: "Your password", value: "kisjdkacij8677" },
@@ -163,36 +175,39 @@ const ProfileSettings: React.FC = () => {
       { label: "Working with E-Signature", value: "+Add" },
       { label: "Set patient booking window", value: "" },
       { label: "Repeat new password", value: "" },
-      { label: "Minimum & maximum time prior to appointments", value: "Min 0  Max 0" }
-    ]
+      {
+        label: "Minimum & maximum time prior to appointments",
+        value: "Min 0  Max 0",
+      },
+    ],
   };
 
   const toggleNotification = (key: keyof NotificationState): void => {
-    setNotifications(prev => ({
+    setNotifications((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
   const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => (
-    <div 
+    <div
       className={`relative inline-flex h-4 w-8 items-center rounded-full cursor-pointer transition-colors ${
-        enabled ? 'bg-teal-600' : 'bg-gray-300'
+        enabled ? "bg-teal-600" : "bg-gray-300"
       }`}
       onClick={onToggle}
     >
       <span
         className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-          enabled ? 'translate-x-4' : 'translate-x-1'
+          enabled ? "translate-x-4" : "translate-x-1"
         }`}
       />
     </div>
   );
 
   const renderSection = (
-    title: string, 
-    icon: React.ReactNode, 
-    data: ProfileItem[], 
+    title: string,
+    icon: React.ReactNode,
+    data: ProfileItem[],
     columns: number = 3
   ): React.ReactElement => (
     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -208,11 +223,13 @@ const ProfileSettings: React.FC = () => {
           <Edit className="w-4 h-4" />
         </button>
       </div>
-      
+
       <div className={`grid grid-cols-${columns} gap-8`}>
         {data.map((item, index) => (
           <div key={index}>
-            <p className="text-sm font-medium text-teal-700 mb-1">{item.label}</p>
+            <p className="text-sm font-medium text-teal-700 mb-1">
+              {item.label}
+            </p>
             <p className="text-gray-800 font-medium">{item.value}</p>
           </div>
         ))}
@@ -221,9 +238,9 @@ const ProfileSettings: React.FC = () => {
   );
 
   const renderPersonalSection = (
-    title: string, 
-    icon: React.ReactNode, 
-    data: ProfileItem[], 
+    title: string,
+    icon: React.ReactNode,
+    data: ProfileItem[],
     columns: number = 3
   ): React.ReactElement => (
     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -239,11 +256,13 @@ const ProfileSettings: React.FC = () => {
           <Edit className="w-4 h-4" />
         </button>
       </div>
-      
+
       <div className={`grid grid-cols-${columns} gap-8`}>
         {data.map((item, index) => (
           <div key={index}>
-            <p className="text-sm font-medium text-teal-700 mb-1">{item.label}</p>
+            <p className="text-sm font-medium text-teal-700 mb-1">
+              {item.label}
+            </p>
             <p className="text-gray-800 font-medium">{item.value}</p>
           </div>
         ))}
@@ -252,9 +271,9 @@ const ProfileSettings: React.FC = () => {
   );
 
   const renderSpecialSection = (
-    title: string, 
-    icon: React.ReactNode, 
-    data: ProfileItem[], 
+    title: string,
+    icon: React.ReactNode,
+    data: ProfileItem[],
     columns: number = 4, // Default to 4 columns
     specialLayout: boolean = false
   ): React.ReactElement => (
@@ -271,7 +290,7 @@ const ProfileSettings: React.FC = () => {
           <Edit className="w-4 h-4" />
         </button>
       </div>
-      
+
       {specialLayout ? (
         // Special layout for availability section
         <div className="space-y-4">
@@ -308,7 +327,7 @@ const ProfileSettings: React.FC = () => {
           ))}
         </div>
       )}
-      
+
       {title === "Professional Education" && (
         <div className="mt-4 flex items-center text-sm text-gray-500">
           <span className="mr-2">📎</span>
@@ -348,13 +367,11 @@ const ProfileSettings: React.FC = () => {
       <div className="flex mt-10">
         {/* Sidebar */}
         <div className="w-80 bg-white h-screen shadow-sm fixed">
-          {/* Profile Section */} 
+          {/* Profile Section */}
           <div className="p-6">
-  
-            
             <div className="flex justify-center items-center">
               <div className="relative border-4 border-teal-500 rounded-full">
-                <Image 
+                <Image
                   src={image}
                   alt="Dr. Mira Moreno"
                   className="rounded-full object-cover h-30 w-30"
@@ -375,43 +392,45 @@ const ProfileSettings: React.FC = () => {
 
           {/* Notifications Section */}
           <div className="px-4 ml-5 my-5">
-            <h4 className="font-bold text-medium text-gray-800 mb-4">Notifications</h4>
+            <h4 className="font-bold text-medium text-gray-800 mb-4">
+              Notifications
+            </h4>
             <div className="font-8 space-y-1 text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">SMS Notifications</span>
-                <ToggleSwitch 
+                <ToggleSwitch
                   enabled={notifications.sms}
-                  onToggle={() => toggleNotification('sms')}
-                  size='lg'
+                  onToggle={() => toggleNotification("sms")}
+                  size="lg"
                 />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">Email Notifications</span>
-                <ToggleSwitch 
+                <ToggleSwitch
                   enabled={notifications.email}
-                  onToggle={() => toggleNotification('email')}
-                  size='md'
+                  onToggle={() => toggleNotification("email")}
+                  size="md"
                 />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">New bookings</span>
-                <ToggleSwitch 
+                <ToggleSwitch
                   enabled={notifications.newBookings}
-                  onToggle={() => toggleNotification('newBookings')}
+                  onToggle={() => toggleNotification("newBookings")}
                 />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-700">Cancellations</span>
-                <ToggleSwitch 
+                <ToggleSwitch
                   enabled={notifications.cancellations}
-                  onToggle={() => toggleNotification('cancellations')}
+                  onToggle={() => toggleNotification("cancellations")}
                 />
               </div>
               <div className="flex items-center justify-between txt-sm">
                 <span className="text-gray-700">Appointment reminders</span>
-                <ToggleSwitch 
+                <ToggleSwitch
                   enabled={notifications.appointmentReminders}
-                  onToggle={() => toggleNotification('appointmentReminders')}
+                  onToggle={() => toggleNotification("appointmentReminders")}
                 />
               </div>
             </div>
@@ -421,8 +440,13 @@ const ProfileSettings: React.FC = () => {
           <div className="px-4">
             <h4 className="font-semibold text-gray-800 mb-3">More info Add</h4>
             <div className="text-sm leading-relaxed border-2 rounded-lg p-2 h-auto">
-              <p>Lorem ipsum dolor sit Lorem ipsum dolor sit Lorem ipsum dolor sit</p>
-              <p className="mt-2">Lorem ipsum dolor sit Lorem ipsum dolor sit</p>
+              <p>
+                Lorem ipsum dolor sit Lorem ipsum dolor sit Lorem ipsum dolor
+                sit
+              </p>
+              <p className="mt-2">
+                Lorem ipsum dolor sit Lorem ipsum dolor sit
+              </p>
             </div>
           </div>
 
@@ -440,34 +464,78 @@ const ProfileSettings: React.FC = () => {
         {/* Main Content Area */}
 
         <div className="flex-1 p-8 ml-80 w">
-          <div className="text-teal-900 text-left my-5 text-2xl font-semibold"> Profile & Settings</div>
+          <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
+            {" "}
+            Profile & Settings
+          </div>
           <div className="max-w-screen mx-auto space-y-6">
             <div className="shadow-sm p-6 bg-white rounded-lg mb-6">
-              <h3 className="text-3xl font-semibold text-teal-800 py-10">DR. Mira Moreno</h3>
-              <p className="text-teal-800 text-lg font-medium">Dermatologist<br></br>10+ Year of Practice</p>
-              <p className="text-lg text-gray-400 mt-1">Setting and details you can change</p>
+              <h3 className="text-3xl font-semibold text-teal-800 py-10">
+                DR. {doctorData?.personalInfo?.fullName}
+              </h3>
+              <p className="text-teal-800 text-lg font-medium">
+                {doctorData?.professionalDetails?.specialization}
+                <br></br>10+ Year of Practice
+              </p>
+              <p className="text-lg text-gray-400 mt-1">
+                Setting and details you can change
+              </p>
             </div>
             {/* Permanent Address */}
-            {renderSection("Permanent Address",<FaMapMarkerAlt className="w-5 h-5 text-teal-600" />, profileData.permanentAddress, 3)}
+            {renderSection(
+              "Permanent Address",
+              <FaMapMarkerAlt className="w-5 h-5 text-teal-600" />,
+              profileData.permanentAddress,
+              3
+            )}
 
             {/* Current Address */}
-            {renderSection("Current Address", <FaMapMarkerAlt className="w-5 h-5 text-teal-600" />, profileData.currentAddress, 3)}
+            {renderSection(
+              "Current Address",
+              <FaMapMarkerAlt className="w-5 h-5 text-teal-600" />,
+              profileData.currentAddress,
+              3
+            )}
 
             {/* Personal Information */}
-            {renderSection("Personal Information", "👤", profileData.personalInformation, 3)}
+            {renderSection(
+              "Personal Information",
+              "👤",
+              profileData.personalInformation,
+              3
+            )}
 
-            {/* Professional Information */}  
-            {renderSpecialSection("Professional Information", <Briefcase className="w-5 h-5 text-teal-600" />, profileData.professionalInformation, 4)}
+            {/* Professional Information */}
+            {renderSpecialSection(
+              "Professional Information",
+              <Briefcase className="w-5 h-5 text-teal-600" />,
+              profileData.professionalInformation,
+              4
+            )}
 
             {/* Professional Education */}
-            {renderSection("Professional Education", <GraduationCap className="w-5 h-5 text-teal-600" />, profileData.professionalEducation, 3)}
+            {renderSection(
+              "Professional Education",
+              <GraduationCap className="w-5 h-5 text-teal-600" />,
+              profileData.professionalEducation,
+              3
+            )}
 
             {/* Availability & Working hours */}
-            {renderSection("Availability & Working hours", "🕐", profileData.availabilityWorkingHours, 3)}
+            {renderSection(
+              "Availability & Working hours",
+              "🕐",
+              profileData.availabilityWorkingHours,
+              3
+            )}
 
             {/* Passwords */}
-            {renderSection("Passwords", <Lock className="w-5 h-5 text-teal-600" />, profileData.passwords, 2)}
-
+            {renderSection(
+              "Passwords",
+              <Lock className="w-5 h-5 text-teal-600" />,
+              profileData.passwords,
+              2
+            )}
           </div>
         </div>
       </div>
