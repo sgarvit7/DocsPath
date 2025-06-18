@@ -29,27 +29,27 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: BarChart3,
     label: "Dashboard",
-    link: "/clinic-management/dashboard/admin",
+    link: "/clinic-management/dashboard/doctor",
   },
   {
     icon: Users,
     label: "Patient Record",
-    link: "/clinic-management/dashboard/admin/patient-management",
+    link: "/clinic-management/dashboard/doctor/patient-record",
   },
   {
     icon: CalendarDays,
     label: "Appointments",
-    link: "/clinic-management/dashboard/admin/appointment",
+    link: "/clinic-management/dashboard/doctor/appointment",
   },
   {
     icon: ClipboardPlus,
     label: "Medical History",
-    link: "/clinic-management/dashboard/admin/medical-history",
+    link: "/clinic-management/dashboard/doctor/medical-history",
   },
   {
     icon: FileText,
     label: "Discharge Summary",
-    link: "/clinic-management/dashboard/admin/discharge-summary",
+    link: "/clinic-management/dashboard/doctor/discharge-summary",
   },
   {
     icon: ClipboardPenLine,
@@ -59,7 +59,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: FileText,
     label: "Lab Reports",
-    link: "/clinic-management/dashboard/admin/lab-reports",
+    link: "/clinic-management/dashboard/doctor/lab-reports",
   },
   {
     icon: Settings,
@@ -142,14 +142,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto z-0">
+        <div className="flex-1 flex-col overflow-auto mt-14">
           {/* Header */}
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-white border-b flex items-center justify-between w-auto"
+            className="bg-white border-b flex"
           >
-            <div className="bg-teal-600 text-white px-4 py-3 z-0 top-0 left-0 flex justify-end fixed w-screen z-10">
+            <div className="bg-teal-600 text-white px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
               <div className="flex items-center space-x-3">
                 <button className="bg-white text-teal-700 px-3 py-1 rounded text-sm font-medium">
                   Free trial

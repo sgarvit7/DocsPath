@@ -88,6 +88,11 @@ model Doctor {
   associatedClinicHospitalName String
   consultationType            String
 
+  //Education Details
+  medicalSchoolName           String
+  medicalSchoolGraduationYear String
+  medicalSchoolDegree         String
+
   // Verification Documents - Cloudinary URLs only
   governmentIssuedId                    String?
   medicalDegreeCertificate              String?

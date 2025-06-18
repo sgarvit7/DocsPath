@@ -1,657 +1,444 @@
-"use client";
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  // LineChart,
-  // Line,
-  Area,
-  AreaChart,
-} from "recharts";
-import {
-  Calendar,
-  Users,
-  // Activity,
-  FileText,
-  BarChart3,
-  Eye,
-  Phone,
-  MessageCircle,
-  Clock,
-  UserCheck,
-  // CalendarDays,
-  TrendingUp,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { useLayout } from "@/contexts/AdminLayoutContext";
-import Image from "next/image";
+'use client';
 
-// Types for better type safety
-interface ChartDataPoint {
-  month?: string;
-  day?: number;
+import React, { useState } from 'react';
+import { Calendar, Clock, Users, FileText, ChevronLeft, ChevronRight, Search, MoreHorizontal } from 'lucide-react';
+
+// Types
+interface Patient {
+  id: string;
+  name: string;
+  age: number;
+  gender: 'Male' | 'Female';
+  date: string;
+  mode: string;
+  condition: string;
+  status: 'Reschedule' | 'Cancel' | 'Upcoming';
+  consultation: string;
+  avatar: string;
+}
+
+interface LabReport {
+  day: string;
   value: number;
 }
 
-interface StatsData {
-  today: number;
-  change: number;
-  trend: "up" | "down";
-}
-
-interface ActiveDoctorsData {
-  available: number;
+interface AppointmentStats {
   total: number;
-  change: number;
-  trend: "up" | "down";
+  change: string;
 }
 
-interface RevenueData {
-  amount: number;
-  period: string;
-  change: number;
-  trend: "up" | "down";
-}
+const Dashboard: React.FC = () => {
+  const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
 
-interface QuickStatItem {
-  title: string;
-  value: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
+  // Sample data
+  const labReports: LabReport[] = [
+    { day: 'M', value: 15 },
+    { day: 'T', value: 8 },
+    { day: 'W', value: 3 },
+    { day: 'T', value: 18 },
+    { day: 'F', value: 25 },
+    { day: 'S', value: 6 },
+    { day: 'S', value: 12 }
+  ];
 
-interface PatientDetail {
-  pid: string;
-  name: string;
-  age: number;
-  gender: string;
-  date: string;
-  time: string;
-  type: string;
-  doctor: string;
-  specialty: string;
-  avatar: string;
-  action: string;
-}
-
-// Dummy data structure for easy customization
-const dashboardData = {
-  admin: {
-    name: "Admin",
-    avatar: "/api/placeholder/80/80",
-  },
-  paymentIncome: {
-    amount: 890.93,
-    trend: "up" as const,
-    chartData: [
-      { month: "Jan", value: 200 },
-      { month: "Feb", value: 150 },
-      { month: "Mar", value: 180 },
-      { month: "Apr", value: 220 },
-      { month: "May", value: 350 },
-      { month: "Jun", value: 320 },
-      { month: "Jul", value: 400 },
-      { month: "Aug", value: 380 },
-      { month: "Sep", value: 180 },
-      { month: "Oct", value: 160 },
-      { month: "Nov", value: 140 },
-      { month: "Dec", value: 120 },
-    ] as ChartDataPoint[],
-  },
-  stats: {
-    totalAppointments: {
-      today: 235,
-      change: 23,
-      trend: "up" as const,
-    } as StatsData,
-    activeDoctors: {
-      available: 23,
-      total: 130,
-      change: 23,
-      trend: "up" as const,
-    } as ActiveDoctorsData,
-    revenue: {
-      amount: 23000,
-      period: "Month",
-      change: 23,
-      trend: "up" as const,
-    } as RevenueData,
-  },
-  inputPatients: {
-    value: "1.6k",
-    change: 23,
-    trend: "up" as const,
-    chartData: [
-      { day: 1, value: 50 },
-      { day: 2, value: 80 },
-      { day: 3, value: 60 },
-      { day: 4, value: 90 },
-      { day: 5, value: 120 },
-      { day: 6, value: 100 },
-      { day: 7, value: 140 },
-    ] as ChartDataPoint[],
-  },
-  bedFree: {
-    value: 179,
-    change: 8.5,
-    trend: "up" as const,
-    chartData: [
-      { day: 1, value: 160 },
-      { day: 2, value: 170 },
-      { day: 3, value: 165 },
-      { day: 4, value: 175 },
-      { day: 5, value: 180 },
-      { day: 6, value: 179 },
-      { day: 7, value: 179 },
-    ] as ChartDataPoint[],
-  },
-  quickStats: {
-    freeInMoment: {
-      title: "Free in the moment",
-      value: "9 Doctors",
-      icon: UserCheck,
-    } as QuickStatItem,
-    labReports: {
-      title: "Lab Reports",
-      value: "13 Done",
-      icon: FileText,
-    } as QuickStatItem,
-    patientWaiting: {
-      title: "Patient Waiting",
-      value: "10 in Lobby",
-      icon: Clock,
-    } as QuickStatItem,
-  },
-  currentTime: {
-    time: "12:54",
-    period: "PM",
-    location: "Mumbai",
-  },
-  calendar: {
-    currentMonth: "November 2018",
-    selectedDate: 8,
-    dates: Array.from({ length: 30 }, (_, i) => i + 1),
-  },
-  patientDetails: [
+  const patients: Patient[] = [
     {
-      pid: "9999999",
-      name: "Ankit Wind",
+      id: '#0000',
+      name: 'Ankit Wind',
       age: 45,
-      gender: "Male",
-      date: "8-Apr-2022",
-      time: "13:00pm",
-      type: "OPD",
-      doctor: "Dr. Smith",
-      specialty: "Dentist",
-      avatar: "/api/placeholder/32/32",
-      action: "Reschedule",
+      gender: 'Male',
+      date: '10-Apr-2022 | 3:00pm',
+      mode: 'OPD',
+      condition: 'Fever',
+      status: 'Reschedule',
+      consultation: 'Join now',
+      avatar: 'AW'
     },
     {
-      pid: "#0000",
-      name: "ByeWind",
+      id: '#0000',
+      name: 'Byrdwind',
       age: 33,
-      gender: "Female",
-      date: "8-Apr-2022",
-      time: "13:00pm",
-      type: "OPD",
-      doctor: "Dr. Smith",
-      specialty: "Cardiologist",
-      avatar: "/api/placeholder/32/32",
-      action: "Confirm",
+      gender: 'Female',
+      date: '10-Apr-2022 | 3:00pm',
+      mode: 'Teleconsultation',
+      condition: 'Cold',
+      status: 'Cancel',
+      consultation: '-',
+      avatar: 'BW'
     },
     {
-      pid: "#0000",
-      name: "Ankit Wind",
+      id: '#0000',
+      name: 'Ankit Wind',
       age: 21,
-      gender: "Male",
-      date: "29-Apr-2022",
-      time: "13:00pm",
-      type: "Teleconsultation",
-      doctor: "Dr. Zoe",
-      specialty: "Pediatrician",
-      avatar: "/api/placeholder/32/32",
-      action: "Cancel",
+      gender: 'Male',
+      date: '10-Apr-2022 | 3:00pm',
+      mode: 'OPD',
+      condition: 'Diabetes',
+      status: 'Upcoming',
+      consultation: '-',
+      avatar: 'AW'
     },
     {
-      pid: "#0000",
-      name: "Anna Mayin",
+      id: '#0000',
+      name: 'Anna Mayin',
       age: 18,
-      gender: "Male",
-      date: "8-Apr-2022",
-      time: "13:00pm",
-      type: "OPD",
-      doctor: "Dr. Smith",
-      specialty: "ENT",
-      avatar: "/api/placeholder/32/32",
-      action: "Reschedule",
-    },
-  ] as PatientDetail[],
-};
+      gender: 'Male',
+      date: '10-Apr-2022 | 3:00pm',
+      mode: 'OPD',
+      condition: 'Coughing',
+      status: 'Cancel',
+      consultation: '-',
+      avatar: 'AM'
+    }
+  ];
 
-const AdminDashboard: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const { setAdminName, setAdminAvatar } = useLayout();
+  const hourlyData = [
+    { hour: '3:00', value: 85 },
+    { hour: '4:00', value: 95 },
+    { hour: '5:00', value: 65 },
+    { hour: '6:00', value: 75 },
+    { hour: '7:00', value: 55 },
+    { hour: '8:00', value: 45 },
+    { hour: '9:00', value: 35 },
+    { hour: '10:00', value: 25 }
+  ];
 
-useEffect(() => {
-  setAdminName(dashboardData.admin.name);
-  setAdminAvatar(dashboardData.admin.avatar);
-}, [dashboardData, setAdminName, setAdminAvatar]);
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+    
+    return days;
+  };
+
+  const formatMonth = (date: Date) => {
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(prev.getMonth() - 1);
+      } else {
+        newDate.setMonth(prev.getMonth() + 1);
+      }
+      return newDate;
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Reschedule':
+        return 'bg-orange-100 text-orange-600 border-orange-200';
+      case 'Cancel':
+        return 'bg-red-100 text-red-600 border-red-200';
+      case 'Upcoming':
+        return 'bg-green-100 text-green-600 border-green-200';
+      default:
+        return 'bg-gray-100 text-gray-600 border-gray-200';
+    }
+  };
+
+  const getAvatarColor = (name: string) => {
+    const colors = [
+      'bg-blue-500',
+      'bg-green-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500'
+    ];
+    return colors[name.length % colors.length];
+  };
+
   return (
-    <div className="p-6 space-y-6">
-      {/* Top Row - Payment Income Chart */}
-      <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Payment income</p>
-                <p className="text-2xl font-bold">
-                  ${dashboardData.paymentIncome.amount}
-                </p>
-              </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={dashboardData.paymentIncome.chartData}>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} />
-                <YAxis hide />
-                <Bar dataKey="value" fill="#0d9488" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Stats Cards */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card className="border-l-4 border-l-blue-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <Calendar className="w-8 h-8 text-blue-500" />
-                    <Badge
-                      variant="secondary"
-                      className="text-green-600 bg-green-50"
-                    >
-                      +{dashboardData.stats.totalAppointments.change}%
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Total Appointment
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {dashboardData.stats.totalAppointments.today} Today
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Card className="border-l-4 border-l-teal-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <Users className="w-8 h-8 text-teal-500" />
-                    <Badge
-                      variant="secondary"
-                      className="text-green-600 bg-green-50"
-                    >
-                      +{dashboardData.stats.activeDoctors.change}%
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    All Active Doctors Today
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {dashboardData.stats.activeDoctors.available}/
-                    {dashboardData.stats.activeDoctors.total} Available
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Card className="border-l-4 border-l-green-500">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <BarChart3 className="w-8 h-8 text-green-500" />
-                    <Badge
-                      variant="secondary"
-                      className="text-green-600 bg-green-50"
-                    >
-                      +{dashboardData.stats.revenue.change}%
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">Revenue Summary</p>
-                  <p className="text-2xl font-bold">
-                    {dashboardData.stats.revenue.amount.toLocaleString()}{" "}
-                    {dashboardData.stats.revenue.period}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
+    <div className="min-h-screen bg-gray-50 p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-teal-600 flex items-center justify-center">
+            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-teal-600 rounded-full"></div>
+            </div>
           </div>
-
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Input Patients</p>
-                      <p className="text-2xl font-bold">
-                        {dashboardData.inputPatients.value}
-                      </p>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="text-green-600 bg-green-50"
-                    >
-                      +{dashboardData.inputPatients.change}%
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={100}>
-                    <AreaChart data={dashboardData.inputPatients.chartData}>
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        stroke="#10b981"
-                        fill="#10b981"
-                        fillOpacity={0.1}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Bed free</p>
-                      <p className="text-2xl font-bold">
-                        {dashboardData.bedFree.value}
-                      </p>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="text-green-600 bg-green-50"
-                    >
-                      +{dashboardData.bedFree.change}%
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={100}>
-                    <AreaChart data={dashboardData.bedFree.chartData}>
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        stroke="#10b981"
-                        fill="#10b981"
-                        fillOpacity={0.1}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Right Column - Calendar and Quick Stats */}
-        <div className="space-y-6">
-          {/* Calendar */}
-          <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center">
-                  {dashboardData.calendar.currentMonth}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-7 gap-1 text-center text-xs mb-2">
-                  {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
-                    (day) => (
-                      <div key={day} className="p-1 font-medium text-gray-500">
-                        {day}
-                      </div>
-                    )
-                  )}
-                </div>
-                <div className="grid grid-cols-7 gap-1 text-center">
-                  <div className="p-2 text-gray-400">31</div>
-                  {dashboardData.calendar.dates.map((date) => (
-                    <div
-                      key={date}
-                      className={`p-2 text-sm cursor-pointer rounded ${
-                        date === dashboardData.calendar.selectedDate
-                          ? "bg-teal-600 text-white"
-                          : "hover:bg-gray-100"
-                      }`}
-                    >
-                      {date}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Time and Location */}
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9 }}
-          >
-            <Card className="bg-gradient-to-r from-teal-500 to-teal-600 text-white">
-              <CardContent className="p-6">
-                <p className="text-sm opacity-90">
-                  {dashboardData.currentTime.location}
-                </p>
-                <p className="text-3xl font-bold">
-                  {dashboardData.currentTime.time}
-                  <span className="text-lg ml-1">
-                    {dashboardData.currentTime.period}
-                  </span>
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Quick Stats */}
-          <div className="space-y-4">
-            {Object.entries(dashboardData.quickStats).map(
-              ([key, stat], index) => (
-                <motion.div
-                  key={key}
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 1 + index * 0.1 }}
-                >
-                  <Card>
-                    <CardContent className="p-4 flex items-center gap-3">
-                      <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-                        <stat.icon className="w-5 h-5 text-teal-600" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-600">{stat.title}</p>
-                        <p className="font-semibold">{stat.value}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            )}
-          </div>
+          <h1 className="text-2xl font-semibold text-teal-700">Welcome, Dr. Max</h1>
         </div>
       </div>
 
-      {/* Patient Details Table */}
-      <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1.3 }}
-      >
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Details Table</CardTitle>
-              <Input
-                placeholder="Search by..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-64"
-              />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Lab Reports Chart */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border">
+            <h3 className="text-lg font-medium mb-4">Lab Reports</h3>
+            <div className="flex items-end justify-between h-40 gap-2">
+              {labReports.map((report, index) => (
+                <div key={index} className="flex flex-col items-center gap-2 flex-1">
+                  <div 
+                    className="bg-teal-600 rounded-t-sm w-full transition-all duration-300 hover:bg-teal-700"
+                    style={{ height: `${(report.value / 30) * 100}%` }}
+                  ></div>
+                  <span className="text-sm text-gray-600">{report.day}</span>
+                </div>
+              ))}
             </div>
-          </CardHeader>
-          <CardContent>
+            <p className="text-center text-sm text-gray-500 mt-2">Week days</p>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-xl p-4 shadow-sm border">
+              <div className="flex items-center gap-3">
+                <Calendar className="w-8 h-8 text-teal-600" />
+                <div>
+                  <p className="text-sm text-gray-600">Month</p>
+                  <p className="text-lg font-semibold">231 Last Month</p>
+                  <p className="text-sm text-gray-500">Total Appointments <span className="text-green-500">+23%</span></p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-4 shadow-sm border">
+              <div className="flex items-center gap-3">
+                <FileText className="w-8 h-8 text-teal-600" />
+                <div>
+                  <p className="text-sm text-gray-600">Month</p>
+                  <p className="text-lg font-semibold">11 to be Issued /Month</p>
+                  <p className="text-sm text-gray-500">Pending Prescriptions</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-4 shadow-sm border">
+              <div>
+                <p className="text-sm text-gray-600">Bed free</p>
+                <p className="text-2xl font-bold">179</p>
+                <p className="text-sm text-green-500">+8.50%</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Patient Details Table */}
+          <div className="bg-white rounded-xl shadow-sm border">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h3 className="text-lg font-medium">Patient Details</h3>
+              <div className="flex items-center gap-2">
+                <button className="text-teal-600 hover:text-teal-700">See all</button>
+                <MoreHorizontal className="w-4 h-4 text-gray-400" />
+              </div>
+            </div>
+            
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      PID
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Name
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Age/Gender
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Date
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Type
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Doctor
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Specialty
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Prescriptions
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Contact
-                    </th>
-                    <th className="text-left p-3 font-medium text-gray-600">
-                      Action
-                    </th>
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">PID</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Name</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Age/Gender</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Date</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Mode</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Condition</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Status</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Consultation</th>
+                    <th className="text-left p-3 text-sm font-medium text-gray-600">Prescription</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {dashboardData.patientDetails.map((patient, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="p-3">{patient.pid}</td>
+                  {patients.map((patient, index) => (
+                    <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="p-3 text-sm">{patient.id}</td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
-                          <Image
-                            src={patient.avatar}
-                            alt={patient.name}
-                            width={32}
-                            height={32}
-                            className="rounded-full"
-                          />
-                          {patient.name}
+                          <div className={`w-8 h-8 rounded-full ${getAvatarColor(patient.name)} flex items-center justify-center text-white text-xs font-medium`}>
+                            {patient.avatar}
+                          </div>
+                          <span className="text-sm font-medium">{patient.name}</span>
                         </div>
                       </td>
+                      <td className="p-3 text-sm">{patient.age}/{patient.gender}</td>
+                      <td className="p-3 text-sm">{patient.date}</td>
+                      <td className="p-3 text-sm">{patient.mode}</td>
+                      <td className="p-3 text-sm">{patient.condition}</td>
                       <td className="p-3">
-                        {patient.age}/{patient.gender}
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(patient.status)}`}>
+                          {patient.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-sm">
+                        {patient.consultation === 'Join now' ? (
+                          <button className="text-teal-600 hover:text-teal-700 text-sm">
+                            {patient.consultation}
+                          </button>
+                        ) : (
+                          patient.consultation
+                        )}
                       </td>
                       <td className="p-3">
-                        {patient.date}|{patient.time}
-                      </td>
-                      <td className="p-3">
-                        <Badge
-                          variant={
-                            patient.type === "OPD" ? "default" : "secondary"
-                          }
-                        >
-                          {patient.type}
-                        </Badge>
-                      </td>
-                      <td className="p-3">{patient.doctor}</td>
-                      <td className="p-3">{patient.specialty}</td>
-                      <td className="p-3">
-                        <Eye className="w-4 h-4 text-gray-500 cursor-pointer" />
-                      </td>
-                      <td className="p-3">
-                        <div className="flex gap-2">
-                          <Phone className="w-4 h-4 text-gray-500 cursor-pointer" />
-                          <MessageCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
-                        </div>
-                      </td>
-                      <td className="p-3">
-                        <Button
-                          size="sm"
-                          variant={
-                            patient.action === "Cancel"
-                              ? "destructive"
-                              : patient.action === "Confirm"
-                              ? "default"
-                              : "outline"
-                          }
-                        >
-                          {patient.action}
-                        </Button>
+                        <button className="text-teal-600 hover:text-teal-700">
+                          <FileText className="w-4 h-4" />
+                        </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="space-y-6">
+          {/* Calendar */}
+          <div className="bg-white rounded-xl p-4 shadow-sm border">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium">{formatMonth(currentDate)}</h3>
+              <div className="flex gap-1">
+                <button 
+                  onClick={() => navigateMonth('prev')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => navigateMonth('next')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
+                <div key={day} className="text-xs text-gray-500 text-center p-1 font-medium">
+                  {day}
+                </div>
+              ))}
+            </div>
+            
+            <div className="grid grid-cols-7 gap-1">
+              {getDaysInMonth(currentDate).map((day, index) => (
+                <div 
+                  key={index} 
+                  className={`
+                    text-center p-2 text-sm cursor-pointer rounded transition-colors
+                    ${day === null ? '' : 'hover:bg-gray-100'}
+                    ${day === 14 ? 'bg-teal-600 text-white' : ''}
+                    ${day && day < 14 ? 'text-gray-400' : ''}
+                  `}
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Today Stats */}
+          <div className="space-y-4">
+            <div className="text-sm text-gray-600">Today you have:</div>
+            
+            <div className="flex gap-4">
+              <div className="bg-white rounded-xl p-4 shadow-sm border flex-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">6</p>
+                    <p className="text-sm text-gray-600">Patient in Lobby</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-xl p-4 shadow-sm border flex-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                    <Calendar className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">12</p>
+                    <p className="text-sm text-gray-600">appointment Today</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Time and Lab Reports */}
+          <div className="bg-white rounded-xl p-4 shadow-sm border">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-right">
+                <p className="text-xs text-gray-500">Mumbai</p>
+                <p className="text-2xl font-bold">12:54 <span className="text-sm font-normal">PM</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-4 shadow-sm border">
+            <div className="flex items-center gap-2 mb-3">
+              <FileText className="w-5 h-5 text-teal-600" />
+              <span className="text-sm">Lab Reports Review Today</span>
+            </div>
+            <p className="text-2xl font-bold">13 <span className="text-sm font-normal text-gray-500">Done</span></p>
+          </div>
+
+          {/* Hours Bar Chart */}
+          <div className="bg-white rounded-xl p-4 shadow-sm border">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-teal-600"></div>
+                <span className="text-sm">Hours Bar chart</span>
+                <span className="text-xs text-green-500">+86%</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mb-3">Busy hours in the day check.</p>
+            
+            <div className="flex items-end justify-between h-24 gap-1">
+              {hourlyData.map((item, index) => (
+                <div key={index} className="flex flex-col items-center gap-1 flex-1">
+                  <div 
+                    className={`w-full rounded-t transition-all duration-300 ${
+                      index < 2 ? 'bg-teal-600' : 'bg-green-400'
+                    }`}
+                    style={{ height: `${item.value}%` }}
+                  ></div>
+                  <span className="text-xs text-gray-500 transform -rotate-45 origin-center">
+                    {item.hour}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search by..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default AdminDashboard;
+export default Dashboard;
