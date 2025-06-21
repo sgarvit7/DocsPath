@@ -89,9 +89,9 @@ model Doctor {
   consultationType            String
 
   //Education Details
-  medicalSchoolName           String
-  medicalSchoolGraduationYear String
-  medicalSchoolDegree         String
+  medicalSchoolName           String?
+  medicalSchoolGraduationYear String?
+  medicalSchoolDegree         String?
 
   // Verification Documents - Cloudinary URLs only
   governmentIssuedId                    String?
@@ -181,4 +181,63 @@ model Patient {
   chronicDiseases String[] @default([])
   injuries        String[] @default([])
   surgeries       String[] @default([])
+}
+
+
+// payment model
+model Payment {
+  id             Int      @id @default(autoincrement()) // corresponds to PID
+  avatarUrl      String?   // Cloudinary URL for profile picture
+  payerName      String    // e.g., Ankit Wind
+  amount         Decimal   @db.Decimal(15,2) // supports large amounts like $150,000
+  paymentDate    DateTime  // 10-Apr-2022/13:00pm
+  receiveDate    DateTime  // 10-Apr-2022/13:00pm
+  transactionId  String    // *13110
+  paymentMode    PaymentMode
+  status         PaymentStatus
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+enum PaymentMode {
+  Cash
+  Online
+}
+
+enum PaymentStatus {
+  Failed
+  Paid
+  Refunded
+  Cancel
+  Pending
+}
+
+// user-access model
+model UserAccess {
+  id           Int           @id @default(autoincrement())
+  name         String        // e.g., Ankit Wind
+  department   Department
+  dateOfJoin   DateTime
+  accessLevel  AccessLevel
+  status       UserStatus
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum Department {
+  Manager
+  Doctor
+  Nurse
+  Stuff
+}
+
+enum AccessLevel {
+  Full
+  Partial
+  Non
+}
+
+enum UserStatus {
+  Active
+  Inactive
 }

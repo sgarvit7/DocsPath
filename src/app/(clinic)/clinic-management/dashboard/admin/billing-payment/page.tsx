@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { Payment } from "@/types/payment";
+import axios from 'axios';
 
 export default function BillingPaymentDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 14)); // November 14, 2018
-
+  const [transactions, setTransactions] = useState<Payment[]>([]);
   
   // Sample data for the chart (monthly revenue)
   const chartData = [
@@ -23,86 +25,17 @@ export default function BillingPaymentDashboard() {
     { month: 'Dec', amount: 160 }
   ];
 
+  useEffect(() => {
+    axios.get('/api/admin/payment') // Adjust the endpoint as needed
+      .then(response => { 
+        setTransactions(response.data);
+      })
+      .catch(error => { 
+        console.error('Error fetching transactions:', error);
+      }); 
+  }, []);
   // Sample transaction data
-  const transactions = [
-    {
-      id: '#0000',
-      name: 'Ankit Wind',
-      avatar: 'AW',
-      amount: 150,
-      paymentDate: '10-Apr-2022/13:00pm',
-      receiveDate: '10-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Online',
-      status: 'Failed'
-    },
-    {
-      id: '#0000',
-      name: 'ByetWind',
-      avatar: 'BW',
-      amount: 150,
-      paymentDate: '8-Apr-2022/13:00pm',
-      receiveDate: '8-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Cash',
-      status: 'Paid'
-    },
-    {
-      id: '#0000',
-      name: 'Ankit Wind',
-      avatar: 'AW',
-      amount: 122222,
-      paymentDate: '10-Apr-2022/13:00pm',
-      receiveDate: '10-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Online',
-      status: 'Refunded'
-    },
-    {
-      id: '#0000',
-      name: 'Anna Mayin',
-      avatar: 'AM',
-      amount: 150,
-      paymentDate: '8-Apr-2022/13:00pm',
-      receiveDate: '8-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Cash',
-      status: 'Cancel'
-    },
-    {
-      id: '#0000',
-      name: 'Ankit Wind',
-      avatar: 'AW',
-      amount: 150,
-      paymentDate: '10-Apr-2022/13:00pm',
-      receiveDate: '10-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Online',
-      status: 'Failed'
-    },
-    {
-      id: '#0000',
-      name: 'Anna Mayin',
-      avatar: 'AM',
-      amount: 150000,
-      paymentDate: '8-Apr-2022/13:00pm',
-      receiveDate: '8-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Cash',
-      status: 'Pending'
-    },
-    {
-      id: '#0000',
-      name: 'Ankit Wind',
-      avatar: 'AW',
-      amount: 150,
-      paymentDate: '10-Apr-2022/13:00pm',
-      receiveDate: '10-Apr-2022/13:00pm',
-      transactionId: '*13110',
-      paymentMode: 'Online',
-      status: 'Cancel'
-    }
-  ];
+  
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -316,7 +249,7 @@ export default function BillingPaymentDashboard() {
                         <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
                           {transaction.avatar}
                         </div>
-                        <span className="text-sm text-gray-900">{transaction.name}</span>
+                        <span className="text-sm text-gray-900">{transaction.payerName}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">{formatAmount(transaction.amount)}</td>

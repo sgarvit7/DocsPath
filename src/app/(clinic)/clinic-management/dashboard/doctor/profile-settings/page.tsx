@@ -230,7 +230,7 @@ const ProfileSettings: React.FC = () => {
             <p className="text-sm font-medium text-teal-700 mb-1">
               {item.label}
             </p>
-            <p className="text-gray-800 font-medium">{item.value}</p>
+            <div className="text-gray-800 font-medium">{item.value}</div>
           </div>
         ))}
       </div>

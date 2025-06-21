@@ -51,7 +51,7 @@ export default function SignInForm() {
     try {
       const authenticatedUser = await signInWithEmailAndPassword(auth, email, password)
       console.log(authenticatedUser.user)
-      dispatch(setEmail(authenticatedUser.user.email || "priya.sharma@example.com"));
+      dispatch(setEmail(authenticatedUser.user.email || "priya.sharma@example.com")); 
       // console.log("returnUrl: ", returnUrl);
       router.push(returnUrl ?? '/')
     } catch (err) {
