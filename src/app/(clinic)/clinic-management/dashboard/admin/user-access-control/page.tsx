@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { UserAccess } from "@/types/userAccess";
 import axios, { AxiosError } from "axios";
+import Calendar from "@/components/dashboardComponents/Calendar";
 
 interface User {
   id: number;
@@ -28,8 +29,6 @@ interface UsageData {
 }
 
 const UserManagementDashboard: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState(14);
-  const [currentMonth, setCurrentMonth] = useState("November 2018");
   const [users, setUsers] = useState<UserAccess[]>([]);
 
   // Sample usage data for the horizontal bar chart
@@ -74,24 +73,15 @@ const UserManagementDashboard: React.FC = () => {
   // Sample user data
 
   // Calendar data for November 2018
-  const calendarDays = [
-    [null, 1, 2, 3, 4, 5, 6],
-    [7, 8, 9, 10, 11, 12, 13],
-    [14, 15, 16, 17, 18, 19, 20],
-    [21, 22, 23, 24, 25, 26, 27],
-    [28, 29, 30, 1, 2, 3, 4],
-  ];
-
-  const dayNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const getAccessColor = (access: string) => {
     switch (access) {
       case "Full":
-        return "text-green-600 bg-green-50";
+        return "text-[#00AB3F]";
       case "Partial":
-        return "text-orange-600 bg-orange-50";
+        return "text-[#EBA352]";
       case "Non":
-        return "text-red-600 bg-red-50";
+        return "text-[#FF0000]";
       default:
         return "text-gray-600 bg-gray-50";
     }
@@ -99,15 +89,16 @@ const UserManagementDashboard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     return status === "Active"
-      ? "text-green-600 bg-green-50"
-      : "text-gray-500 bg-gray-50";
+      ? "text-[#00AB3F]"
+      : "text-gray-500";
   };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
+      
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-start justify-between mb-8 w-auto ">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
               <div className="text-white text-2xl">🔒</div>
@@ -117,63 +108,8 @@ const UserManagementDashboard: React.FC = () => {
             </h1>
           </div>
 
-          {/* Calendar Widget */}
-          <div className="bg-white rounded-lg shadow-sm p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-gray-800">{currentMonth}</h3>
-              <div className="flex space-x-1">
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-7 gap-1 text-xs">
-              {dayNames.map((day) => (
-                <div
-                  key={day}
-                  className="text-center text-gray-500 py-1 text-[10px]"
-                >
-                  {day}
-                </div>
-              ))}
-
-              {calendarDays.map((week, weekIndex) =>
-                week.map((day, dayIndex) => (
-                  <div
-                    key={`${weekIndex}-${dayIndex}`}
-                    className={`text-center py-1 text-xs cursor-pointer rounded ${
-                      day === selectedDate
-                        ? "bg-teal-600 text-white"
-                        : day && day <= 30
-                        ? "text-gray-700 hover:bg-gray-100"
-                        : "text-gray-300"
-                    }`}
-                    onClick={() => day && day <= 30 && setSelectedDate(day)}
-                  >
-                    {day}
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="mt-3 text-xs text-gray-600">
-              <div>Today, 14th 📅</div>
-              <div className="font-medium">Mumbai</div>
-              <div className="text-lg font-bold">
-                12:54 <span className="text-xs">PM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Scale of Use Chart */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white w-1/3 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
               Scale of Use
             </h2>
@@ -209,6 +145,14 @@ const UserManagementDashboard: React.FC = () => {
             </div>
           </div>
 
+          {/* Calendar Widget */}
+          <Calendar />
+        </div>
+
+        {/* Main Content */}
+        <div className="flex flex-col grid grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+          
+
           {/* Add User Button */}
           <div className="flex items-start">
             <button className="bg-black text-white rounded-full py-3 px-6 flex items-center space-x-2 hover:bg-gray-800 transition-colors">
@@ -220,7 +164,7 @@ const UserManagementDashboard: React.FC = () => {
 
         {/* Users Table */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="bg-teal-600 text-white">
+          <div className="bg-[#1C6D65] text-white">
             <div className="grid grid-cols-7 gap-4 px-6 py-4 text-sm font-medium">
               <div>ID</div>
               <div>Department</div>
@@ -234,26 +178,27 @@ const UserManagementDashboard: React.FC = () => {
 
           <div className="divide-y divide-gray-200">
             {users &&
-              users.map((user: UserAccess) => (
+              users.map((user: UserAccess, index: number) => (
                 <div
                   key={user.id}
-                  className="grid grid-cols-7 gap-4 px-6 py-4 hover:bg-gray-50"
+                  className={`grid grid-cols-7 gap-4 px-6 py-4 hover:bg-gray-50 ${
+                    index % 2 === 1 ? "bg-[#EBF4F3]" : "bg-white"
+                  }`}
                 >
                   <div className="text-sm font-medium text-gray-900">
                     {user.id}
                   </div>
-                  <div className="text-sm text-gray-600">{user.department}</div>
-                  <div className="text-sm text-gray-600">{user.dateOfJoin}</div>
+                  <div className="text-sm">{user.department}</div>
+                  <div className="text-sm">{user.dateOfJoin}</div>
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center text-xs">
-                      {/* {user.avatar} */}
                       <User className="w-4 h-4 text-teal-600" />
                     </div>
-                    <span className="text-sm text-gray-900">{user.name}</span>
+                    <span className="text-sm">{user.name}</span>
                   </div>
                   <div>
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getAccessColor(
+                      className={`inline-flex px-2 py-1 text-lg font-medium rounded-full ${getAccessColor(
                         user.accessLevel
                       )}`}
                     >
@@ -262,7 +207,7 @@ const UserManagementDashboard: React.FC = () => {
                   </div>
                   <div>
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                      className={`inline-flex px-2 py-1 text-lg font-medium rounded-full ${getStatusColor(
                         user.status
                       )}`}
                     >
@@ -270,13 +215,13 @@ const UserManagementDashboard: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button className="p-1 text-gray-400 hover:text-gray-600 border border-gray-300 rounded">
-                      <Trash2 className="w-4 h-4" />
+                    <button className="p-1 text-gray-400 hover:text-gray-600 border border-gray-300 rounded-full">
+                      <Trash2 className="w-4 h-4 text-[#005A51]" />
                     </button>
-                    <button className="p-1 text-gray-400 hover:text-gray-600 border border-gray-300 rounded">
-                      <Edit className="w-4 h-4" />
+                    <button className="p-1 text-gray-400 hover:text-gray-600 border border-gray-300 rounded-full">
+                      <Edit className="w-4 h-4 text-[#005A51]" />
                     </button>
-                    <button className="px-3 py-1 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                    <button className="px-3 py-1 text-[#005A51] text-xs  border border-gray-300 rounded-full hover:bg-gray-50">
                       Confirm
                     </button>
                   </div>

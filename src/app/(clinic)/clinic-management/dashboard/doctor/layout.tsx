@@ -142,7 +142,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex-col overflow-auto mt-14">
+        <div className="flex-1 z-0 flex-col overflow-auto mt-14">
           {/* Header */}
           <motion.div
             initial={{ y: -50, opacity: 0 }}
