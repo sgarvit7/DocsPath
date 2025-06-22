@@ -17,6 +17,8 @@ export default function Page() {
     router.push(`/clinic-management/teleconsultation/${roomName}`)
   }
 
+  console.log(onlineUsers);
+
   return (
     <>
       <div className="text-red-500">call status: {callResponse?callResponse:"No connection established"}</div>

@@ -5,7 +5,8 @@ import { Search, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { Payment } from "@/types/payment";
 import axios from "axios";
 import Calendar from "@/components/dashboardComponents/Calendar";
-
+import billImage from "@/app/assets/payment.png";
+import Image from "next/image";
 export default function BillingPaymentDashboard() {
   const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 14)); // November 14, 2018
   const [transactions, setTransactions] = useState<Payment[]>([]);
@@ -67,33 +68,34 @@ export default function BillingPaymentDashboard() {
   const maxAmount = Math.max(...chartData.map((d) => d.amount));
 
   // Calendar component
-  
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Header Section */}
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <div className="w-8 h-6 bg-orange-500 rounded"></div>
+            <div className="flex items-center justify-center">
+              <Image src={billImage} alt="Lock Icon" width={100} height={100} />
             </div>
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">
-                Billing & Payment
-              </h1>
+            <div className="w-[50vw] bg-gradient-to-r from-[#10CEC047] to-teal-50">
+            <h1 className="text-3xl p-1 font-bold bg-gradient-to-r from-[#007065] to-[#28988D] bg-clip-text text-transparent">
+              Billing & Payment
+            </h1>
             </div>
           </div>
           <Calendar />
         </div>
 
         {/* Revenue Chart Section */}
-        <div className="flex flex-col bg-white p-6 rounded-lg shadow-sm border -mt-80 w-2/3">
+        <div className="flex flex-col bg-white p-6 rounded-lg shadow-sm border -mt-70 w-2/3">
           <div className="flex justify-between items-start mb-6">
             <div className="text-3xl font-bold text-gray-900">$890.93</div>
 
             <div>
-              <div className="text-sm text-teal-700 font-medium mt-1">Revenue</div>
+              <div className="text-sm text-teal-700 font-medium mt-1">
+                Revenue
+              </div>
               <div className="text-sm text-gray-500">Month</div>
             </div>
           </div>

@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
   Plus,
   Trash2,
   Edit,
@@ -11,6 +9,8 @@ import {
 import { UserAccess } from "@/types/userAccess";
 import axios, { AxiosError } from "axios";
 import Calendar from "@/components/dashboardComponents/Calendar";
+import lock from "@/app/assets/lock.png";
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -100,10 +100,10 @@ const UserManagementDashboard: React.FC = () => {
         {/* Header */}
         <div className="flex items-start justify-between mb-8 w-auto ">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
-              <div className="text-white text-2xl">🔒</div>
+            <div className="flex items-center justify-center">
+              <Image src={lock} alt="Lock Icon" width={100} height={100} />
             </div>
-            <h1 className="text-2xl font-semibold text-gray-800">
+            <h1 className="text-3xl p-1 font-semibold bg-gradient-to-r from-[#007065] to-[#28988D] bg-clip-text text-transparent">
               User Management
             </h1>
           </div>

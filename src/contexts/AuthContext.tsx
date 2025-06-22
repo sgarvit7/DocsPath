@@ -61,6 +61,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
   };
 
+  console.log(user);
+
   return (
     <AuthContext.Provider value={value}>
       {loading ? <LoadingScreen /> : children}

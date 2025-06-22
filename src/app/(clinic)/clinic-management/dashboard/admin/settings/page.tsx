@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Admin } from "@/types/admin"; // Adjust the import path as necessary
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProfileSettings() {
   const [darkMode, setDarkMode] = useState(false);
@@ -49,9 +50,11 @@ export default function ProfileSettings() {
   // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
   const [userEmail, setUserEmail] = useState("");
 
-  useEffect(() => {
-    setUserEmail(email || "priya.sharma@example.com");
-  }, []);
+  const { user } = useAuth();
+  console.log(user);
+  // useEffect(() => {
+  //   setUserEmail(email || "priya.sharma@example.com");
+  // }, []);
 
   useEffect(() => {
     if (!userEmail) return;
