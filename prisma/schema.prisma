@@ -9,24 +9,6 @@ datasource db {
 }
 
 // models
-// model User {
-//   id        Int      @id @default(autoincrement())
-//   email     String   @unique
-//   name      String?
-//   createdAt DateTime @default(now())
-//   posts     Post[]
-// }
-
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User    @relation(fields: [authorId], references: [id])
-//   authorId  Int
-// }
-
-// schema.prisma
 model Admin {
   id             String   @id @default(uuid())
   managementType String
@@ -71,16 +53,16 @@ model Doctor {
   phoneNumber  String
   dateOfBirth  String
   gender       String
-  
+
   // Profile Photo - Cloudinary URL only
   profilePhoto String?
 
   // Professional Details
   medicalLicenseNumber         String
-  specialization              String
-  yearsOfExperience           String
+  specialization               String
+  yearsOfExperience            String
   associatedClinicHospitalName String
-  consultationType            String
+  consultationType             String
 
   // Verification Documents - Cloudinary URLs only
   governmentIssuedId                    String?
@@ -91,13 +73,50 @@ model Doctor {
   // Work Schedule Preferences
   availableConsultationHours  String
   preferredModeOfConsultation String
-  languageSpoken             String
-  additionalInformation      String?
-  emergencyContactDetails    String
-  personalBio                String?
+  languageSpoken              String
+  additionalInformation       String?
+  emergencyContactDetails     String
+  personalBio                 String?
 
   // Status and Verification
   // isVerified Boolean @default(false)
   // isActive   Boolean @default(true)
   @@map("doctors")
+}
+
+model Patient {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // supabaseUid String    @unique
+
+  // Demographic Data (embedded in User model)
+  title           String?
+  name            String?
+  birthDate       DateTime?
+  gender          String?
+  bloodGroup      String?
+  height          Int?
+  weight          Int?
+  maritalStatus   String?
+  contactNumber   String?
+  alternateNumber String?
+
+  // Lifestyle Data (embedded in User model)
+  smokingHabit       String?
+  alcoholConsumption String?
+  activityLevel      String?
+  dietHabit          String?
+  occupation         String?
+
+  // Medical Data (embedded in User model)
+  allergies       String[] @default([])
+  medications     String[] @default([])
+  chronicDiseases String[] @default([])
+  injuries        String[] @default([])
+  surgeries       String[] @default([])
+
+  @@map("patients")
 }

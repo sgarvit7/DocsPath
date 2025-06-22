@@ -205,7 +205,7 @@ export const submitDoctorOnboarding = createAsyncThunk(
       });
 
       const response = await fetch(
-        "http://localhost:3000/api/doctorOnboarding",
+        "http://localhost:3000/api/doctor",
         {
           method: "POST",
           body: formData,
@@ -238,7 +238,7 @@ export const getDoctors = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctorOnboarding`
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/doctor`
       );
       console.log(data);
       return data as Doctor[];
