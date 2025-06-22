@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import {
@@ -12,12 +12,20 @@ import {
   AuthError
 } from 'firebase/auth'
 import { auth } from '../../firebase/config'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-// import Image from 'next/image'
+import { sendMagicLink } from '@/utils/emailMagicLink'
+
+interface FormData {
+  name: string
+  email: string
+  phone: string
+  password: string
+  confirmPassword: string
+}
 
 export default function SignUpPage() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
@@ -28,12 +36,99 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isChecking, setIsChecking] = useState(false)
+  const [emailVerificationSent, setEmailVerificationSent] = useState(false)
+  const [isSendingVerification, setIsSendingVerification] = useState(false)
+  const [verifiedEmails, setVerifiedEmails] = useState<Set<string>>(new Set())
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Load form data and verification state from sessionStorage on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedFormData = window.sessionStorage.getItem('signupFormData')
+      const savedVerifiedEmails = window.sessionStorage.getItem('verifiedEmails')
+      
+      if (savedFormData) {
+        try {
+          const parsedData = JSON.parse(savedFormData)
+          setForm(parsedData)
+        } catch (error) {
+          console.error('Error parsing saved form data:', error)
+        }
+      }
+
+      if (savedVerifiedEmails) {
+        try {
+          const parsedEmails = JSON.parse(savedVerifiedEmails)
+          setVerifiedEmails(new Set(parsedEmails))
+        } catch (error) {
+          console.error('Error parsing saved verified emails:', error)
+        }
+      }
+
+      // Check if coming back from email verification
+      const verified = searchParams?.get('verified')
+      if (verified === 'true') {
+        const emailFromStorage = window.localStorage.getItem('emailForSignIn')
+        if (emailFromStorage) {
+          // Add to verified emails set
+          setVerifiedEmails(prev => {
+            const newSet = new Set(prev)
+            newSet.add(emailFromStorage)
+            // Save to sessionStorage
+            window.sessionStorage.setItem('verifiedEmails', JSON.stringify([...newSet]))
+            return newSet
+          })
+          
+          // Update form with verified email if it matches or if email is empty
+          setForm(prev => {
+            const shouldUpdateEmail = prev.email === emailFromStorage || !prev.email
+            const updatedForm = shouldUpdateEmail 
+              ? { ...prev, email: emailFromStorage }
+              : prev
+            
+            // Save updated form data
+            window.sessionStorage.setItem('signupFormData', JSON.stringify(updatedForm))
+            return updatedForm
+          })
+          
+          // Clear the localStorage item
+          window.localStorage.removeItem('emailForSignIn')
+          
+          // Clear the URL parameter
+          const newUrl = new URL(window.location.href)
+          newUrl.searchParams.delete('verified')
+          window.history.replaceState({}, '', newUrl.toString())
+        }
+      }
+    }
+  }, [searchParams])
+
+  // Save form data to sessionStorage whenever form changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem('signupFormData', JSON.stringify(form))
+    }
+  }, [form])
+
+  // Save verified emails to sessionStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem('verifiedEmails', JSON.stringify([...verifiedEmails]))
+    }
+  }, [verifiedEmails])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+    
     // Clear error when user starts typing again
     if (error) setError('')
+    
+    // Reset email verification sent state if email changes
+    if (name === 'email') {
+      setEmailVerificationSent(false)
+    }
   }
 
   const checkPhoneExists = async (phoneNumber: string): Promise<boolean> => {
@@ -50,6 +145,39 @@ export default function SignUpPage() {
     }
   }
 
+  const handleSendVerification = async () => {
+    if (!form.email) {
+      setError('Please enter your email address first')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    // Check if email is already verified
+    if (verifiedEmails.has(form.email)) {
+      setError('This email is already verified')
+      return
+    }
+
+    setIsSendingVerification(true)
+    setError('')
+
+    const result = await sendMagicLink(form.email)
+    
+    if (result.success) {
+      setEmailVerificationSent(true)
+      setError('')
+    } else {
+      setError(result.error || 'Failed to send verification email')
+    }
+    
+    setIsSendingVerification(false)
+  }
+
   const handleSubmit = async () => {
     setError('')
     const { name, email, phone, password, confirmPassword } = form
@@ -57,6 +185,7 @@ export default function SignUpPage() {
     // Validate form fields
     if (!name) return setError('Name is required')
     if (!email) return setError('Email is required')
+    if (!verifiedEmails.has(email)) return setError('Please verify your email before proceeding')
     if (!phone) return setError('Phone number is required')
     if (!password) return setError('Password is required')
     if (password !== confirmPassword) return setError('Passwords do not match')
@@ -74,6 +203,10 @@ export default function SignUpPage() {
 
       // Store phone temporarily for OTP linking
       window.sessionStorage.setItem('userData', JSON.stringify({ name, email, phone }))
+      // Clear signup form data as registration is successful
+      window.sessionStorage.removeItem('signupFormData')
+      window.sessionStorage.removeItem('verifiedEmails')
+      
       router.push('/sign-up/verify-otp')
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -99,6 +232,9 @@ export default function SignUpPage() {
       const {user} = await signInWithPopup(auth, provider)
       console.log( user.displayName,  user.email)
       window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
+      // Clear signup form data
+      window.sessionStorage.removeItem('signupFormData')
+      window.sessionStorage.removeItem('verifiedEmails')
       router.push('/clinic-onboarding')
     } catch (err: unknown) {
       console.log(err)
@@ -111,7 +247,9 @@ export default function SignUpPage() {
       const provider = new FacebookAuthProvider()
       const {user} = await signInWithPopup(auth, provider)
       window.sessionStorage.setItem('userData', JSON.stringify({ name: user.displayName, email: user.email }))
-      router.push('/clinic-onboarding')
+      // Clear signup form data 
+      window.sessionStorage.removeItem('signupFormData')
+      window.sessionStorage.removeItem('verifiedEmails')
       router.push('/clinic-onboarding')
     } catch (error) {
       console.log(error)
@@ -122,6 +260,33 @@ export default function SignUpPage() {
   const handleSignIn = () => {
     router.push('/sign-in')
   }
+
+  // Listen for email verification from the magic link page (popup scenario)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleEmailVerified = (event: CustomEvent) => {
+        const email = event.detail?.email || form.email
+        if (email) {
+          setVerifiedEmails(prev => {
+            const newSet = new Set(prev)
+            newSet.add(email)
+            return newSet
+          })
+          setEmailVerificationSent(false)
+        }
+      }
+
+      window.addEventListener('emailVerified', handleEmailVerified as EventListener)
+      
+      return () => {
+        window.removeEventListener('emailVerified', handleEmailVerified as EventListener)
+      }
+    }
+  }, [form.email])
+
+  // Determine email field state
+  const isCurrentEmailVerified = verifiedEmails.has(form.email)
+  const shouldShowVerifyButton = form.email && !isCurrentEmailVerified
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-teal-50 px-4">
@@ -157,6 +322,7 @@ export default function SignUpPage() {
             <div className="relative">
               <input
                 name="name"
+                value={form.name}
                 onChange={handleChange}
                 placeholder="Name"
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
@@ -171,6 +337,7 @@ export default function SignUpPage() {
             <div className="relative">
               <input
                 name="phone"
+                value={form.phone}
                 onChange={handleChange}
                 placeholder="+91"
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
@@ -183,25 +350,63 @@ export default function SignUpPage() {
             </div>
 
             <div className="relative">
-              <input
-                name="email"
-                type="email"
-                onChange={handleChange}
-                placeholder="Email"
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
-              />
+              <div className="flex">
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  className={`flex-1 p-3 border ${isCurrentEmailVerified ? 'border-green-500 bg-green-50' : 'border-gray-300'} rounded-l-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10`}
+                  disabled={isCurrentEmailVerified}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={handleSendVerification}
+                  disabled={isSendingVerification || isCurrentEmailVerified || !shouldShowVerifyButton}
+                  className={`px-4 py-3 rounded-r-lg text-sm font-medium transition duration-300 ${
+                    isCurrentEmailVerified 
+                      ? 'bg-green-600 text-white cursor-default' 
+                      : isSendingVerification || !shouldShowVerifyButton
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-teal-700 text-white hover:bg-teal-800'
+                  }`}
+                >
+                  {isCurrentEmailVerified ? 'Verified' : isSendingVerification ? 'Sending...' : 'Verify Email'}
+                </motion.button>
+              </div>
               <span className="absolute left-3 top-3 text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
               </span>
+              {isCurrentEmailVerified && (
+                <span className="absolute right-20 top-3 text-green-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </span>
+              )}
             </div>
+
+            {emailVerificationSent && !isCurrentEmailVerified && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-blue-600 text-sm bg-blue-50 p-3 rounded border border-blue-200"
+              >
+                📧 Verification email sent! Please check your inbox and click the verification link to continue.
+              </motion.div>
+            )}
 
             <div className="relative">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
+                value={form.password}
                 onChange={handleChange}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
@@ -224,6 +429,7 @@ export default function SignUpPage() {
               <input
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
+                value={form.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm Password"
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
@@ -256,8 +462,8 @@ export default function SignUpPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSubmit}
-              disabled={isChecking}
-              className={`w-full ${isChecking ? 'bg-teal-500' : 'bg-teal-700'} text-white py-3 rounded-lg font-medium transition duration-300 ${isChecking ? 'cursor-not-allowed' : ''}`}
+              disabled={isChecking || !isCurrentEmailVerified}
+              className={`w-full ${isChecking || !isCurrentEmailVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-700 hover:bg-teal-800'} text-white py-3 rounded-lg font-medium transition duration-300`}
             >
               {isChecking ? 'Checking...' : 'Sign Up'}
             </motion.button>
