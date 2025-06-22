@@ -17,9 +17,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { getDoctors } from "@/store/doctorSlice";
-import {Doctor} from "@/types/doctor";
+import { Doctor } from "@/types/doctor";
 import { AppDispatch, RootState } from "@/store/store";
 import Image from "next/image";
+import BulkUploadModal from "@/utils/BulkUploadModal";
 
 // Dummy data objects for easy modification
 const summaryStats = {
@@ -55,6 +56,7 @@ const calendarData = {
 const getStatusInfo = (doctor: Doctor) => {
   const consultationType = doctor.professionalDetails?.consultationType;
   console.log(consultationType);
+  console.log(consultationType);
   const isAvailable = Math.random() > 0.5; // Random availability for demo
 
   if (consultationType === "Online") {
@@ -74,6 +76,7 @@ const DoctorManagement: React.FC = () => {
   const allDoctorList = useSelector<RootState>(
     (store) => store.doctorOnboarding.doctors
   ) as Doctor[];
+
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[] | null>(null);
 
   useEffect(() => {
@@ -88,6 +91,7 @@ const DoctorManagement: React.FC = () => {
     if (allDoctorList) {
       console.log("allDoctorList: ", allDoctorList);
       setFilteredDoctors(allDoctorList);
+      console.log("filteredDoctors: ", filteredDoctors);
     }
   }, [allDoctorList]);
 
@@ -108,6 +112,8 @@ const DoctorManagement: React.FC = () => {
   const handleAction = (action: string, doctorId: string) => {
     console.log(`${action} action for doctor ${doctorId}`);
   };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -211,7 +217,10 @@ const DoctorManagement: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="flex items-center justify-between mb-6"
           >
-            <Button className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2">
+            <Button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2 cursor-pointer"
+            >
               <Plus className="w-4 h-4" />
               Add New Doctor
             </Button>
@@ -375,7 +384,6 @@ const DoctorManagement: React.FC = () => {
                 </div>
               ))}
 
-              {/* Calendar dates */}
               {Array.from({ length: 30 }, (_, i) => i + 1).map((date) => (
                 <div
                   key={date}
@@ -408,6 +416,12 @@ const DoctorManagement: React.FC = () => {
           </div>
         </motion.div>
       </div>
+
+      <BulkUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        uploadType={"doctor"}
+      />
     </div>
   );
 };

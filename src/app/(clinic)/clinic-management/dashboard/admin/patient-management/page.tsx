@@ -1,5 +1,9 @@
 "use client";
+<<<<<<< HEAD
 import React, { useState } from "react";
+=======
+import React, { useState, useEffect } from "react";
+>>>>>>> 16668ba9f99308e693bdaa77bb7346a303a1c6c3
 import { motion } from "framer-motion";
 import {
   Plus,
@@ -14,7 +18,11 @@ import {
   FileText,
   Clock,
 } from "lucide-react";
+<<<<<<< HEAD
 import Image from "next/image";
+=======
+import BulkUploadModal from "@/utils/BulkUploadModal";
+>>>>>>> 16668ba9f99308e693bdaa77bb7346a303a1c6c3
 
 // Dummy data objects for easy modification
 const summaryStats = {
@@ -141,6 +149,7 @@ const patientData = [
 const PatientManagement: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredPatients, setFilteredPatients] = useState(patientData);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -449,9 +458,15 @@ const PatientManagement: React.FC = () => {
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-1 mb-4">
+<<<<<<< HEAD
               {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
                 <div
                   key={`${day}-${index}`}
+=======
+              {["M", "T", "W", "T", "F", "S", "S"].map((day) => (
+                <div
+                  key={day}
+>>>>>>> 16668ba9f99308e693bdaa77bb7346a303a1c6c3
                   className="text-center text-xs text-gray-500 py-1"
                 >
                   {day}
@@ -509,7 +524,12 @@ const PatientManagement: React.FC = () => {
             className="bg-white rounded-xl shadow-sm border p-4 flex items-center justify-between"
           >
             <div className="flex items-center gap-4">
-              <button className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2 text-sm">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+                className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2 text-sm cursor-pointer"
+              >
                 <Plus className="w-4 h-4" />
                 Register New Patient
               </button>
@@ -644,6 +664,12 @@ const PatientManagement: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      <BulkUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        uploadType={"patient"}
+      />
     </div>
   );
 };
