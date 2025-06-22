@@ -24,8 +24,8 @@ export default function VerifyEmailPage() {
           const emailForSignIn = window.localStorage.getItem('emailForSignIn')
           
           if (emailForSignIn) {
-            // Store the verified email in localStorage for the signup page to pick up
-            const existingVerifiedEmails = window.localStorage.getItem('verifiedEmails')
+            // Store the verified email in sessionStorage to match SignUpPage
+            const existingVerifiedEmails = window.sessionStorage.getItem('verifiedEmails')
             let verifiedEmails = []
             
             if (existingVerifiedEmails) {
@@ -39,7 +39,40 @@ export default function VerifyEmailPage() {
             // Add the verified email if not already present
             if (!verifiedEmails.includes(emailForSignIn)) {
               verifiedEmails.push(emailForSignIn)
-              window.localStorage.setItem('verifiedEmails', JSON.stringify(verifiedEmails))
+              window.sessionStorage.setItem('verifiedEmails', JSON.stringify(verifiedEmails))
+            }
+
+            // Also update the signup form data to include the verified email
+            const existingFormData = window.sessionStorage.getItem('signupFormData')
+            if (existingFormData) {
+              try {
+                const formData = JSON.parse(existingFormData)
+                // Update email if it's empty or matches the verified email
+                if (!formData.email || formData.email === emailForSignIn) {
+                  formData.email = emailForSignIn
+                  window.sessionStorage.setItem('signupFormData', JSON.stringify(formData))
+                }
+              } catch (e) {
+                // If form data doesn't exist or is corrupted, create new one
+                const newFormData = {
+                  name: '',
+                  email: emailForSignIn,
+                  phone: '',
+                  password: '',
+                  confirmPassword: ''
+                }
+                window.sessionStorage.setItem('signupFormData', JSON.stringify(newFormData))
+              }
+            } else {
+              // Create form data with verified email
+              const newFormData = {
+                name: '',
+                email: emailForSignIn,
+                phone: '',
+                password: '',
+                confirmPassword: ''
+              }
+              window.sessionStorage.setItem('signupFormData', JSON.stringify(newFormData))
             }
           }
           

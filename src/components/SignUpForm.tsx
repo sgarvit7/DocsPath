@@ -42,67 +42,68 @@ export default function SignUpPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Load form data and verification state from sessionStorage on component mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedFormData = window.sessionStorage.getItem('signupFormData')
-      const savedVerifiedEmails = window.sessionStorage.getItem('verifiedEmails')
-      
-      if (savedFormData) {
-        try {
-          const parsedData = JSON.parse(savedFormData)
-          setForm(parsedData)
-        } catch (error) {
-          console.error('Error parsing saved form data:', error)
-        }
-      }
-
-      if (savedVerifiedEmails) {
-        try {
-          const parsedEmails = JSON.parse(savedVerifiedEmails)
-          setVerifiedEmails(new Set(parsedEmails))
-        } catch (error) {
-          console.error('Error parsing saved verified emails:', error)
-        }
-      }
-
-      // Check if coming back from email verification
-      const verified = searchParams?.get('verified')
-      if (verified === 'true') {
-        const emailFromStorage = window.localStorage.getItem('emailForSignIn')
-        if (emailFromStorage) {
-          // Add to verified emails set
-          setVerifiedEmails(prev => {
-            const newSet = new Set(prev)
-            newSet.add(emailFromStorage)
-            // Save to sessionStorage
-            window.sessionStorage.setItem('verifiedEmails', JSON.stringify([...newSet]))
-            return newSet
-          })
-          
-          // Update form with verified email if it matches or if email is empty
-          setForm(prev => {
-            const shouldUpdateEmail = prev.email === emailFromStorage || !prev.email
-            const updatedForm = shouldUpdateEmail 
-              ? { ...prev, email: emailFromStorage }
-              : prev
-            
-            // Save updated form data
-            window.sessionStorage.setItem('signupFormData', JSON.stringify(updatedForm))
-            return updatedForm
-          })
-          
-          // Clear the localStorage item
-          window.localStorage.removeItem('emailForSignIn')
-          
-          // Clear the URL parameter
-          const newUrl = new URL(window.location.href)
-          newUrl.searchParams.delete('verified')
-          window.history.replaceState({}, '', newUrl.toString())
-        }
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    const savedFormData = window.sessionStorage.getItem('signupFormData')
+    const savedVerifiedEmails = window.sessionStorage.getItem('verifiedEmails')
+    
+    if (savedFormData) {
+      try {
+        const parsedData = JSON.parse(savedFormData)
+        setForm(parsedData)
+      } catch (error) {
+        console.error('Error parsing saved form data:', error)
       }
     }
-  }, [searchParams])
+
+    if (savedVerifiedEmails) {
+      try {
+        const parsedEmails = JSON.parse(savedVerifiedEmails)
+        setVerifiedEmails(new Set(parsedEmails))
+      } catch (error) {
+        console.error('Error parsing saved verified emails:', error)
+      }
+    }
+
+    // Check if coming back from email verification
+    const verified = searchParams?.get('verified')
+    if (verified === 'true') {
+      // Check both localStorage and sessionStorage for the email
+      const emailFromLocalStorage = window.localStorage.getItem('emailForSignIn')
+      const emailFromSession = savedFormData ? JSON.parse(savedFormData).email : ''
+      const emailToVerify = emailFromLocalStorage || emailFromSession
+      
+      if (emailToVerify) {
+        // Add to verified emails set
+        setVerifiedEmails(prev => {
+          const newSet = new Set(prev)
+          newSet.add(emailToVerify)
+          // Save to sessionStorage
+          window.sessionStorage.setItem('verifiedEmails', JSON.stringify([...newSet]))
+          return newSet
+        })
+        
+        // Update form with verified email
+        setForm(prev => {
+          const updatedForm = { ...prev, email: emailToVerify }
+          // Save updated form data
+          window.sessionStorage.setItem('signupFormData', JSON.stringify(updatedForm))
+          return updatedForm
+        })
+        
+        // Clear the localStorage item
+        if (emailFromLocalStorage) {
+          window.localStorage.removeItem('emailForSignIn')
+        }
+        
+        // Clear the URL parameter
+        const newUrl = new URL(window.location.href)
+        newUrl.searchParams.delete('verified')
+        window.history.replaceState({}, '', newUrl.toString())
+      }
+    }
+  }
+}, [searchParams])
 
   // Save form data to sessionStorage whenever form changes
   useEffect(() => {
