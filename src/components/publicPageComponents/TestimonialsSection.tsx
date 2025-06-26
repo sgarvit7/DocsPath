@@ -71,7 +71,7 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
   };
 
   return (
-    <section className="bg-teal-600 py-16">
+    <section className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-teal-600 text-black'} py-16`}>
       <div className="container mx-auto px-4">
         <motion.div
           variants={containerVariants}
@@ -81,7 +81,7 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
         >
           <motion.h2
             variants={itemVariants}
-            className="text-3xl font-bold text-white text-center mb-12"
+            className="text-3xl font-bold text-center mb-12"
           >
             What Doctors Say About DocsPath
           </motion.h2>
@@ -90,13 +90,12 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
             variants={itemVariants}
             className="relative"
           >
-            {/* Testimonials Container */}
             <div className="flex justify-center space-x-6 overflow-hidden">
               {testimonials.map((testimonial, index) => {
                 const isActive = index === currentIndex;
                 const isNext = index === (currentIndex + 1) % testimonials.length;
                 const isPrev = index === (currentIndex - 1 + testimonials.length) % testimonials.length;
-                
+
                 return (
                   <motion.div
                     key={testimonial.id}
@@ -107,35 +106,35 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
                       x: isActive ? 0 : isNext ? 100 : isPrev ? -100 : 0
                     }}
                     transition={{ duration: 0.5 }}
-                    className={`bg-white rounded-lg p-6 shadow-lg min-w-[320px] max-w-[320px] ${
-                      !isActive && !isPrev && !isNext ? 'hidden' : ''
-                    }`}
+                    className={`rounded-lg p-6 shadow-lg min-w-[320px] max-w-[320px] transition-colors duration-500 ${
+                      darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
+                    } ${!isActive && !isPrev && !isNext ? 'hidden' : ''}`}
                   >
                     {/* Quote Icon */}
-                    <div className="text-6xl text-gray-200 leading-none mb-2">"</div>
-                    
+                    <div className={`text-6xl leading-none mb-2 ${darkMode ? 'text-gray-500' : 'text-gray-200'}`}>&quot;</div>
+
                     {/* Stars */}
                     <div className="flex space-x-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    
+
                     {/* Content */}
-                    <p className="text-gray-700 mb-6 leading-relaxed">
+                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-6 leading-relaxed`}>
                       {testimonial.content}
                     </p>
-                    
+
                     {/* Doctor Info */}
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                        <span className="text-teal-600 font-semibold">
-                          {testimonial.avatar}
-                        </span>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold ${
+                        darkMode ? 'bg-gray-700 text-teal-200' : 'bg-teal-100 text-teal-600'
+                      }`}>
+                        {testimonial.avatar}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">{testimonial.name}</h4>
-                        <p className="text-gray-600 text-sm">{testimonial.title}</p>
+                        <h4 className={`${darkMode ? 'text-white' : 'text-gray-800'} font-semibold`}>{testimonial.name}</h4>
+                        <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{testimonial.title}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -146,15 +145,19 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
             {/* Navigation Arrows */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors duration-300"
+              className={`absolute left-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
+                darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white/20 hover:bg-white/30 text-white'
+              }`}
               aria-label="Previous testimonial"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-            
+
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-colors duration-300"
+              className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
+                darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white/20 hover:bg-white/30 text-white'
+              }`}
               aria-label="Next testimonial"
             >
               <ChevronRight className="w-6 h-6" />
@@ -167,7 +170,9 @@ export default function TestimonialsSection({ darkMode }: TestimonialsSectionPro
                   key={index}
                   onClick={() => setCurrentIndex(index)}
                   className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                    index === currentIndex ? 'bg-white' : 'bg-white/40'
+                    index === currentIndex
+                      ? 'bg-white'
+                      : darkMode ? 'bg-white/40' : 'bg-white/60'
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />

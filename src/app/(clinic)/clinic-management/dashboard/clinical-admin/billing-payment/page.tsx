@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Search, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { Search,  Info } from "lucide-react";
 import { Payment } from "@/types/payment";
 import axios from "axios";
 import Calendar from "@/components/dashboard/Calendar";
 import billImage from "@/app/assets/payment.png";
 import Image from "next/image";
 export default function BillingPaymentDashboard() {
-  const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 14)); // November 14, 2018
+  // const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 14)); // November 14, 2018
   const [transactions, setTransactions] = useState<Payment[]>([]);
 
   // Sample data for the chart (monthly revenue)
@@ -65,7 +65,7 @@ export default function BillingPaymentDashboard() {
     }).format(amount);
   };
 
-  const maxAmount = Math.max(...chartData.map((d) => d.amount));
+  // const maxAmount = Math.max(...chartData.map((d) => d.amount));
 
   // Calendar component
 

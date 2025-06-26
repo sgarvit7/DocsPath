@@ -13,17 +13,16 @@ const actionCodeSettings = {
 export const sendMagicLink = async (email: string): Promise<{ success: boolean; error?: string }> => {
   try {
     await sendSignInLinkToEmail(auth, email, actionCodeSettings)
-    // Save the email locally so you don't need to ask the user for it again
-    // if they open the link on the same device.
     if (typeof window !== 'undefined') {
       window.localStorage.setItem('emailForSignIn', email)
     }
     return { success: true }
-  } catch (error: any) {
-    console.error('Error sending magic link:', error)
+  } catch (error: unknown) {
+    const err = error as Error
+    console.error('Error sending magic link:', err)
     return { 
       success: false, 
-      error: error.message || 'Failed to send verification email' 
+      error: err.message || 'Failed to send verification email' 
     }
   }
 }
@@ -36,7 +35,6 @@ export const verifyMagicLink = async (url: string, email?: string): Promise<{ su
 
     let emailToVerify = email
     if (!emailToVerify && typeof window !== 'undefined') {
-      // Convert null to undefined using nullish coalescing operator
       emailToVerify = window.localStorage.getItem('emailForSignIn') ?? undefined
     }
 
@@ -45,18 +43,18 @@ export const verifyMagicLink = async (url: string, email?: string): Promise<{ su
     }
 
     await signInWithEmailLink(auth, emailToVerify, url)
-    
-    // Clear the email from storage
+
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('emailForSignIn')
     }
 
     return { success: true }
-  } catch (error: any) {
-    console.error('Error verifying magic link:', error)
+  } catch (error: unknown) {
+    const err = error as Error
+    console.error('Error verifying magic link:', err)
     return { 
       success: false, 
-      error: error.message || 'Failed to verify email' 
+      error: err.message || 'Failed to verify email' 
     }
   }
 }

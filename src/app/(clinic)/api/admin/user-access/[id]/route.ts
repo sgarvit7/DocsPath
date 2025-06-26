@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { UserAccess } from '@/types/userAccess';
+import { Prisma } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,
@@ -35,22 +36,18 @@ export async function PUT(
     const { id } = await params;
     const body : UserAccess = await req.json();
 
-    const updatedUser = await prisma.userAccess.update({
+     const updatedUser = await prisma.userAccess.update({
       where: { id: parseInt(id) },
       data: body,
     });
 
     return NextResponse.json(updatedUser);
-  } catch (error: any) {
-    if (error.code === 'P2025') {
-      // Prisma: Record not found
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    } catch (error) {
+      return NextResponse.json(
+        { error: 'Failed to update user', details: error },
+        { status: 500 }
+      );
     }
-    return NextResponse.json(
-      { error: 'Failed to update user', details: error },
-      { status: 500 }
-    );
-  }
 }
 
 export async function DELETE(
@@ -65,12 +62,12 @@ export async function DELETE(
     });
 
     return NextResponse.json({ message: 'User deleted' });
-  } catch (error: any) {
-    if (error.code === 'P2025') {
+  } catch (err: unknown) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
     return NextResponse.json(
-      { error: 'Failed to delete user', details: error },
+      { error: 'Failed to delete user', details: err },
       { status: 500 }
     );
   }

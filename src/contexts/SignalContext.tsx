@@ -134,7 +134,10 @@ export function SignalProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
       };
     }
-  }, []);
+  }, 
+  
+  
+  []);
 
   // ringing user
   const ringingCallee = (roomName: string) => {

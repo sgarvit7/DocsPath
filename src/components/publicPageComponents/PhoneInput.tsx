@@ -23,6 +23,7 @@ export default function CountrySelect() {
 
   if (loading) return <div>Loading countries...</div>;
   if (error) return <div>{error}</div>;
+  setError(error);
 
   return (
     <div className="flex flex-row items-center">

@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { patient } from "@/types/patient";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const patients : patient[] = await prisma.patient.findMany()
     return NextResponse.json(patients)

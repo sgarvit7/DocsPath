@@ -3,10 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
   ResponsiveContainer,
   // LineChart,
   // Line,
@@ -24,8 +20,7 @@ import {
   MessageCircle,
   Clock,
   UserCheck,
-  // CalendarDays,
-  TrendingUp,
+  // CalendarDays
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,7 +31,6 @@ import Image from "next/image";
 import billImage from "@/app/assets/payment.png";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import QuickStatsCard from "@/components/dashboard/QuickStatsBar";
-import clsx from "clsx";
 
 // Types for better type safety
 interface ChartDataPoint {

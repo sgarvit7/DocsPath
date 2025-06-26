@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { X, Award, Power } from "lucide-react";
+import { Award, Power } from "lucide-react";
 import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
 import upgradeImage from "@/app/assets/upgrade.png";
 import image from "./../../../../../assets/doctor-profile.jpg";
@@ -42,43 +42,43 @@ interface ToggleSwitchProps {
   onToggle: () => void;
   size?: "sm" | "md" | "lg";
 }
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
-  enabled,
-  onToggle,
-  size = "md",
-}) => {
-  // Define size classes
-  const sizeClasses = {
-    sm: {
-      container: "h-4 w-8",
-      knob: "h-3 w-3",
-      translate: enabled ? "translate-x-5" : "translate-x-1",
-    },
-    md: {
-      container: "h-6 w-11",
-      knob: "h-4 w-4",
-      translate: enabled ? "translate-x-6" : "translate-x-1",
-    },
-    lg: {
-      container: "h-8 w-16",
-      knob: "h-6 w-6",
-      translate: enabled ? "translate-x-8" : "translate-x-1",
-    },
-  }[size];
+// const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
+//   enabled,
+//   onToggle,
+//   size = "md",
+// }) => {
+//   // Define size classes
+//   const sizeClasses = {
+//     sm: {
+//       container: "h-4 w-8",
+//       knob: "h-3 w-3",
+//       translate: enabled ? "translate-x-5" : "translate-x-1",
+//     },
+//     md: {
+//       container: "h-6 w-11",
+//       knob: "h-4 w-4",
+//       translate: enabled ? "translate-x-6" : "translate-x-1",
+//     },
+//     lg: {
+//       container: "h-8 w-16",
+//       knob: "h-6 w-6",
+//       translate: enabled ? "translate-x-8" : "translate-x-1",
+//     },
+//   }[size];
 
-  return (
-    <div
-      className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
-        sizeClasses.container
-      } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
-      onClick={onToggle}
-    >
-      <span
-        className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
-      />
-    </div>
-  );
-};
+//   return (
+//     <div
+//       className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
+//         sizeClasses.container
+//       } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
+//       onClick={onToggle}
+//     >
+//       <span
+//         className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
+//       />
+//     </div>
+//   );
+// };
 
 const ProfileSettings: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationState>({
@@ -251,38 +251,38 @@ const ProfileSettings: React.FC = () => {
     </div>
   );
 
-  const renderPersonalSection = (
-    title: string,
-    icon: React.ReactNode,
-    data: ProfileItem[],
-    columns: number = 3
-  ): React.ReactElement => (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">{icon}</span>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-        </div>
-        <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
-          <span>Edit</span>
-          <Edit className="w-4 h-4" />
-        </button>
-      </div>
+  // const renderPersonalSection = (
+  //   title: string,
+  //   icon: React.ReactNode,
+  //   data: ProfileItem[],
+  //   columns: number = 3
+  // ): React.ReactElement => (
+  //   <div className="bg-white rounded-lg shadow-sm p-6">
+  //     <div className="flex items-center justify-between mb-6">
+  //       <div className="flex items-center space-x-2">
+  //         <div className="w-5 h-5 rounded-full flex items-center justify-center">
+  //           <span className="text-white text-xs">{icon}</span>
+  //         </div>
+  //         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+  //       </div>
+  //       <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
+  //         <span>Edit</span>
+  //         <Edit className="w-4 h-4" />
+  //       </button>
+  //     </div>
 
-      <div className={`grid grid-cols-${columns} gap-8`}>
-        {data.map((item, index) => (
-          <div key={index}>
-            <p className="text-sm font-medium text-teal-700 mb-1">
-              {item.label}
-            </p>
-            <p className="text-gray-800 font-medium">{item.value}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  //     <div className={`grid grid-cols-${columns} gap-8`}>
+  //       {data.map((item, index) => (
+  //         <div key={index}>
+  //           <p className="text-sm font-medium text-teal-700 mb-1">
+  //             {item.label}
+  //           </p>
+  //           <p className="text-gray-800 font-medium">{item.value}</p>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   </div>
+  // );
 
   const renderSpecialSection = (
     title: string,

@@ -3,21 +3,15 @@
 import React, { useState } from "react";
 import {
   Search,
-  Calendar,
-  Clock,
   FileText,
   Phone,
   Mail,
-  User,
-  TrendingUp,
-  Menu,
-  ListCollapse,
   BarChart3,
 } from "lucide-react";
 import {
   BarChart,
   Bar,
-  XAxis,
+  // XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
@@ -27,7 +21,7 @@ import {
 } from "recharts";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import patientRecord from "@/app/assets/patient-record.png";
 import Image from "next/image";
 import CalendarComponent from "@/components/dashboard/Calendar";
@@ -49,12 +43,12 @@ interface Patient {
   avatar: string;
 }
 
-interface ChartData {
-  category: string;
-  age: number;
-  genderM: number;
-  genderF: number;
-}
+// interface ChartData {
+//   category: string;
+//   age: number;
+//   genderM: number;
+//   genderF: number;
+// }
 
 interface StatsCard {
   title: string;
@@ -66,7 +60,7 @@ interface StatsCard {
 
 const PatientRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  // const [selectedDate, setSelectedDate] = useState(new Date());
 
   const data = [
     {
@@ -89,15 +83,15 @@ const PatientRecords: React.FC = () => {
     },
   ];
   // Sample data
-  const chartData: ChartData[] = [
-    { category: "0-10", age: 25, genderM: 12, genderF: 13 },
-    { category: "11-20", age: 35, genderM: 18, genderF: 17 },
-    { category: "21-30", age: 45, genderM: 22, genderF: 23 },
-    { category: "31-40", age: 38, genderM: 19, genderF: 19 },
-    { category: "41-50", age: 42, genderM: 21, genderF: 21 },
-    { category: "51-60", age: 35, genderM: 17, genderF: 18 },
-    { category: "61+", age: 28, genderM: 14, genderF: 14 },
-  ];
+  // const chartData: ChartData[] = [
+  //   { category: "0-10", age: 25, genderM: 12, genderF: 13 },
+  //   { category: "11-20", age: 35, genderM: 18, genderF: 17 },
+  //   { category: "21-30", age: 45, genderM: 22, genderF: 23 },
+  //   { category: "31-40", age: 38, genderM: 19, genderF: 19 },
+  //   { category: "41-50", age: 42, genderM: 21, genderF: 21 },
+  //   { category: "51-60", age: 35, genderM: 17, genderF: 18 },
+  //   { category: "61+", age: 28, genderM: 14, genderF: 14 },
+  // ];
 
   const patients: Patient[] = [
     {
@@ -178,12 +172,12 @@ const PatientRecords: React.FC = () => {
     },
   ];
 
-  const currentDate = new Date();
-  const currentTime = currentDate.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+  // const currentDate = new Date();
+  // const currentTime = currentDate.toLocaleTimeString("en-US", {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   hour12: true,
+  // });
 
   const filteredPatients = patients.filter(
     (patient) =>

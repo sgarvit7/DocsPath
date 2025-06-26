@@ -46,13 +46,7 @@ const summaryStats = {
   },
 };
 
-const calendarData = {
-  currentMonth: "November 2018",
-  currentDate: 12,
-  currentTime: "12:54",
-  currentPeriod: "PM",
-  location: "Mumbai",
-};
+
 
 // Helper function to determine status based on consultation type and availability
 const getStatusInfo = (doctor: Doctor) => {
@@ -79,22 +73,22 @@ const DoctorManagement: React.FC = () => {
     (store) => store.doctorOnboarding.doctors
   ) as Doctor[];
 
-  const getStatusColor = (action: string) => {
-    let color = "";
-    switch (action.toLowerCase()) {
-      case "in the house":
-        color = "#92E3A9";
-        break;
-      case "vacation":
-        color = "#EBA352"; break;
-      case "free day":
-        color = "#FF0000"; break;
-      default:
-        color = "black"; break;
-    }
+  // const getStatusColor = (action: string) => {
+  //   let color = "";
+  //   switch (action.toLowerCase()) {
+  //     case "in the house":
+  //       color = "#92E3A9";
+  //       break;
+  //     case "vacation":
+  //       color = "#EBA352"; break;
+  //     case "free day":
+  //       color = "#FF0000"; break;
+  //     default:
+  //       color = "black"; break;
+  //   }
 
-    return `text-[${color}] border-[${color}] border-2 rounded-full shadow-md bg-white`;
-  };
+  //   return `text-[${color}] border-[${color}] border-2 rounded-full shadow-md bg-white`;
+  // };
 
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[] | null>(null);
 
@@ -112,7 +106,7 @@ const DoctorManagement: React.FC = () => {
       setFilteredDoctors(allDoctorList);
       console.log("filteredDoctors: ", filteredDoctors);
     }
-  }, [allDoctorList]);
+  }, [allDoctorList, filteredDoctors]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

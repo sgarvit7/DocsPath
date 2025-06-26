@@ -5,76 +5,60 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Upload, FileText, Download, Users, User } from "lucide-react";
 import * as XLSX from "xlsx";
 import axios from "axios";
+import { patient } from "@/types/patient";
+import { DoctorDB } from "@/types/doctor";
 
-// Types based on your Prisma models
-interface Doctor {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-
-  // Personal Information
-  fullName: string;
-  emailAddress: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  gender: string;
-  profilePhoto?: string;
-
-  // Professional Details
-  medicalLicenseNumber: string;
-  specialization: string;
-  yearsOfExperience: string;
-  associatedClinicHospitalName: string;
-  consultationType: string;
-
-  // Verification Documents - Cloudinary URLs
-  governmentIssuedId?: string;
-  medicalDegreeCertificate?: string;
-  medicalCouncilRegistrationCertificate?: string;
-  experienceCertificate?: string;
-
-  // Work Schedule Preferences
-  availableConsultationHours: string;
-  preferredModeOfConsultation: string;
-  languageSpoken: string;
-  additionalInformation?: string;
-  emergencyContactDetails: string;
-  personalBio?: string;
+// Types for raw CSV/Excel data
+interface RawDoctorData {
+  "Full Name"?: string;
+  "Email Address"?: string;
+  "Phone Number"?: string;
+  "Date of Birth"?: string;
+  "Gender"?: string;
+  "Medical License Number"?: string;
+  "Specialization"?: string;
+  "Years of Experience"?: string;
+  "Associated Clinic Hospital Name"?: string;
+  "Consultation Type"?: string;
+  "Available Consultation Hours"?: string;
+  "Preferred Mode of Consultation"?: string;
+  "Language Spoken"?: string;
+  "Emergency Contact Details"?: string;
+  "Personal Bio"?: string;
+  "Additional Information"?: string;
+  "Medical School Name"?: string;
+  "Medical School Graduation Year"?: string;
+  "Medical School Degree"?: string;
 }
 
-interface Patient {
-  id?: string;
-  email: string;
-  phone?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-
-  // Demographic Data
-  title?: string;
-  name?: string;
-  birthDate?: Date;
-  gender?: string;
-  bloodGroup?: string;
-  height?: number;
-  weight?: number;
-  maritalStatus?: string;
-  contactNumber?: string;
-  alternateNumber?: string;
-
-  // Lifestyle Data
-  smokingHabit?: string;
-  alcoholConsumption?: string;
-  activityLevel?: string;
-  dietHabit?: string;
-  occupation?: string;
-
-  // Medical Data
-  allergies?: string[];
-  medications?: string[];
-  chronicDiseases?: string[];
-  injuries?: string[];
-  surgeries?: string[];
+interface RawPatientData {
+  "Email"?: string;
+  "Phone"?: string;
+  "Title"?: string;
+  "Name"?: string;
+  "Birth Date"?: string;
+  "Gender"?: string;
+  "Blood Group"?: string;
+  "Height (cm)"?: string;
+  "Weight (kg)"?: string;
+  "Marital Status"?: string;
+  "Contact Number"?: string;
+  "Alternate Number"?: string;
+  "Smoking Habit"?: string;
+  "Alcohol Consumption"?: string;
+  "Activity Level"?: string;
+  "Diet Habit"?: string;
+  "Occupation"?: string;
+  "Allergies"?: string;
+  "Medications"?: string;
+  "Chronic Diseases"?: string;
+  "Injuries"?: string;
+  "Surgeries"?: string;
 }
+
+// Types for bulk upload (omitting auto-generated fields)
+type DoctorBulkUpload = Omit<DoctorDB, 'id' | 'createdAt' | 'updatedAt'>;
+type PatientBulkUpload = Omit<patient, 'id' | 'createdAt' | 'updatedAt' | 'supabaseUid'>;
 
 interface BulkUploadModalProps {
   isOpen: boolean;
@@ -137,7 +121,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     exit: { opacity: 0, x: -20 },
   };
 
-  // Sample data templates based on your Prisma models
+  // Sample data templates
   const sampleTemplates = {
     doctor: {
       headers: [
@@ -157,6 +141,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
         "Emergency Contact Details",
         "Personal Bio",
         "Additional Information",
+        "Medical School Name",
+        "Medical School Graduation Year",
+        "Medical School Degree",
       ],
       sampleData: [
         "Dr. John Smith",
@@ -175,6 +162,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
         "+1987654321",
         "Experienced cardiologist",
         "Available for emergency consultations",
+        "Harvard Medical School",
+        "2010",
+        "MD",
       ],
     },
     patient: {
@@ -277,14 +267,12 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     }
   };
 
-  const parseFileData = async (file: File): Promise<any[]> => {
+  const parseFileData = async (file: File): Promise<RawDoctorData[] | RawPatientData[]> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
         try {
-          let data: any[];
-
           if (file.name.endsWith(".csv")) {
             const text = e.target?.result as string;
             const rows = text
@@ -297,21 +285,25 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
               .slice(1)
               .filter((row) => row.some((cell) => cell.length > 0));
 
-            data = dataRows.map((row) => {
+            const parsedData = dataRows.map((row) => {
               const obj: Record<string, string> = {};
               headers.forEach((header, index) => {
                 obj[header] = row[index] || "";
               });
               return obj;
             });
+
+            const data = parsedData as unknown as RawDoctorData[] | RawPatientData[];
+            resolve(data);
           } else {
             const workbook = XLSX.read(e.target?.result, { type: "array" });
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            data = XLSX.utils.sheet_to_json(worksheet);
+            const xlsxData = XLSX.utils.sheet_to_json(worksheet);
+            
+            const data = xlsxData as unknown as RawDoctorData[] | RawPatientData[];
+            resolve(data);
           }
-
-          resolve(data);
         } catch (error) {
           reject(error);
         }
@@ -327,9 +319,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     });
   };
 
-  const transformDataForAPI = (rawData: any[]): Doctor[] | Patient[] => {
+  const transformDataForAPI = (rawData: RawDoctorData[] | RawPatientData[]): DoctorBulkUpload[] | PatientBulkUpload[] => {
     if (uploadType === "doctor") {
-      return rawData.map((row) => ({
+      return (rawData as RawDoctorData[]).map((row): DoctorBulkUpload => ({
         fullName: row["Full Name"] || "",
         emailAddress: row["Email Address"] || "",
         phoneNumber: row["Phone Number"] || "",
@@ -338,22 +330,28 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
         medicalLicenseNumber: row["Medical License Number"] || "",
         specialization: row["Specialization"] || "",
         yearsOfExperience: row["Years of Experience"] || "",
-        associatedClinicHospitalName:
-          row["Associated Clinic Hospital Name"] || "",
+        associatedClinicHospitalName: row["Associated Clinic Hospital Name"] || "",
         consultationType: row["Consultation Type"] || "",
         availableConsultationHours: row["Available Consultation Hours"] || "",
-        preferredModeOfConsultation:
-          row["Preferred Mode of Consultation"] || "",
+        preferredModeOfConsultation: row["Preferred Mode of Consultation"] || "",
         languageSpoken: row["Language Spoken"] || "",
         emergencyContactDetails: row["Emergency Contact Details"] || "",
-        personalBio: row["Personal Bio"] || "",
-        additionalInformation: row["Additional Information"] || "",
-      })) as Doctor[];
+        personalBio: row["Personal Bio"] || null,
+        additionalInformation: row["Additional Information"] || null,
+        medicalSchoolName: row["Medical School Name"] || null,
+        medicalSchoolGraduationYear: row["Medical School Graduation Year"] || null,
+        medicalSchoolDegree: row["Medical School Degree"] || null,
+        profilePhoto: null,
+        governmentIssuedId: null,
+        medicalDegreeCertificate: null,
+        medicalCouncilRegistrationCertificate: null,
+        experienceCertificate: null,
+      }));
     } else {
-      return rawData.map((row) => {
+      return (rawData as RawPatientData[]).map((row): PatientBulkUpload => {
         // Helper function to split comma-separated values into arrays
-        const splitToArray = (value: string): string[] => {
-          if (!value || value.trim() === "") return [];
+        const splitToArray = (value: string): string[] | null => {
+          if (!value || value.trim() === "" || value.toLowerCase() === "none") return null;
           return value
             .split(",")
             .map((item) => item.trim())
@@ -361,35 +359,33 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
         };
 
         // Parse birth date
-        const birthDate = row["Birth Date"]
-          ? new Date(row["Birth Date"])
-          : undefined;
+        const birthDate = row["Birth Date"] ? new Date(row["Birth Date"]) : null;
 
         return {
           email: row["Email"] || "",
-          phone: row["Phone"] || undefined,
-          title: row["Title"] || undefined,
-          name: row["Name"] || "",
+          phone: row["Phone"] || null,
+          title: row["Title"] || null,
+          name: row["Name"] || null,
           birthDate: birthDate,
-          gender: row["Gender"] || undefined,
-          bloodGroup: row["Blood Group"] || undefined,
-          height: row["Height (cm)"] ? parseInt(row["Height (cm)"]) : undefined,
-          weight: row["Weight (kg)"] ? parseInt(row["Weight (kg)"]) : undefined,
-          maritalStatus: row["Marital Status"] || undefined,
-          contactNumber: row["Contact Number"] || undefined,
-          alternateNumber: row["Alternate Number"] || undefined,
-          smokingHabit: row["Smoking Habit"] || undefined,
-          alcoholConsumption: row["Alcohol Consumption"] || undefined,
-          activityLevel: row["Activity Level"] || undefined,
-          dietHabit: row["Diet Habit"] || undefined,
-          occupation: row["Occupation"] || undefined,
+          gender: row["Gender"] || null,
+          bloodGroup: row["Blood Group"] || null,
+          height: row["Height (cm)"] ? parseInt(row["Height (cm)"]) : null,
+          weight: row["Weight (kg)"] ? parseInt(row["Weight (kg)"]) : null,
+          maritalStatus: row["Marital Status"] || null,
+          contactNumber: row["Contact Number"] || null,
+          alternateNumber: row["Alternate Number"] || null,
+          smokingHabit: row["Smoking Habit"] || null,
+          alcoholConsumption: row["Alcohol Consumption"] || null,
+          activityLevel: row["Activity Level"] || null,
+          dietHabit: row["Diet Habit"] || null,
+          occupation: row["Occupation"] || null,
           allergies: splitToArray(row["Allergies"] || ""),
           medications: splitToArray(row["Medications"] || ""),
           chronicDiseases: splitToArray(row["Chronic Diseases"] || ""),
           injuries: splitToArray(row["Injuries"] || ""),
           surgeries: splitToArray(row["Surgeries"] || ""),
         };
-      }) as Patient[];
+      });
     }
   };
 
@@ -409,16 +405,17 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
 
       setUploadStatus('uploading');
       setStatusMessage('Uploading data...');
-      console.log(transformedData)
-      const {data} = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/${uploadType}/bulk-upload`, {
+      console.log(transformedData);
+      
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/${uploadType}/bulk-upload`, {
         data: transformedData
       }, {
         headers: {
           'Content-Type': 'application/json',
         },
-        // timeout: 30000, 
       });
-console.log(data)
+      
+      console.log(data);
       setUploadStatus('success');
       setStatusMessage(`Successfully uploaded ${transformedData.length} ${uploadType} records!`);
       setTimeout(() => {

@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Calendar,
-  ChevronLeft,
-  ChevronRight,
   Search,
   Check,
   Edit,
@@ -13,8 +11,6 @@ import {
 import appointmentImage from "@/app/assets/appointment.png";
 import Image from "next/image";
 import CalendarComponent from "@/components/dashboard/Calendar"
-import StatsCard from "@/components/dashboard/StatsCard";
-import QuickStatsBar from "@/components/dashboard/QuickStatsBar";
 import {
   AreaChart,
   Area,
@@ -44,7 +40,7 @@ interface PatientOverviewData {
 }
 
 const Dashboard: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
+  // const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
 
   // Sample data for patient overview chart
   const patientOverviewData: PatientOverviewData[] = [
@@ -110,49 +106,7 @@ const Dashboard: React.FC = () => {
     },
   ];
 
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
-
-    const days = [];
-
-    // Adjust for Monday start (0 = Sunday, 1 = Monday, etc.)
-    const adjustedStartingDay =
-      startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
-
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < adjustedStartingDay; i++) {
-      days.push(null);
-    }
-
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(day);
-    }
-
-    return days;
-  };
-
-  const formatMonth = (date: Date) => {
-    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  };
-
-  const navigateMonth = (direction: "prev" | "next") => {
-    setCurrentDate((prev) => {
-      const newDate = new Date(prev);
-      if (direction === "prev") {
-        newDate.setMonth(prev.getMonth() - 1);
-      } else {
-        newDate.setMonth(prev.getMonth() + 1);
-      }
-      return newDate;
-    });
-  };
-
+  
   // Circular progress component
   const CircularProgress: React.FC<{
     percentage: number;
@@ -252,7 +206,7 @@ const Dashboard: React.FC = () => {
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip formatter={(value: any) => `${value}%`} />
+                <Tooltip formatter={(value: number) => `${value}%`} />
                 <Legend
                   verticalAlign="bottom"
                   height={36}

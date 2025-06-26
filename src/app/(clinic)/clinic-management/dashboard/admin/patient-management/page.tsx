@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Plus,
@@ -13,7 +13,6 @@ import {
   TrendingUp,
   FileText,
   Clock,
-  Donut,
 } from "lucide-react";
 import Image from "next/image";
 import BulkUploadModal from "@/utils/BulkUploadModal";
@@ -43,13 +42,13 @@ const summaryStats = {
   },
 };
 
-const patientAgeData = {
-  ageGroups: [
-    { range: "30-40", percentage: 50.0, color: "#2563eb" },
-    { range: "20-30", percentage: 30.0, color: "#10b981" },
-    { range: "60-80", percentage: 20.0, color: "#f59e0b" },
-  ],
-};
+// const patientAgeData = {
+//   ageGroups: [
+//     { range: "30-40", percentage: 50.0, color: "#2563eb" },
+//     { range: "20-30", percentage: 30.0, color: "#10b981" },
+//     { range: "60-80", percentage: 20.0, color: "#f59e0b" },
+//   ],
+// };
 
 const sidebarStats = {
   patientsWaiting: {
@@ -167,11 +166,11 @@ const PatientManagement: React.FC = () => {
   };
 
   const pieData = [
-  { value: 48.8, color: '#005A51', label: 'Age 60-80' },
-  { value: 24.3, color: '#008379', label: 'Age 40-60' },
-  { value: 14.6, color: '#CCF5ED', label: 'Age 20-40' },
-  { value: 12.3, color: '#DFF5E9', label: 'Age 10-20' },
-];
+    { value: 48.8, color: "#005A51", label: "Age 60-80" },
+    { value: 24.3, color: "#008379", label: "Age 40-60" },
+    { value: 14.6, color: "#CCF5ED", label: "Age 20-40" },
+    { value: 12.3, color: "#DFF5E9", label: "Age 10-20" },
+  ];
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
@@ -451,10 +450,12 @@ const PatientManagement: React.FC = () => {
                       </td>
                       <td className="py-2 px-3">
                         <div className="flex items-center gap-2">
-                          <img
+                          <Image
                             src={patient.avatar}
                             alt={patient.name}
-                            className="w-6 h-6 rounded-full object-cover"
+                            width={24}
+                            height={24}
+                            className="rounded-full object-cover"
                           />
                           <span className="font-medium text-gray-900 text-xs">
                             {patient.name}

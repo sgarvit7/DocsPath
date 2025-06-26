@@ -9,11 +9,9 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
   Cell,
 } from "recharts";
-import { Eye, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import medicalHistory from "@/app/assets/medical-history.png";
 import Image from "next/image";
 import StatsCard from "@/components/dashboard/StatsCard";
@@ -49,7 +47,7 @@ interface StatsCard {
 }
 
 const MedicalDashboard: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState(14);
+  
   const [searchTerm, setSearchTerm] = useState("");
 
   // Sample data
@@ -137,29 +135,29 @@ const MedicalDashboard: React.FC = () => {
     },
   ];
 
-  const generateCalendar = (year: number, month: number) => {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
+  // const generateCalendar = (year: number, month: number) => {
+  //   const firstDay = new Date(year, month, 1);
+  //   const lastDay = new Date(year, month + 1, 0);
+  //   const daysInMonth = lastDay.getDate();
+  //   const startingDayOfWeek = firstDay.getDay();
 
-    const calendar = [];
+  //   const calendar = [];
 
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      calendar.push(null);
-    }
+  //   // Add empty cells for days before the first day of the month
+  //   for (let i = 0; i < startingDayOfWeek; i++) {
+  //     calendar.push(null);
+  //   }
 
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      calendar.push(day);
-    }
+  //   // Add days of the month
+  //   for (let day = 1; day <= daysInMonth; day++) {
+  //     calendar.push(day);
+  //   }
 
-    return calendar;
-  };
+  //   return calendar;
+  // };
 
-  const calendar = generateCalendar(2018, 10); // November 2018
-  const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  // const calendar = generateCalendar(2018, 10); // November 2018
+  // const daysOfWeek = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const filteredPatients = patients.filter((patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase())

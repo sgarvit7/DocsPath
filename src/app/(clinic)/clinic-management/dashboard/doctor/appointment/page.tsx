@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Calendar,
   CalendarDays,
-  ChevronLeft,
-  ChevronRight,
   Search,
   Check,
   Edit,
@@ -15,7 +13,6 @@ import appointmentImage from "@/app/assets/appointment.png";
 import Image from "next/image";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import StatsCard from "@/components/dashboard/StatsCard";
-import QuickStatsBar from "@/components/dashboard/QuickStatsBar";
 import {
   AreaChart,
   Area,
@@ -53,7 +50,7 @@ interface StatsCard {
 }
 
 const Dashboard: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
+  // const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
 
   const statsCards: StatsCard[] = [
     {
@@ -133,92 +130,48 @@ const Dashboard: React.FC = () => {
     },
   ];
 
-  const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
+  // const getDaysInMonth = (date: Date) => {
+  //   const year = date.getFullYear();
+  //   const month = date.getMonth();
+  //   const firstDay = new Date(year, month, 1);
+  //   const lastDay = new Date(year, month + 1, 0);
+  //   const daysInMonth = lastDay.getDate();
+  //   const startingDayOfWeek = firstDay.getDay();
 
-    const days = [];
+  //   const days = [];
 
-    // Adjust for Monday start (0 = Sunday, 1 = Monday, etc.)
-    const adjustedStartingDay =
-      startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
+  //   // Adjust for Monday start (0 = Sunday, 1 = Monday, etc.)
+  //   const adjustedStartingDay =
+  //     startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
 
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < adjustedStartingDay; i++) {
-      days.push(null);
-    }
+  //   // Add empty cells for days before the first day of the month
+  //   for (let i = 0; i < adjustedStartingDay; i++) {
+  //     days.push(null);
+  //   }
 
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(day);
-    }
+  //   // Add days of the month
+  //   for (let day = 1; day <= daysInMonth; day++) {
+  //     days.push(day);
+  //   }
 
-    return days;
-  };
+  //   return days;
+  // };
 
-  const formatMonth = (date: Date) => {
-    return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-  };
+  // const formatMonth = (date: Date) => {
+  //   return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  // };
 
-  const navigateMonth = (direction: "prev" | "next") => {
-    setCurrentDate((prev) => {
-      const newDate = new Date(prev);
-      if (direction === "prev") {
-        newDate.setMonth(prev.getMonth() - 1);
-      } else {
-        newDate.setMonth(prev.getMonth() + 1);
-      }
-      return newDate;
-    });
-  };
-
-  // Circular progress component
-  const CircularProgress: React.FC<{
-    percentage: number;
-    size: number;
-    strokeWidth: number;
-    color: string;
-    children: React.ReactNode;
-  }> = ({ percentage, size, strokeWidth, color, children }) => {
-    const radius = (size - strokeWidth) / 2;
-    const circumference = radius * 2 * Math.PI;
-    const strokeDasharray = circumference;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-    return (
-      <div className="relative inline-flex items-center justify-center">
-        <svg width={size} height={size} className="transform -rotate-90">
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke="#e5e7eb"
-            strokeWidth={strokeWidth}
-            fill="none"
-          />
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill="none"
-            strokeDasharray={strokeDasharray}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap="round"
-            className="transition-all duration-300 ease-in-out"
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          {children}
-        </div>
-      </div>
-    );
-  };
+  // const navigateMonth = (direction: "prev" | "next") => {
+  //   setCurrentDate((prev) => {
+  //     const newDate = new Date(prev);
+  //     if (direction === "prev") {
+  //       newDate.setMonth(prev.getMonth() - 1);
+  //     } else {
+  //       newDate.setMonth(prev.getMonth() + 1);
+  //     }
+  //     return newDate;
+  //   });
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -275,7 +228,7 @@ const Dashboard: React.FC = () => {
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip formatter={(value: any) => `${value}%`} />
+                <Tooltip formatter={(value: number) => `${value}%`} />
                 <Legend
                   verticalAlign="bottom"
                   height={36}

@@ -67,7 +67,7 @@ export default function HowItWorksSection({ darkMode }: HowItWorksSectionProps) 
                     Sign Up & Set Up
                   </h4>
                   <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Create your account and personalize your clinic's dashboard.
+                    Create your account and personalize your clinic&apos;s dashboard.
                   </p>
                 </div>
               </div>

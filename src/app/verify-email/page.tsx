@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { verifyMagicLink } from '../../utils/emailMagicLink'
 
@@ -9,7 +9,7 @@ export default function VerifyEmailPage() {
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying')
   const [error, setError] = useState('')
   const router = useRouter()
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -32,6 +32,7 @@ export default function VerifyEmailPage() {
               try {
                 verifiedEmails = JSON.parse(existingVerifiedEmails)
               } catch (e) {
+                console.log(e);
                 verifiedEmails = []
               }
             }
@@ -53,6 +54,7 @@ export default function VerifyEmailPage() {
                   window.sessionStorage.setItem('signupFormData', JSON.stringify(formData))
                 }
               } catch (e) {
+                console.log(e);
                 // If form data doesn't exist or is corrupted, create new one
                 const newFormData = {
                   name: '',

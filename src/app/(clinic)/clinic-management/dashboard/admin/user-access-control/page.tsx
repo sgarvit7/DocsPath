@@ -123,7 +123,7 @@ const UserManagementDashboard: React.FC = () => {
               </div>
 
               <div className="space-y-3">
-                {usageData.map((item, index) => (
+                {usageData.map((item) => (
                   <div key={item.name} className="flex items-center">
                     <div className="w-16 text-sm text-white font-medium text-right mr-3">
                       {item.name}

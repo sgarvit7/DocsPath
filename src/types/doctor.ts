@@ -139,7 +139,7 @@ export interface DoctorOnboardingState {
 }
 
 // Initial state
-const initialState: DoctorOnboardingState = {
+export const initialState: DoctorOnboardingState = {
   currentStep: 1,
   personalInfo: {
     fullName: "",

@@ -1,6 +1,7 @@
 'use client';
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Eye, Plus } from 'lucide-react';
+import React from 'react';
+import { Eye, Plus } from 'lucide-react';
+import CalendarComponent from "@/components/dashboard/Calendar"
 
 interface Report {
   serialNumber: string;
@@ -13,8 +14,7 @@ interface DayData {
 }
 
 const AIAnalyticsDashboard: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState(14);
-  const [currentMonth, setCurrentMonth] = useState('November 2018');
+  // const [selectedDate, setSelectedDate] = useState(14);
 
   // Sample data for the bar chart
   const weekData: DayData[] = [
@@ -35,15 +35,15 @@ const AIAnalyticsDashboard: React.FC = () => {
   ];
 
   // Calendar data for November 2018
-  const calendarDays = [
-    [null, 1, 2, 3, 4, 5, 6],
-    [7, 8, 9, 10, 11, 12, 13],
-    [14, 15, 16, 17, 18, 19, 20],
-    [21, 22, 23, 24, 25, 26, 27],
-    [28, 29, 30, 1, 2, 3, 4]
-  ];
+  // const calendarDays = [
+  //   [null, 1, 2, 3, 4, 5, 6],
+  //   [7, 8, 9, 10, 11, 12, 13],
+  //   [14, 15, 16, 17, 18, 19, 20],
+  //   [21, 22, 23, 24, 25, 26, 27],
+  //   [28, 29, 30, 1, 2, 3, 4]
+  // ];
 
-  const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  // const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
   const maxValue = Math.max(...weekData.map(d => d.value));
 
@@ -60,51 +60,7 @@ const AIAnalyticsDashboard: React.FC = () => {
           </div>
           
           {/* Calendar Widget */}
-          <div className="bg-white rounded-lg shadow-sm p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-gray-800">{currentMonth}</h3>
-              <div className="flex space-x-1">
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-7 gap-1 text-xs">
-              {dayNames.map(day => (
-                <div key={day} className="text-center text-gray-500 py-1 text-[10px]">
-                  {day}
-                </div>
-              ))}
-              
-              {calendarDays.map((week, weekIndex) => 
-                week.map((day, dayIndex) => (
-                  <div
-                    key={`${weekIndex}-${dayIndex}`}
-                    className={`text-center py-1 text-xs cursor-pointer rounded ${
-                      day === selectedDate
-                        ? 'bg-teal-600 text-white'
-                        : day && day <= 30
-                        ? 'text-gray-700 hover:bg-gray-100'
-                        : 'text-gray-300'
-                    }`}
-                    onClick={() => day && day <= 30 && setSelectedDate(day)}
-                  >
-                    {day}
-                  </div>
-                ))
-              )}
-            </div>
-            
-            <div className="mt-3 text-xs text-gray-600">
-              <div>Today, 14th 📅</div>
-              <div className="font-medium">Mumbai</div>
-              <div className="text-lg font-bold">12:54 <span className="text-xs">PM</span></div>
-            </div>
-          </div>
+          <CalendarComponent />
         </div>
 
         {/* Main Content */}
@@ -125,7 +81,7 @@ const AIAnalyticsDashboard: React.FC = () => {
               {/* Bar Chart */}
               <div className="mb-8">
                 <div className="flex items-end justify-between h-48 px-4">
-                  {weekData.map((item, index) => (
+                  {weekData.map((item) => (
                     <div key={item.day} className="flex flex-col items-center">
                       <div 
                         className={`w-12 rounded-t-md mb-2 ${
@@ -147,7 +103,7 @@ const AIAnalyticsDashboard: React.FC = () => {
                   <div className="text-right">View</div>
                 </div>
                 
-                {reports.map((report, index) => (
+                {reports.map((report) => (
                   <div key={report.serialNumber} className="grid grid-cols-3 gap-4 py-4 border-b border-gray-100">
                     <div className="text-sm font-medium text-teal-600">
                       {report.serialNumber}
