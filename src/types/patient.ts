@@ -1,34 +1,37 @@
 export interface patient {
+  /* Core identifiers – always present */
   id: string;
   email: string;
-  phone?: string;
   createdAt: Date;
   updatedAt: Date;
   supabaseUid: string;
 
-  // Demographic Data
-  title?: string;
-  name?: string;
-  birthDate?: Date;
-  gender?: string;
-  bloodGroup?: string;
-  height?: number;
-  weight?: number;
-  maritalStatus?: string;
-  contactNumber?: string;
-  alternateNumber?: string;
+  /* Basic contacts */
+  phone?: string | null;
 
-  // Lifestyle Data
-  smokingHabit?: string;
-  alcoholConsumption?: string;
-  activityLevel?: string;
-  dietHabit?: string;
-  occupation?: string;
+  /* Demographic data */
+  title?: string | null;
+  name?: string | null;
+  birthDate?: Date | null;
+  gender?: string | null;
+  bloodGroup?: string | null;
+  height?: number | null;
+  weight?: number | null;
+  maritalStatus?: string | null;
+  contactNumber?: string | null;
+  alternateNumber?: string | null;
 
-  // Medical Data
-  allergies: string[];
-  medications: string[];
-  chronicDiseases: string[];
-  injuries: string[];
-  surgeries: string[];
+  /* Lifestyle data */
+  smokingHabit?: string | null;
+  alcoholConsumption?: string | null;
+  activityLevel?: string | null;
+  dietHabit?: string | null;
+  occupation?: string | null;
+
+  /* Medical data */
+  allergies?: string[] | null;
+  medications?: string[] | null;
+  chronicDiseases?: string[] | null;
+  injuries?: string[] | null;
+  surgeries?: string[] | null;
 }

@@ -290,6 +290,11 @@ const formatDoctorDetails = (data: DoctorDB): Doctor => ({
     associatedClinicHospitalName: data.associatedClinicHospitalName,
     consultationType: data.consultationType,
   },
+  educationDetails: {
+    medicalSchoolName: data?.medicalSchoolName ?? undefined,
+    medicalSchoolGraduationYear: data?.medicalSchoolGraduationYear ?? undefined ,
+    medicalSchoolDegree: data?.medicalSchoolDegree ?? undefined,
+  },
   verificationDocument: {
     governmentIssuedId: data.governmentIssuedId ?? undefined,
     medicalDegreeCertificate: data.medicalDegreeCertificate ?? undefined,

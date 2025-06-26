@@ -9,7 +9,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "@mui/x-date-pickers/themeAugmentation";
 
 const PRIMARY_COLOR = "#086861";
-const PRIMARY_COLOR_DARK = "#07544f";
 
 const theme = createTheme({
   components: {
@@ -55,21 +54,25 @@ export default function CustomCalendar() {
 
   return (
     <div className="bg-white h-1/3 w-auto float-right">
-    <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
-      </LocalizationProvider>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateCalendar
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+          />
+        </LocalizationProvider>
+
         <div className="-mt-10 p-3 bg-teal-50 rounded-lg flex justify-between">
-            <div>
-               <div className="text-xs">Today</div>
-          <div className="text-md font-semibold text-teal-800">Mumbai</div> 
-            </div>
-          
+          <div>
+            <div className="text-xs">Today</div>
+            <div className="text-md font-semibold text-teal-800">Mumbai</div>
+          </div>
+
           <div className="text-3xl font-medium text-teal-800">
             12:54 <span className="text-sm">PM</span>
           </div>
         </div>
-    </ThemeProvider>
+      </ThemeProvider>
     </div>
   );
 }

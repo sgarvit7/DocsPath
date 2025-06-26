@@ -17,7 +17,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutContext } from "../../../../../contexts/AdminLayoutContext";
-import Image from "next/image";
 
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -97,7 +96,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <motion.div
             initial={{ x: -300 }}
             animate={{ x: 0 }}
-            className="w-64 bg-teal-600 text-white flex flex-col "
+            className="w-64 bg-gradient-to-b from-[#08685E] to-[#1D6C64] text-white flex flex-col "
           >
             <div className="p-6 z-10">
               <div className="flex items-center gap-3 mb-8">
@@ -149,7 +148,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             animate={{ y: 0, opacity: 1 }}
             className="bg-white border-b flex"
           >
-            <div className="bg-teal-600 text-white px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
+            <div className="bg-[#086861] text-white px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
               <div className="flex items-center space-x-3">
                 <button className="bg-white text-teal-700 px-3 py-1 rounded text-sm font-medium">
                   Free trial

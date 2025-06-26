@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { UserAccess } from "@/types/userAccess";
 import axios, { AxiosError } from "axios";
-import Calendar from "@/components/dashboardComponents/Calendar";
+import Calendar from "@/components/dashboard/Calendar";
 import lock from "@/app/assets/lock.png";
 import Image from "next/image";
 

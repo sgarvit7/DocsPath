@@ -98,9 +98,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <motion.div
           initial={{ x: -300 }}
           animate={{ x: 0 }}
-          className="w-64 bg-teal-600 text-white flex flex-col"
+          className="w-64 bg-gradient-to-b from-[#08685E] to-[#1D6C64] text-white flex flex-col"
         >
-          <div className="p-6">
+          <div className="p-6 z-10">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                 <Stethoscope className="w-6 h-6 text-teal-600" />
@@ -140,33 +140,31 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </motion.div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 z-0 flex-col overflow-auto mt-14">
           {/* Header */}
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="bg-white p-6 border-b flex items-center justify-between"
+            className="bg-white border-b flex"
           >
-            <div className="flex items-center gap-4">
-              <Image
-                src={adminAvatar || "/placeholder.jpg"} 
-                alt="Admin"
-                width={64} 
-                height={64} 
-                className="rounded-xl object-cover"
-              />
-              <h2 className="text-2xl font-bold text-gray-800">
-                Welcome, {adminName}
-              </h2>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
-                Free Plan
-              </Button>
-              <Button size="sm" className="bg-red-600 hover:bg-red-700">
-                Upgrade
-              </Button>
+            <div className="bg-[#086861] text-white px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
+              <div className="flex items-center space-x-3">
+                <button className="bg-white text-teal-700 px-3 py-1 rounded text-sm font-medium">
+                  Free trial
+                </button>
+                <button className="bg-red-600 text-white px-3 py-1 rounded text-sm font-medium">
+                  Upgrade
+                </button>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-teal-700 font-medium">🔔</span>
+                </div>
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-teal-700 font-medium">❓</span>
+                </div>
+                <div className="w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">M</span>
+                </div>
+              </div>
             </div>
           </motion.div>
 

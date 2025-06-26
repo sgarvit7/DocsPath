@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import StoreProvider from "@/components/StoreProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export const metadata: Metadata = {
   title: "Medmin",
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <StoreProvider>
+          <CssBaseline />
           <AuthProvider>{children}</AuthProvider>
         </StoreProvider>
       </body>

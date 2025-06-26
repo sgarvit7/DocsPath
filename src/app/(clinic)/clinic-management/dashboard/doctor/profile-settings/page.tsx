@@ -7,10 +7,10 @@ import { Edit, Briefcase, GraduationCap, Lock } from "lucide-react";
 import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { Doctor } from "@/types/doctor"; // Adjust the import path as necessary
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileItem {
   label: string;
@@ -87,12 +87,20 @@ const ProfileSettings: React.FC = () => {
     appointmentReminders: true,
   });
 
-  const email = useSelector((state: RootState) => state.user.email);
   // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
   const [userEmail, setUserEmail] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor | null>(null);
+
+  const { user } = useAuth();
   useEffect(() => {
-    setUserEmail(email || "ananya.sharma@example.com"); // Replace with actual email from Redux or context
+    const Email = user?.email;
+    console.log(user?.email);
+    if (Email) {
+      setUserEmail(Email);
+    } else {
+      setUserEmail("ananya.sharma@example.com");
+    }
+    console.log(userEmail); // Replace with actual email from Redux or context
   }, []);
 
   useEffect(() => {
@@ -109,8 +117,9 @@ const ProfileSettings: React.FC = () => {
         }
       )
       .then((response) => {
-        setDoctorData(response.data);
+        setDoctorData(response.data.doctor);
         console.log("Doctor profile fetched:", response.data);
+        console.log(doctorData?.personalInfo?.fullName);
       })
       .catch((error) => {
         console.error("Error fetching doctor profile:", error);
@@ -122,7 +131,10 @@ const ProfileSettings: React.FC = () => {
     permanentAddress: [
       { label: "State/District", value: "Kerala" },
       { label: "Town / Village", value: "Leecia, East London" },
-      { label: "Street /Area/Locality", value: doctorData?.professionalDetails?.specialization || "Dermatology" },
+      {
+        label: "Street /Area/Locality",
+        value: doctorData?.professionalDetails?.specialization || "Dermatology",
+      },
       { label: "Pin Code", value: "6834602" },
       { label: "Post Office", value: "EST 524" },
       { label: "House No", value: "a 67M" },
@@ -342,7 +354,7 @@ const ProfileSettings: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-teal-700 text-white px-4 py-3 flex items-center justify-between top-0 fixed w-full z-10 shadow-md">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between space-x-4">
           <span className="text-lg font-medium">Profile & Settings</span>
         </div>
         <div className="flex items-center space-x-3">
@@ -464,10 +476,17 @@ const ProfileSettings: React.FC = () => {
         {/* Main Content Area */}
 
         <div className="flex-1 p-8 ml-80 w">
-          <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
-            {" "}
-            Profile & Settings
+          <div className="flex justify-between items-start">
+            <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
+              Profile & Settings
+            </div>
+            <Link href="/clinic-management/dashboard/doctor">
+              <button className="cursor-pointer h-10 w-10 bg-[#086861] text-white mx-10 rounded-lg text-xl font-medium">
+                {"<"}
+              </button>
+            </Link>
           </div>
+
           <div className="max-w-screen mx-auto space-y-6">
             <div className="shadow-sm p-6 bg-white rounded-lg mb-6">
               <h3 className="text-3xl font-semibold text-teal-800 py-10">

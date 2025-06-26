@@ -23,10 +23,12 @@ const publicRoutes = ['/sign-in', '/sign-up','/','/about'];
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
     // listener
     const unsubscribe = onAuthStateChanged(auth, (user) => { // This sets up a listener that runs whenever the user: Logs in, Logs out, Refreshes the page. This is how Firebase tells you whether a user is currently signed in. It gives you the user directly If someone is logged in.
     // console.log(user)
@@ -61,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: !!user,
   };
 
+  if (!mounted) return null;
   console.log(user);
 
   return (

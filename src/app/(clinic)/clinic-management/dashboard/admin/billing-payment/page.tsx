@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Search, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { Payment } from "@/types/payment";
 import axios from "axios";
-import Calendar from "@/components/dashboardComponents/Calendar";
+import Calendar from "@/components/dashboard/Calendar";
 import billImage from "@/app/assets/payment.png";
 import Image from "next/image";
 export default function BillingPaymentDashboard() {
