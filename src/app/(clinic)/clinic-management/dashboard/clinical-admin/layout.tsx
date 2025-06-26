@@ -13,6 +13,7 @@ import {
   Stethoscope,
   ClipboardPenLine,
   ClipboardPlus,
+  CreditCard,
   Bell,
   Play
 } from "lucide-react";
@@ -32,42 +33,58 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: BarChart3,
     label: "Dashboard",
-    link: "/clinic-management/dashboard/doctor",
+    link: "/clinic-management/dashboard/clinical-admin",
   },
   {
     icon: Users,
     label: "Patient Record",
-    link: "/clinic-management/dashboard/doctor/patient-record",
+    link: "/clinic-management/dashboard/clinical-admin/patient-record",
   },
   {
     icon: CalendarDays,
     label: "Appointments",
-    link: "/clinic-management/dashboard/doctor/appointment",
+    link: "/clinic-management/dashboard/clinical-admin/appointment",
   },
   {
     icon: ClipboardPlus,
     label: "Medical History",
-    link: "/clinic-management/dashboard/doctor/medical-history",
+    link: "/clinic-management/dashboard/clinical-admin/medical-history",
   },
   {
     icon: FileText,
     label: "Discharge Summary",
-    link: "/clinic-management/dashboard/doctor/discharge-summary",
+    link: "/clinic-management/dashboard/clinical-admin/discharge-summary",
   },
   {
     icon: ClipboardPenLine,
     label: "Prescription",
-    link: "/clinic-management/dashboard/doctor/prescription",
+    link: "/clinic-management/dashboard/clinical-admin/prescription",
   },
   {
     icon: FileText,
     label: "Lab Reports",
-    link: "/clinic-management/dashboard/doctor/lab-reports",
+    link: "/clinic-management/dashboard/clinical-admin/lab-reports",
+  },
+  
+  {
+    icon: CreditCard,
+    label: "Billing & Payment",
+    link: "/clinic-management/dashboard/clinical-admin/billing-payment",
+  },
+  {
+    icon: BarChart3,
+    label: "AI Analytic & Reports",
+    link: "/clinic-management/dashboard/clinical-admin/analytic-reports",
+  },
+  {
+    icon: Shield,
+    label: "User Access Control",
+    link: "/clinic-management/dashboard/clinical-admin/user-access-control",
   },
   {
     icon: Settings,
     label: "Settings",
-    link: "/clinic-management/dashboard/doctor/profile-settings",
+    link: "/clinic-management/dashboard/clinical-admin/profile-settings",
   },
 ];
 
@@ -96,7 +113,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="flex h-screen bg-gray-50 z-10">
         {/* Sidebar */}
         {pathName !==
-          "/clinic-management/dashboard/doctor/profile-settings" && (
+          "/clinic-management/dashboard/clinical-admin/profile-settings" && (
           <motion.div
             initial={{ x: -300 }}
             animate={{ x: 0 }}
@@ -107,7 +124,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                   <Stethoscope className="w-6 h-6 text-teal-600" />
                 </div>
-                <h1 className="text-xl font-bold">Doctor Management</h1>
+                <h1 className="text-xl font-bold">Clinical-Admin Control</h1>
               </div>
 
               <nav className="space-y-2">
@@ -118,7 +135,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => router.push(item.link)}
-                    className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
                       item.link === pathName
                         ? "bg-teal-700"
                         : "hover:bg-teal-700"
@@ -131,7 +148,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               </nav>
             </div>
 
-            <div className="mt-auto p-6">
+            <div className="mt-auto p-2">
               <Button
                 onClick={handleLogout}
                 variant="ghost"

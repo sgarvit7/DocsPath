@@ -12,45 +12,45 @@ const UPLOAD_DIR =
     : path.join(process.cwd(), "/tmp/uploads");
 
 // Helper function to ensure upload directory exists
-async function ensureUploadDir() {
-  try {
-    await fs.access(UPLOAD_DIR);
-  } catch (error) {
-    console.log(error);
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-  }
-}
+// async function ensureUploadDir() {
+//   try {
+//     await fs.access(UPLOAD_DIR);
+//   } catch (error) {
+//     console.log(error);
+//     await fs.mkdir(UPLOAD_DIR, { recursive: true });
+//   }
+// }
 
 // Helper function to save a file from the form data, upload to Cloudinary, and delete local file
-async function processFile(
-  file: File
-): Promise<{ cloudinaryUrl: string; originalName: string }> {
-  const fileBuffer = Buffer.from(await file.arrayBuffer());
-  const fileName = `${uuidv4()}-${file.name}`;
-  const filePath = path.join(UPLOAD_DIR, fileName);
+// async function processFile(
+//   file: File
+// ): Promise<{ cloudinaryUrl: string; originalName: string }> {
+//   const fileBuffer = Buffer.from(await file.arrayBuffer());
+//   const fileName = `${uuidv4()}-${file.name}`;
+//   const filePath = path.join(UPLOAD_DIR, fileName);
 
-  // Save file locally first
-  await fs.writeFile(filePath, fileBuffer);
+//   // Save file locally first
+//   await fs.writeFile(filePath, fileBuffer);
 
-  // Upload to Cloudinary
-  const cloudinaryUrl = await uploadFileToCloudinary(filePath);
+//   // Upload to Cloudinary
+//   const cloudinaryUrl = await uploadFileToCloudinary(filePath);
 
-  // Delete local file after successful upload
-  try {
-    await fs.unlink(filePath);
-  } catch (error) {
-    console.error("Error deleting local file:", error);
-  }
+//   // Delete local file after successful upload
+//   try {
+//     await fs.unlink(filePath);
+//   } catch (error) {
+//     console.error("Error deleting local file:", error);
+//   }
 
-  if (!cloudinaryUrl) {
-    throw new Error("Failed to upload file to Cloudinary");
-  }
+//   if (!cloudinaryUrl) {
+//     throw new Error("Failed to upload file to Cloudinary");
+//   }
 
-  return {
-    cloudinaryUrl,
-    originalName: file.name,
-  };
-}
+//   return {
+//     cloudinaryUrl,
+//     originalName: file.name,
+//   };
+// }
 
 // Interface for document information
 interface DocumentInfo {

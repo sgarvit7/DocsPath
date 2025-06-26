@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { X, Award, Power } from "lucide-react";
 import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
-import upgradeImage from "@/app/assets/upgrade.png"
+import upgradeImage from "@/app/assets/upgrade.png";
 import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
@@ -492,7 +492,7 @@ const ProfileSettings: React.FC = () => {
             <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
               Profile & Settings
             </div>
-            <Link href="/clinic-management/dashboard/doctor">
+            <Link href="/clinic-management/dashboard/clinical-admin">
               <button className="cursor-pointer h-10 w-10 bg-[#086861] text-white mx-10 rounded-lg text-xl font-medium">
                 {"<"}
               </button>

@@ -145,8 +145,6 @@ const Dashboard: React.FC = () => {
     },
   ];
 
-  
-
   const hourlyData = [
     { hour: "3:00", a: 30, b: 15, c: 10 },
     { hour: "4:00", a: 22, b: 18, c: 8 },

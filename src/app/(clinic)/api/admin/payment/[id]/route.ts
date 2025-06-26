@@ -5,11 +5,13 @@ import { Payment } from '@/types/payment';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params;
   try {
     const payment = await prisma.payment.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
 
     if (!payment) {
@@ -27,13 +29,15 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params;
   try {
     const body : Payment = await req.json();
 
     const updated = await prisma.payment.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data: body,
     });
 
@@ -52,11 +56,13 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const {id} = await params;
   try {
     await prisma.payment.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
 
     return NextResponse.json({ message: 'Payment deleted' });

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Calendar,
-  CalendarDays,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -13,7 +12,7 @@ import {
 } from "lucide-react";
 import appointmentImage from "@/app/assets/appointment.png";
 import Image from "next/image";
-import CalendarComponent from "@/components/dashboard/Calendar";
+import CalendarComponent from "@/components/dashboard/Calendar"
 import StatsCard from "@/components/dashboard/StatsCard";
 import QuickStatsBar from "@/components/dashboard/QuickStatsBar";
 import {
@@ -44,31 +43,9 @@ interface PatientOverviewData {
   female: number;
 }
 
-interface StatsCard {
-  title: string;
-  value: number;
-  subtitle: string;
-  color: string;
-  icon?: React.ReactNode;
-}
-
 const Dashboard: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2018, 10, 1)); // November 2018
 
-  const statsCards: StatsCard[] = [
-    {
-      title: "Today you have:",
-      value: 6,
-      subtitle: "Patient in Lobby",
-      color: "#086861",
-    },
-    {
-      title: "Appointments for the day:",
-      value: 12,
-      subtitle: "appointment Today",
-      color: "#22C55E",
-    },
-  ];
   // Sample data for patient overview chart
   const patientOverviewData: PatientOverviewData[] = [
     { month: "Jan", male: 45, female: 55 },
@@ -303,19 +280,53 @@ const Dashboard: React.FC = () => {
               </AreaChart>
             </ResponsiveContainer>
           </div>
+
+          
         </div>
 
         {/* Right Column */}
         <div className="lg:col-span-2 space-y-6 ml-4 ">
+          
+
           {/* Today Stats */}
           <div className="space-y-4 w-full">
             <div className="flex gap-4">
-              {/* Today Stats */}
-              <div className="flex w-full items-center justify-between gap-6">
-                {/* Stats Cards */}
-                {statsCards.map((card, index) => (
-                  <StatsCard key={index} data={card} maxValue={20} />
-                ))}
+              <div className="bg-white rounded-xl p-4 shadow-sm border flex-1">
+                <div className="text-xs text-gray-500 mb-2">
+                  Today you have:
+                </div>
+                <CircularProgress
+                  percentage={75}
+                  size={80}
+                  strokeWidth={6}
+                  color="#0d9488"
+                >
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-gray-800">6</div>
+                    <div className="text-xs text-gray-500">
+                      Patient in Lobby
+                    </div>
+                  </div>
+                </CircularProgress>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 shadow-sm border flex-1">
+                <div className="text-xs text-gray-500 mb-2">
+                  Appointments for the day:
+                </div>
+                <CircularProgress
+                  percentage={80}
+                  size={80}
+                  strokeWidth={6}
+                  color="#10b981"
+                >
+                  <div className="text-center">
+                    <div className="text-lg font-bold text-gray-800">12</div>
+                    <div className="text-xs text-gray-500">
+                      appointment Today
+                    </div>
+                  </div>
+                </CircularProgress>
               </div>
             </div>
           </div>
@@ -340,8 +351,8 @@ const Dashboard: React.FC = () => {
 
             <div className="bg-white rounded-xl p-4 shadow-sm border">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded flex items-center justify-center">
-                  <CalendarDays className="w-8 h-8 text-teal-600" />
+                <div className="w-8 h-8 bg-teal-600 rounded flex items-center justify-center">
+                  <div className="text-white text-sm font-bold">Rx</div>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Month</p>
@@ -353,17 +364,22 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
+
+          
+
+          
         </div>
         <div className="lg:col-span-2">
           <CalendarComponent />
-        </div>
+          </div>
+          
       </div>
 
       {/* Scheduled Appointments Table */}
-      <div className="rounded-xl shadow-sm">
-        <div className="p-6 border-b flex justify-between items-start">
-          <h3 className="text-lg font-medium">Scheduled Appointments</h3>
-          <div className="relative">
+          <div className="rounded-xl shadow-sm">
+            <div className="p-6 border-b flex justify-between items-start">
+              <h3 className="text-lg font-medium">Scheduled Appointments</h3>
+              <div className="relative">
             <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
             <input
               type="text"
@@ -374,61 +390,63 @@ const Dashboard: React.FC = () => {
               <Search className="w-4 h-4 text-white" />
             </button>
           </div>
-        </div>
+            </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-teal-600 text-white">
-              <tr>
-                <th className="text-left p-4 font-medium">PID</th>
-                <th className="text-left p-4 font-medium">Name</th>
-                <th className="text-left p-4 font-medium">Date</th>
-                <th className="text-left p-4 font-medium">Condition</th>
-                <th className="text-left p-4 font-medium">Mode</th>
-                <th className="text-left p-4 font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {scheduledAppointments.map((appointment, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  <td className="p-4 text-sm font-medium">{appointment.id}</td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full ${appointment.avatarColor} flex items-center justify-center text-white text-xs font-medium`}
-                      >
-                        {appointment.avatar}
-                      </div>
-                      <span className="text-sm font-medium">
-                        {appointment.name}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-sm">{appointment.date}</td>
-                  <td className="p-4 text-sm">{appointment.condition}</td>
-                  <td className="p-4 text-sm">{appointment.mode}</td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      <button className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded flex items-center justify-center">
-                        <Check className="w-4 h-4 text-green-600" />
-                      </button>
-                      <button className="w-8 h-8 bg-orange-100 hover:bg-orange-200 rounded flex items-center justify-center">
-                        <Edit className="w-4 h-4 text-orange-600" />
-                      </button>
-                      <button className="w-8 h-8 bg-red-100 hover:bg-red-200 rounded flex items-center justify-center">
-                        <X className="w-4 h-4 text-red-600" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-teal-600 text-white">
+                  <tr>
+                    <th className="text-left p-4 font-medium">PID</th>
+                    <th className="text-left p-4 font-medium">Name</th>
+                    <th className="text-left p-4 font-medium">Date</th>
+                    <th className="text-left p-4 font-medium">Condition</th>
+                    <th className="text-left p-4 font-medium">Mode</th>
+                    <th className="text-left p-4 font-medium">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scheduledAppointments.map((appointment, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-gray-100 hover:bg-gray-50"
+                    >
+                      <td className="p-4 text-sm font-medium">
+                        {appointment.id}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-8 h-8 rounded-full ${appointment.avatarColor} flex items-center justify-center text-white text-xs font-medium`}
+                          >
+                            {appointment.avatar}
+                          </div>
+                          <span className="text-sm font-medium">
+                            {appointment.name}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-sm">{appointment.date}</td>
+                      <td className="p-4 text-sm">{appointment.condition}</td>
+                      <td className="p-4 text-sm">{appointment.mode}</td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <button className="w-8 h-8 bg-green-100 hover:bg-green-200 rounded flex items-center justify-center">
+                            <Check className="w-4 h-4 text-green-600" />
+                          </button>
+                          <button className="w-8 h-8 bg-orange-100 hover:bg-orange-200 rounded flex items-center justify-center">
+                            <Edit className="w-4 h-4 text-orange-600" />
+                          </button>
+                          <button className="w-8 h-8 bg-red-100 hover:bg-red-200 rounded flex items-center justify-center">
+                            <X className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
     </div>
   );
 };
