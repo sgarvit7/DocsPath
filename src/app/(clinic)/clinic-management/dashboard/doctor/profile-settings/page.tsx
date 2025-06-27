@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Award, Power } from "lucide-react";
 import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
-import upgradeImage from "@/app/assets/upgrade.png"
-import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import axios from "axios";
@@ -367,7 +365,7 @@ const ProfileSettings: React.FC = () => {
             </button>
             <button className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
               <Image
-                src={upgradeImage}
+                src="/assets/upgrade.png"
                 alt="Upgrade"
                 width={30}
                 height={30}
@@ -396,9 +394,11 @@ const ProfileSettings: React.FC = () => {
             <div className="flex justify-center items-center">
               <div className="relative border-4 border-teal-500 rounded-full">
                 <Image
-                  src={image}
+                  src="/assets/doctor-profile.jpg"
                   alt="Dr. Mira Moreno"
-                  className="rounded-full object-cover h-30 w-30"
+                  width={120}
+                  height={120}
+                  className="rounded-full object-cover"
                 />
                 <div className="absolute -bottom-1 -right-1 bg-teal-600 rounded-full p-1">
                   <Award className="w-4 h-4 text-white" />

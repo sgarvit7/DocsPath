@@ -22,12 +22,10 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import patientRecord from "@/app/assets/patient-record.png";
 import Image from "next/image";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import StatsCard from "@/components/dashboard/StatsCard";
 import QuickStatsCard from "@/components/dashboard/QuickStatsBar";
-import filter from "@/app/assets/filter.png";
 
 // Types
 interface Patient {
@@ -206,7 +204,7 @@ const PatientRecords: React.FC = () => {
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
             <Image
-              src={patientRecord}
+              src="/assets/patient-record.png"
               alt="Patient Records"
               width={64}
               height={64}
@@ -321,7 +319,7 @@ const PatientRecords: React.FC = () => {
       <div className="mb-6 w-full flex justify-end items-end">
         <div className="w-full">
           <Image
-            src={filter}
+            src="/assets/filter.png"
             width={48}
             height={48}
             alt="filter"

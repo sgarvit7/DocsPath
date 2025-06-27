@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutContext } from "../../../../../contexts/AdminLayoutContext";
 import Image from "next/image";
-import upgradeImage from "@/app/assets/upgrade.png"
 
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -156,7 +155,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   Free Plan
                 </button>
                 <button className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
-                  <Image src={upgradeImage} alt="Upgrade" width={30} height={30} className="float-left mx-2 flex items-center justify-center"/>Upgrade
+                  <Image src="/assets/upgrade.png" alt="Upgrade" width={30} height={30} className="float-left mx-2 flex items-center justify-center"/>Upgrade
                 </button>
                 <div className="w-8 h-8 text-white rounded-full flex items-center justify-center">
                   <Bell />

@@ -12,11 +12,9 @@ import {
   Cell,
 } from "recharts";
 import { Eye, Search } from "lucide-react";
-import medicalHistory from "@/app/assets/medical-history.png";
 import Image from "next/image";
 import StatsCard from "@/components/dashboard/StatsCard";
 import CalendarComponent from "@/components/dashboard/Calendar";
-import filter from "@/app/assets/filter.png";
 
 interface Patient {
   id: string;
@@ -171,7 +169,7 @@ const MedicalDashboard: React.FC = () => {
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center">
               <Image
-                src={medicalHistory}
+                src="/assets/medical-history.png"
                 alt="Medical History"
                 width={64}
                 height={64}
@@ -270,7 +268,7 @@ const MedicalDashboard: React.FC = () => {
           <div className="mb-6 w-full flex justify-end items-end">
             <div className="w-full">
               <Image
-                src={filter}
+                src="/assets/filter.png"
                 width={48}
                 height={48}
                 alt="filter"

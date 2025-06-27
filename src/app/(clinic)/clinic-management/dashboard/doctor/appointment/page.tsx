@@ -9,7 +9,6 @@ import {
   Edit,
   X,
 } from "lucide-react";
-import appointmentImage from "@/app/assets/appointment.png";
 import Image from "next/image";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import StatsCard from "@/components/dashboard/StatsCard";
@@ -182,7 +181,7 @@ const Dashboard: React.FC = () => {
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center">
               <Image
-                src={appointmentImage}
+                src="/assets/appointment.png"
                 alt="Appointment Image"
                 width={64}
                 height={64}

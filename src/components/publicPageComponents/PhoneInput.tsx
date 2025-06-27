@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import countriesArray from "../../app/assets/countries.json"; // Assuming you have a JSON file with country data
+import countriesArray from "../../../public/assets/countries.json"; // Assuming you have a JSON file with country data
 import { Country } from "@/types/country";
 
 export default function CountrySelect() {
@@ -14,8 +14,14 @@ export default function CountrySelect() {
 
   useEffect(() => {
     const getCountries = async () => {
-      setCountries(countriesArray);
-      setLoading(false);
+      try {
+        setCountries(countriesArray);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load countries");
+        setLoading(false);
+      }
     };
 
     getCountries();
@@ -23,7 +29,6 @@ export default function CountrySelect() {
 
   if (loading) return <div>Loading countries...</div>;
   if (error) return <div>{error}</div>;
-  setError(error);
 
   return (
     <div className="flex flex-row items-center">
@@ -32,15 +37,15 @@ export default function CountrySelect() {
         alt={`${countryCode} flag`}
         width={24}
         height={24}
-      ></Image>
+      />
       <select
         className="border border-gray-300 rounded px-1 bg-white ml-2 w-15"
         value={countryCode}
         onChange={(e) => setCountryCode(e.target.value)}
       >
-        {countries.map((countriesArray) => (
-          <option key={countriesArray.code} value={countriesArray.code}>
-            {countriesArray.dial_code}
+        {countries.map((country) => (
+          <option key={country.code} value={country.code}>
+            {country.dial_code}
           </option>
         ))}
       </select>
@@ -48,8 +53,10 @@ export default function CountrySelect() {
         value={phoneNumber}
         id="phone"
         onChange={(e) => setPhoneNumber(e.target.value)}
-        className="border border-gray-300 rounded m-0 px-1 bg-white m-2 w-30"
-      ></input>
+        className="border border-gray-300 rounded px-1 bg-white ml-2 w-30"
+        type="tel"
+        placeholder="Enter phone number"
+      />
     </div>
   );
 }

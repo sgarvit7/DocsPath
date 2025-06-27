@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import BulkUploadModal from "@/utils/BulkUploadModal";
-import patient from "@/app/assets/patient.png";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import DonutChart from "@/components/dashboard/DonutChart";
 
@@ -182,7 +181,7 @@ const PatientManagement: React.FC = () => {
       >
         <div className="flex items-center gap-3">
           <Image
-            src={patient}
+            src="/assets/patient.png"
             alt="Patient Icon"
             width={64}
             height={64}
@@ -200,7 +199,7 @@ const PatientManagement: React.FC = () => {
       </motion.div>
 
       {/* Main Grid Container */}
-      <div className="grid grid-rows-2 gap-4 h-[calc(100vh-120px)]">
+      <div className="grid grid-rows-2 gap-4">
         {/* First Grid - 4 Columns */}
         <div className="grid grid-cols-4 gap-4">
           {/* Column 1: Pie Chart */}

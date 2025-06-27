@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useLayout } from "@/contexts/AdminLayoutContext";
 import Image from "next/image";
-import billImage from "@/app/assets/payment.png";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import QuickStatsCard from "@/components/dashboard/QuickStatsBar";
 
@@ -285,7 +284,7 @@ const getActionColor = (action: string) => {
           <div className="flex items-center gap-4 ">
             <div className="flex items-center justify-center">
               <Image
-                src={billImage}
+                src="/assets/payment.png"
                 alt="Lock Icon"
                 width={50}
                 height={50}
@@ -306,7 +305,6 @@ const getActionColor = (action: string) => {
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <div className="flex justify-between items-start mb-6">
                 <div className="text-3xl font-bold text-gray-900">$890.93</div>
-
                 <div>
                   <div className="text-sm text-teal-700 font-medium mt-1">
                     Revenue

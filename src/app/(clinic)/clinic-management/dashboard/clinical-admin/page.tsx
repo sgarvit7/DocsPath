@@ -27,7 +27,6 @@ import StatsCard from "@/components/dashboard/StatsCard";
 import QuickStatsCard from "@/components/dashboard/QuickStatsBar";
 import CalendarComponent from "@/components/dashboard/Calendar";
 import Image from "next/image";
-import filter from "@/app/assets/filter.png";
 
 // Types
 interface Patient {
@@ -404,7 +403,7 @@ const Dashboard: React.FC = () => {
       <div className="my-6 w-full flex justify-end items-end">
         <div className="w-full">
           <Image
-            src={filter}
+            src="/assets/filter.png"
             width={48}
             height={48}
             alt="filter"

@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Award, Power } from "lucide-react";
 import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
-import upgradeImage from "@/app/assets/upgrade.png";
-import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import axios from "axios";
@@ -42,43 +40,6 @@ interface ToggleSwitchProps {
   onToggle: () => void;
   size?: "sm" | "md" | "lg";
 }
-// const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
-//   enabled,
-//   onToggle,
-//   size = "md",
-// }) => {
-//   // Define size classes
-//   const sizeClasses = {
-//     sm: {
-//       container: "h-4 w-8",
-//       knob: "h-3 w-3",
-//       translate: enabled ? "translate-x-5" : "translate-x-1",
-//     },
-//     md: {
-//       container: "h-6 w-11",
-//       knob: "h-4 w-4",
-//       translate: enabled ? "translate-x-6" : "translate-x-1",
-//     },
-//     lg: {
-//       container: "h-8 w-16",
-//       knob: "h-6 w-6",
-//       translate: enabled ? "translate-x-8" : "translate-x-1",
-//     },
-//   }[size];
-
-//   return (
-//     <div
-//       className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
-//         sizeClasses.container
-//       } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
-//       onClick={onToggle}
-//     >
-//       <span
-//         className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
-//       />
-//     </div>
-//   );
-// };
 
 const ProfileSettings: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationState>({
@@ -94,6 +55,7 @@ const ProfileSettings: React.FC = () => {
   const [doctorData, setDoctorData] = useState<Doctor | null>(null);
 
   const { user } = useAuth();
+  
   useEffect(() => {
     const Email = user?.email;
     console.log(user?.email);
@@ -103,7 +65,7 @@ const ProfileSettings: React.FC = () => {
       setUserEmail("ananya.sharma@example.com");
     }
     console.log(userEmail); // Replace with actual email from Redux or context
-  }, []);
+  }, [user?.email]);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -128,8 +90,12 @@ const ProfileSettings: React.FC = () => {
       });
   }, [userEmail]);
 
+  // Memoize the PhoneInput components to prevent re-creation on every render
+  const phoneInputComponent = useMemo(() => <PhoneInput />, []);
+  const emergencyContactComponent = useMemo(() => <PhoneInput />, []);
+
   // Profile data as dictionary of arrays with label-value pairs
-  const profileData: ProfileData = {
+  const profileData: ProfileData = useMemo(() => ({
     permanentAddress: [
       { label: "State/District", value: "Kerala" },
       { label: "Town / Village", value: "Leecia, East London" },
@@ -154,8 +120,8 @@ const ProfileSettings: React.FC = () => {
       { label: "Last Name", value: "Jendob" },
       { label: "Field of practice", value: "Dermatology" },
       { label: "Email address", value: "Mira1229@gmail.com" },
-      { label: "Phone", value: <PhoneInput></PhoneInput> },
-      { label: "Emergency Contact", value: <PhoneInput></PhoneInput> },
+      { label: "Phone", value: phoneInputComponent },
+      { label: "Emergency Contact", value: emergencyContactComponent },
     ],
     professionalInformation: [
       { label: "Medical registration number", value: "4000000000" },
@@ -194,7 +160,7 @@ const ProfileSettings: React.FC = () => {
         value: "Min 0  Max 0",
       },
     ],
-  };
+  }), [doctorData?.professionalDetails?.specialization, phoneInputComponent, emergencyContactComponent]);
 
   const toggleNotification = (key: keyof NotificationState): void => {
     setNotifications((prev) => ({
@@ -250,39 +216,6 @@ const ProfileSettings: React.FC = () => {
       </div>
     </div>
   );
-
-  // const renderPersonalSection = (
-  //   title: string,
-  //   icon: React.ReactNode,
-  //   data: ProfileItem[],
-  //   columns: number = 3
-  // ): React.ReactElement => (
-  //   <div className="bg-white rounded-lg shadow-sm p-6">
-  //     <div className="flex items-center justify-between mb-6">
-  //       <div className="flex items-center space-x-2">
-  //         <div className="w-5 h-5 rounded-full flex items-center justify-center">
-  //           <span className="text-white text-xs">{icon}</span>
-  //         </div>
-  //         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-  //       </div>
-  //       <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
-  //         <span>Edit</span>
-  //         <Edit className="w-4 h-4" />
-  //       </button>
-  //     </div>
-
-  //     <div className={`grid grid-cols-${columns} gap-8`}>
-  //       {data.map((item, index) => (
-  //         <div key={index}>
-  //           <p className="text-sm font-medium text-teal-700 mb-1">
-  //             {item.label}
-  //           </p>
-  //           <p className="text-gray-800 font-medium">{item.value}</p>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
 
   const renderSpecialSection = (
     title: string,
@@ -367,7 +300,7 @@ const ProfileSettings: React.FC = () => {
             </button>
             <button className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
               <Image
-                src={upgradeImage}
+                src="/assets/upgrade.png"
                 alt="Upgrade"
                 width={30}
                 height={30}
@@ -396,9 +329,11 @@ const ProfileSettings: React.FC = () => {
             <div className="flex justify-center items-center">
               <div className="relative border-4 border-teal-500 rounded-full">
                 <Image
-                  src={image}
+                  src="/assets/doctor-profile.jpg"
                   alt="Dr. Mira Moreno"
-                  className="rounded-full object-cover h-30 w-30"
+                  width={120}
+                  height={120}
+                  className="rounded-full object-cover"
                 />
                 <div className="absolute -bottom-1 -right-1 bg-teal-600 rounded-full p-1">
                   <Award className="w-4 h-4 text-white" />

@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.(png|jpe?g|gif|svg|webp)$/i,
-      type: "asset/resource",
+      type: "assets/resource",
     });
     return config;
   },

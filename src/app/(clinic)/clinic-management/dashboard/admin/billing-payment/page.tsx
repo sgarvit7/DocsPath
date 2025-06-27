@@ -5,7 +5,6 @@ import { Search, Info } from "lucide-react";
 import { Payment } from "@/types/payment";
 import axios from "axios";
 import Calendar from "@/components/dashboard/Calendar";
-import billImage from "@/app/assets/payment.png";
 import Image from "next/image";
 export default function BillingPaymentDashboard() {
   const [transactions, setTransactions] = useState<Payment[]>([]);
@@ -75,7 +74,7 @@ export default function BillingPaymentDashboard() {
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-4">
             <div className="flex items-center justify-center">
-              <Image src={billImage} alt="Lock Icon" width={100} height={100} />
+              <Image src="/assets/payment.png" alt="Lock Icon" width={100} height={100} />
             </div>
             <div className="w-[50vw] bg-gradient-to-r from-[#10CEC047] to-teal-50">
             <h1 className="text-3xl p-1 font-bold bg-gradient-to-r from-[#007065] to-[#28988D] bg-clip-text text-transparent">

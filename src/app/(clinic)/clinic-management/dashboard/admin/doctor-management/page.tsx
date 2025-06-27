@@ -22,7 +22,6 @@ import { AppDispatch, RootState } from "@/store/store";
 import Image from "next/image";
 import BulkUploadModal from "@/utils/BulkUploadModal";
 import Calendar from "@/components/dashboard/Calendar";
-import StethoscopeImage from "@/app/assets/stethoscope.png";
 
 // Dummy data objects for easy modification
 const summaryStats = {
@@ -138,7 +137,7 @@ const DoctorManagement: React.FC = () => {
       >
         <div className="flex items-center gap-4">
           <Image
-            src={StethoscopeImage}
+            src="/assets/stethoscope.png"
             alt="Stethoscope Icon"
             width={100}
             height={100}
