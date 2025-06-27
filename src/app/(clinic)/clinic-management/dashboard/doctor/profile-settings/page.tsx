@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { X, Award, Power } from "lucide-react";
-import { Edit, Briefcase, GraduationCap, Lock } from "lucide-react";
+import { Award, Power } from "lucide-react";
+import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
+import upgradeImage from "@/app/assets/upgrade.png"
 import image from "./../../../../../assets/doctor-profile.jpg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { Doctor } from "@/types/doctor"; // Adjust the import path as necessary
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileItem {
   label: string;
@@ -40,43 +42,43 @@ interface ToggleSwitchProps {
   onToggle: () => void;
   size?: "sm" | "md" | "lg";
 }
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
-  enabled,
-  onToggle,
-  size = "md",
-}) => {
-  // Define size classes
-  const sizeClasses = {
-    sm: {
-      container: "h-4 w-8",
-      knob: "h-3 w-3",
-      translate: enabled ? "translate-x-5" : "translate-x-1",
-    },
-    md: {
-      container: "h-6 w-11",
-      knob: "h-4 w-4",
-      translate: enabled ? "translate-x-6" : "translate-x-1",
-    },
-    lg: {
-      container: "h-8 w-16",
-      knob: "h-6 w-6",
-      translate: enabled ? "translate-x-8" : "translate-x-1",
-    },
-  }[size];
+// const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
+//   enabled,
+//   onToggle,
+//   size = "md",
+// }) => {
+//   // Define size classes
+//   const sizeClasses = {
+//     sm: {
+//       container: "h-4 w-8",
+//       knob: "h-3 w-3",
+//       translate: enabled ? "translate-x-5" : "translate-x-1",
+//     },
+//     md: {
+//       container: "h-6 w-11",
+//       knob: "h-4 w-4",
+//       translate: enabled ? "translate-x-6" : "translate-x-1",
+//     },
+//     lg: {
+//       container: "h-8 w-16",
+//       knob: "h-6 w-6",
+//       translate: enabled ? "translate-x-8" : "translate-x-1",
+//     },
+//   }[size];
 
-  return (
-    <div
-      className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
-        sizeClasses.container
-      } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
-      onClick={onToggle}
-    >
-      <span
-        className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
-      />
-    </div>
-  );
-};
+//   return (
+//     <div
+//       className={`relative inline-flex items-center rounded-full cursor-pointer transition-colors ${
+//         sizeClasses.container
+//       } ${enabled ? "bg-teal-600" : "bg-gray-300"}`}
+//       onClick={onToggle}
+//     >
+//       <span
+//         className={`inline-block rounded-full bg-white transition-transform ${sizeClasses.knob} ${sizeClasses.translate}`}
+//       />
+//     </div>
+//   );
+// };
 
 const ProfileSettings: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationState>({
@@ -87,12 +89,20 @@ const ProfileSettings: React.FC = () => {
     appointmentReminders: true,
   });
 
-  const email = useSelector((state: RootState) => state.user.email);
   // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
   const [userEmail, setUserEmail] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor | null>(null);
+
+  const { user } = useAuth();
   useEffect(() => {
-    setUserEmail(email || "ananya.sharma@example.com"); // Replace with actual email from Redux or context
+    const Email = user?.email;
+    console.log(user?.email);
+    if (Email) {
+      setUserEmail(Email);
+    } else {
+      setUserEmail("ananya.sharma@example.com");
+    }
+    console.log(userEmail); // Replace with actual email from Redux or context
   }, []);
 
   useEffect(() => {
@@ -109,8 +119,9 @@ const ProfileSettings: React.FC = () => {
         }
       )
       .then((response) => {
-        setDoctorData(response.data);
+        setDoctorData(response.data.doctor);
         console.log("Doctor profile fetched:", response.data);
+        console.log(doctorData?.personalInfo?.fullName);
       })
       .catch((error) => {
         console.error("Error fetching doctor profile:", error);
@@ -122,7 +133,10 @@ const ProfileSettings: React.FC = () => {
     permanentAddress: [
       { label: "State/District", value: "Kerala" },
       { label: "Town / Village", value: "Leecia, East London" },
-      { label: "Street /Area/Locality", value: doctorData?.professionalDetails?.specialization || "Dermatology" },
+      {
+        label: "Street /Area/Locality",
+        value: doctorData?.professionalDetails?.specialization || "Dermatology",
+      },
       { label: "Pin Code", value: "6834602" },
       { label: "Post Office", value: "EST 524" },
       { label: "House No", value: "a 67M" },
@@ -230,45 +244,45 @@ const ProfileSettings: React.FC = () => {
             <p className="text-sm font-medium text-teal-700 mb-1">
               {item.label}
             </p>
-            <p className="text-gray-800 font-medium">{item.value}</p>
+            <div className="text-gray-800 font-medium">{item.value}</div>
           </div>
         ))}
       </div>
     </div>
   );
 
-  const renderPersonalSection = (
-    title: string,
-    icon: React.ReactNode,
-    data: ProfileItem[],
-    columns: number = 3
-  ): React.ReactElement => (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <div className="w-5 h-5 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs">{icon}</span>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-        </div>
-        <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
-          <span>Edit</span>
-          <Edit className="w-4 h-4" />
-        </button>
-      </div>
+  // const renderPersonalSection = (
+  //   title: string,
+  //   icon: React.ReactNode,
+  //   data: ProfileItem[],
+  //   columns: number = 3
+  // ): React.ReactElement => (
+  //   <div className="bg-white rounded-lg shadow-sm p-6">
+  //     <div className="flex items-center justify-between mb-6">
+  //       <div className="flex items-center space-x-2">
+  //         <div className="w-5 h-5 rounded-full flex items-center justify-center">
+  //           <span className="text-white text-xs">{icon}</span>
+  //         </div>
+  //         <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+  //       </div>
+  //       <button className="bg-gray-200 rounded-full p-3 hover:text-teal-700 font-medium text-sm flex items-center space-x-1">
+  //         <span>Edit</span>
+  //         <Edit className="w-4 h-4" />
+  //       </button>
+  //     </div>
 
-      <div className={`grid grid-cols-${columns} gap-8`}>
-        {data.map((item, index) => (
-          <div key={index}>
-            <p className="text-sm font-medium text-teal-700 mb-1">
-              {item.label}
-            </p>
-            <p className="text-gray-800 font-medium">{item.value}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  //     <div className={`grid grid-cols-${columns} gap-8`}>
+  //       {data.map((item, index) => (
+  //         <div key={index}>
+  //           <p className="text-sm font-medium text-teal-700 mb-1">
+  //             {item.label}
+  //           </p>
+  //           <p className="text-gray-800 font-medium">{item.value}</p>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   </div>
+  // );
 
   const renderSpecialSection = (
     title: string,
@@ -341,30 +355,40 @@ const ProfileSettings: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-teal-700 text-white px-4 py-3 flex items-center justify-between top-0 fixed w-full z-10 shadow-md">
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-medium">Profile & Settings</span>
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="bg-white border-b flex"
+      >
+        <div className="bg-[#086861] px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
+          <div className="flex items-center space-x-3">
+            <button className="bg-white px-3 py-1 border-1 border-black rounded-full text-sm font-medium">
+              Free Plan
+            </button>
+            <button className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
+              <Image
+                src={upgradeImage}
+                alt="Upgrade"
+                width={30}
+                height={30}
+                className="float-left mx-2 flex items-center justify-center"
+              />
+              Upgrade
+            </button>
+            <div className="w-8 h-8 text-white rounded-full flex items-center justify-center">
+              <Bell />
+            </div>
+            <div className="w-6 h-6 text-white border-2 p-1 border-white rounded-full flex items-center justify-center">
+              <Play />
+            </div>
+            <div className="w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">M</span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center space-x-3">
-          <button className="bg-white text-teal-700 px-3 py-1 rounded text-sm font-medium">
-            Free trial
-          </button>
-          <button className="bg-red-600 text-white px-3 py-1 rounded text-sm font-medium">
-            Upgrade
-          </button>
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-teal-700 font-medium">🔔</span>
-          </div>
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-teal-700 font-medium">❓</span>
-          </div>
-          <div className="w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-medium">M</span>
-          </div>
-        </div>
-      </div>
+      </motion.div>
 
-      <div className="flex mt-10">
+      <div className="flex">
         {/* Sidebar */}
         <div className="w-80 bg-white h-screen shadow-sm fixed">
           {/* Profile Section */}
@@ -464,10 +488,17 @@ const ProfileSettings: React.FC = () => {
         {/* Main Content Area */}
 
         <div className="flex-1 p-8 ml-80 w">
-          <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
-            {" "}
-            Profile & Settings
+          <div className="flex justify-between items-start">
+            <div className="text-teal-900 text-left my-5 text-2xl font-semibold">
+              Profile & Settings
+            </div>
+            <Link href="/clinic-management/dashboard/doctor">
+              <button className="cursor-pointer h-10 w-10 bg-[#086861] text-white mx-10 rounded-lg text-xl font-medium">
+                {"<"}
+              </button>
+            </Link>
           </div>
+
           <div className="max-w-screen mx-auto space-y-6">
             <div className="shadow-sm p-6 bg-white rounded-lg mb-6">
               <h3 className="text-3xl font-semibold text-teal-800 py-10">

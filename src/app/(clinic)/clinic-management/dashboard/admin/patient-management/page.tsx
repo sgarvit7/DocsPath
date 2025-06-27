@@ -15,6 +15,10 @@ import {
   Clock,
 } from "lucide-react";
 import Image from "next/image";
+import BulkUploadModal from "@/utils/BulkUploadModal";
+import patient from "@/app/assets/patient.png";
+import CalendarComponent from "@/components/dashboard/Calendar";
+import DonutChart from "@/components/dashboard/DonutChart";
 
 // Dummy data objects for easy modification
 const summaryStats = {
@@ -38,13 +42,13 @@ const summaryStats = {
   },
 };
 
-const patientAgeData = {
-  ageGroups: [
-    { range: "30-40", percentage: 50.0, color: "#2563eb" },
-    { range: "20-30", percentage: 30.0, color: "#10b981" },
-    { range: "60-80", percentage: 20.0, color: "#f59e0b" },
-  ],
-};
+// const patientAgeData = {
+//   ageGroups: [
+//     { range: "30-40", percentage: 50.0, color: "#2563eb" },
+//     { range: "20-30", percentage: 30.0, color: "#10b981" },
+//     { range: "60-80", percentage: 20.0, color: "#f59e0b" },
+//   ],
+// };
 
 const sidebarStats = {
   patientsWaiting: {
@@ -59,14 +63,6 @@ const sidebarStats = {
     count: 13,
     status: "Done",
   },
-};
-
-const calendarData = {
-  currentMonth: "November 2018",
-  currentDate: 14,
-  currentTime: "12:54",
-  currentPeriod: "PM",
-  location: "Mumbai",
 };
 
 // Dummy patient data
@@ -141,6 +137,7 @@ const patientData = [
 const PatientManagement: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredPatients, setFilteredPatients] = useState(patientData);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -151,7 +148,6 @@ const PatientManagement: React.FC = () => {
     );
     setFilteredPatients(filtered);
   };
-
   const handleAction = (action: string, patientId: string) => {
     console.log(`${action} action for patient ${patientId}`);
   };
@@ -169,36 +165,12 @@ const PatientManagement: React.FC = () => {
     }
   };
 
-  // Create pie chart segments
-  const createPieSegments = () => {
-    let cumulativePercentage = 0;
-    return patientAgeData.ageGroups.map((group) => {
-      const startAngle = cumulativePercentage * 3.6; // Convert percentage to degrees
-      const endAngle = (cumulativePercentage + group.percentage) * 3.6;
-      cumulativePercentage += group.percentage;
-
-      const startAngleRad = (startAngle - 90) * (Math.PI / 180);
-      const endAngleRad = (endAngle - 90) * (Math.PI / 180);
-
-      const largeArcFlag = group.percentage > 50 ? 1 : 0;
-
-      const x1 = 50 + 40 * Math.cos(startAngleRad);
-      const y1 = 50 + 40 * Math.sin(startAngleRad);
-      const x2 = 50 + 40 * Math.cos(endAngleRad);
-      const y2 = 50 + 40 * Math.sin(endAngleRad);
-
-      const pathData = `M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
-
-      return {
-        path: pathData,
-        color: group.color,
-        percentage: group.percentage,
-        range: group.range,
-      };
-    });
-  };
-
-  const pieSegments = createPieSegments();
+  const pieData = [
+    { value: 48.8, color: "#005A51", label: "Age 60-80" },
+    { value: 24.3, color: "#008379", label: "Age 40-60" },
+    { value: 14.6, color: "#CCF5ED", label: "Age 20-40" },
+    { value: 12.3, color: "#DFF5E9", label: "Age 10-20" },
+  ];
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
@@ -209,9 +181,13 @@ const PatientManagement: React.FC = () => {
         className="flex items-center justify-between mb-6"
       >
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center">
-            <Users className="w-6 h-6 text-teal-600" />
-          </div>
+          <Image
+            src={patient}
+            alt="Patient Icon"
+            width={64}
+            height={64}
+            className="object-cover m-4"
+          />
           <div>
             <h1 className="text-xl font-bold text-gray-900">
               Patient Management
@@ -232,67 +208,10 @@ const PatientManagement: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl p-4 shadow-sm border"
           >
-            <h3 className="font-semibold text-gray-900 mb-3 text-sm">
-              Your Patients
-            </h3>
-
-            {/* Pie Chart */}
-            <div className="flex items-center justify-center mb-4">
-              <div className="relative">
-                <svg width="160" height="160" viewBox="0 0 100 100">
-                  {/* Outer ring */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="#f3f4f6"
-                    strokeWidth="20"
-                  />
-
-                  {/* Pie segments */}
-                  {pieSegments.map((segment, index) => (
-                    <path
-                      key={index}
-                      d={segment.path}
-                      fill={segment.color}
-                      stroke="white"
-                      strokeWidth="0.5"
-                    />
-                  ))}
-
-                  {/* Inner circle */}
-                  <circle cx="50" cy="50" r="20" fill="white" />
-                </svg>
-
-                {/* Percentage Labels */}
-                <div className="absolute top-2 left-6 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                  50.0%
-                </div>
-                <div className="absolute bottom-6 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
-                  30.0%
-                </div>
-                <div className="absolute bottom-2 right-6 bg-amber-500 text-white px-2 py-1 rounded text-xs font-medium">
-                  20.0%
-                </div>
-              </div>
-            </div>
-
-            {/* Age Legend */}
-            <div className="space-y-2">
-              {patientAgeData.ageGroups.map((group, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: group.color }}
-                  ></div>
-                  <span className="text-xs text-gray-600">
-                    Age {group.range}
-                  </span>
-                </div>
-              ))}
+            <div className="w-full flex mx-auto border-1 rounded-lg border-[#086861]">
+              {/* <DonutChart pieData={pieData} /> */}
+              <DonutChart pieData={pieData} />
             </div>
           </motion.div>
 
@@ -433,83 +352,28 @@ const PatientManagement: React.FC = () => {
             transition={{ delay: 0.8 }}
             className="bg-white rounded-xl shadow-sm border p-4"
           >
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-gray-900 text-sm">
-                {calendarData.currentMonth}
-              </h3>
-              <div className="flex items-center gap-1">
-                <button className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-600 text-xs">‹</span>
-                </button>
-                <button className="w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-600 text-xs">›</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1 mb-4">
-              {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
-                <div
-                  key={`${day}-${index}`}
-                  className="text-center text-xs text-gray-500 py-1"
-                >
-                  {day}
-                </div>
-              ))}
-
-              <div className="text-center py-1 text-xs text-gray-400">31</div>
-              {Array.from({ length: 30 }, (_, i) => i + 1).map((date) => (
-                <div
-                  key={date}
-                  className={`text-center py-1 text-xs cursor-pointer rounded ${
-                    date === calendarData.currentDate
-                      ? "bg-teal-600 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {date}
-                </div>
-              ))}
-              {Array.from({ length: 4 }, (_, i) => i + 1).map((date) => (
-                <div
-                  key={`next-${date}`}
-                  className="text-center py-1 text-xs text-gray-400"
-                >
-                  {date}
-                </div>
-              ))}
-            </div>
-
-            {/* Current Time */}
-            <div className="bg-teal-50 rounded-lg p-3">
-              <div className="text-center">
-                <p className="text-xs text-gray-500 mb-1">Today • DRIIFF</p>
-                <p className="text-xs font-medium text-gray-700 mb-1">
-                  {calendarData.location}
-                </p>
-                <div className="text-lg font-bold text-teal-600">
-                  {calendarData.currentTime}
-                  <span className="text-xs ml-1">
-                    {calendarData.currentPeriod}
-                  </span>
-                </div>
-              </div>
+            <div className="w-auto h-1/3">
+              <CalendarComponent />
             </div>
           </motion.div>
         </div>
 
         {/* Second Grid - 2 Rows */}
-        <div className="grid grid-rows-2 gap-4">
+        <div className="grid grid-rows-1 gap-4">
           {/* Row 1: Register New Patient */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="bg-white rounded-xl shadow-sm border p-4 flex items-center justify-between"
+            className="rounded-xl p-1 flex items-center justify-between"
           >
-            <div className="flex items-center gap-4">
-              <button className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+                className="bg-black hover:bg-gray-800 text-white rounded-full px-6 py-2 flex items-center gap-2 text-sm cursor-pointer"
+              >
                 <Plus className="w-4 h-4" />
                 Register New Patient
               </button>
@@ -586,10 +450,12 @@ const PatientManagement: React.FC = () => {
                       </td>
                       <td className="py-2 px-3">
                         <div className="flex items-center gap-2">
-                          <img
+                          <Image
                             src={patient.avatar}
                             alt={patient.name}
-                            className="w-6 h-6 rounded-full object-cover"
+                            width={24}
+                            height={24}
+                            className="rounded-full object-cover"
                           />
                           <span className="font-medium text-gray-900 text-xs">
                             {patient.name}
@@ -644,6 +510,12 @@ const PatientManagement: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      <BulkUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        uploadType={"patient"}
+      />
     </div>
   );
 };

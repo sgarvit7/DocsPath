@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Settings, Edit3, User, Briefcase } from "lucide-react";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { Admin } from "@/types/admin"; // Adjust the import path as necessary
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProfileSettings() {
   const [darkMode, setDarkMode] = useState(false);
@@ -45,12 +44,13 @@ export default function ProfileSettings() {
     setDarkMode(!darkMode);
   };
 
-  const email = useSelector((state: RootState) => state.user.email);
   // For demonstration, using a hardcoded email. Replace with actual email from Redux or context
   const [userEmail, setUserEmail] = useState("");
 
+  const { user } = useAuth();
+  console.log(user);
   useEffect(() => {
-    setUserEmail(email || "priya.sharma@example.com");
+    setUserEmail(user?.email || "priya.sharma@example.com");
   }, []);
 
   useEffect(() => {

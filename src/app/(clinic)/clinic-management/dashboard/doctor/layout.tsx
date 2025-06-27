@@ -3,21 +3,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Users,
-  Activity,
   FileText,
   Settings,
-  Shield,
   BarChart3,
   CalendarDays,
   LogOut,
   Stethoscope,
   ClipboardPenLine,
   ClipboardPlus,
+  Bell,
+  Play
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutContext } from "../../../../../contexts/AdminLayoutContext";
 import Image from "next/image";
+import upgradeImage from "@/app/assets/upgrade.png"
 
 interface SidebarItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -97,7 +98,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <motion.div
             initial={{ x: -300 }}
             animate={{ x: 0 }}
-            className="w-64 bg-teal-600 text-white flex flex-col "
+            className="w-64 bg-gradient-to-b from-[#08685E] to-[#1D6C64] text-white flex flex-col "
           >
             <div className="p-6 z-10">
               <div className="flex items-center gap-3 mb-8">
@@ -142,26 +143,26 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex-col overflow-auto mt-14">
+        <div className="flex-1 z-0 flex-col overflow-auto mt-14">
           {/* Header */}
           <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="bg-white border-b flex"
           >
-            <div className="bg-teal-600 text-white px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
+            <div className="bg-[#086861] px-4 py-3 h-14 z-0 top-0 left-0 flex justify-end fixed w-screen z-10 ">
               <div className="flex items-center space-x-3">
-                <button className="bg-white text-teal-700 px-3 py-1 rounded text-sm font-medium">
-                  Free trial
+                <button className="bg-white px-3 py-1 border-1 border-black rounded-full text-sm font-medium">
+                  Free Plan
                 </button>
-                <button className="bg-red-600 text-white px-3 py-1 rounded text-sm font-medium">
-                  Upgrade
+                <button className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <Image src={upgradeImage} alt="Upgrade" width={30} height={30} className="float-left mx-2 flex items-center justify-center"/>Upgrade
                 </button>
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-teal-700 font-medium">🔔</span>
+                <div className="w-8 h-8 text-white rounded-full flex items-center justify-center">
+                  <Bell />
                 </div>
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-teal-700 font-medium">❓</span>
+                <div className="w-6 h-6 text-white border-2 p-1 border-white rounded-full flex items-center justify-center">
+                  <Play />
                 </div>
                 <div className="w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">M</span>

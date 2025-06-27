@@ -58,6 +58,11 @@ export interface Doctor {
     associatedClinicHospitalName: string;
     consultationType: string;
   };
+  educationDetails: {
+    medicalSchoolName?: string | null;
+    medicalSchoolGraduationYear?: string | null;
+    medicalSchoolDegree?: string | null;
+  };
   verificationDocument: {
     governmentIssuedId?: string | null;
     medicalDegreeCertificate?: string | null;
@@ -77,7 +82,9 @@ export interface Doctor {
 }
 
 export interface DoctorDB {
-  id?: string;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   // Personal Information
   fullName: string;
@@ -94,6 +101,11 @@ export interface DoctorDB {
   associatedClinicHospitalName: string;
   consultationType: string;
 
+  // Education Details
+  medicalSchoolName?: string | null;
+  medicalSchoolGraduationYear?: string | null;
+  medicalSchoolDegree?: string | null;
+
   // Verification Documents
   governmentIssuedId?: string | null;
   medicalDegreeCertificate?: string | null;
@@ -108,8 +120,9 @@ export interface DoctorDB {
   emergencyContactDetails: string;
   personalBio?: string | null;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  // Status and Verification (commented in schema, but included optionally)
+  // isVerified?: boolean;
+  // isActive?: boolean;
 }
 
 export interface DoctorOnboardingState {
@@ -126,7 +139,7 @@ export interface DoctorOnboardingState {
 }
 
 // Initial state
-const initialState: DoctorOnboardingState = {
+export const initialState: DoctorOnboardingState = {
   currentStep: 1,
   personalInfo: {
     fullName: "",
