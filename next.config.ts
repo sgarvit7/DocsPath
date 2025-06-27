@@ -5,11 +5,12 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     domains: ["flagsapi.com"],
+    unoptimized: true, // ← ADD THIS LINE
   },
   webpack(config) {
     config.module.rules.push({
       test: /\.(png|jpe?g|gif|svg|webp)$/i,
-      type: 'asset/resource',
+      type: "asset/resource",
     });
     return config;
   },
