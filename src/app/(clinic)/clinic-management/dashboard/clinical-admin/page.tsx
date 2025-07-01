@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -143,6 +143,25 @@ const Dashboard: React.FC = () => {
       avatar: "AM",
     },
   ];
+
+  const filteredPatients = useMemo(() => {
+      const q = searchTerm.trim().toLowerCase();
+      if (!q) return patients; // empty box ⇒ show everything
+  
+      return patients.filter((p) =>
+        [
+          p.id,
+          p.name,
+          p.age.toString(),
+          p.gender,
+          p.date,
+          p.mode,
+          p.condition,
+          p.status,
+          p.consultation,
+        ].some((field) => field.toLowerCase().includes(q))
+      );
+    }, [patients, searchTerm]);
 
   const hourlyData = [
     { hour: "3:00", a: 30, b: 15, c: 10 },
@@ -433,92 +452,85 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto border-[#086861] border-2 rounded-lg">
-          <table className="w-full">
-            <thead className="bg-gray-50 text-[#005A51] font-bold text-md border-b-1 border-b-black">
-              <tr>
-                <th className="text-left p-3">
-                  PID
-                </th>
-                <th className="text-left p-3">
-                  Name
-                </th>
-                <th className="text-left p-3">
-                  Age/Gender
-                </th>
-                <th className="text-left p-3">
-                  Date
-                </th>
-                <th className="text-left p-3">
-                  Mode
-                </th>
-                <th className="text-left p-3">
-                  Condition
-                </th>
-                <th className="text-left p-3">
-                  Status
-                </th>
-                <th className="text-left p-3">
-                  Consultation
-                </th>
-                <th className="text-left p-3">
-                  Prescription
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  <td className="p-3 text-sm">{patient.id}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-8 h-8 rounded-full ${getAvatarColor(
-                          patient.name
-                        )} flex items-center justify-center text-white text-xs font-medium`}
-                      >
-                        {patient.avatar}
-                      </div>
-                      <span className="text-sm font-medium">
-                        {patient.name}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="p-3 text-sm">
-                    {patient.age}/{patient.gender}
-                  </td>
-                  <td className="p-3 text-sm">{patient.date}</td>
-                  <td className="p-3 text-sm">{patient.mode}</td>
-                  <td className="p-3 text-sm">{patient.condition}</td>
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(
-                        patient.status
-                      )}`}
-                    >
-                      {patient.status}
-                    </span>
-                  </td>
-                  <td className="p-3 text-sm">
-                    {patient.consultation === "Join now" ? (
-                      <button className="text-teal-600 hover:text-teal-700 text-sm">
-                        {patient.consultation}
-                      </button>
-                    ) : (
-                      patient.consultation
-                    )}
-                  </td>
-                  <td className="p-3">
-                    <button className="text-teal-600 hover:text-teal-700">
-                      <FileText className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+           <table className="w-full">
+                      <thead className="bg-gray-50 text-[#005A51] font-bold text-md border-b-1 border-b-black">
+                        <tr>
+                          <th className="text-left p-3">PID</th>
+                          <th className="text-left p-3">Name</th>
+                          <th className="text-left p-3">Age/Gender</th>
+                          <th className="text-left p-3">Date</th>
+                          <th className="text-left p-3">Mode</th>
+                          <th className="text-left p-3">Condition</th>
+                          <th className="text-left p-3">Status</th>
+                          <th className="text-left p-3">Consultation</th>
+                          <th className="text-left p-3">Prescription</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredPatients.length ? (
+                          filteredPatients.map((patient, index) => (
+                            <tr
+                              key={index}
+                              className="border-b border-gray-100 hover:bg-gray-50"
+                            >
+                              <td className="p-3 text-sm">{patient.id}</td>
+                              <td className="p-3">
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`w-8 h-8 rounded-full ${getAvatarColor(
+                                      patient.name
+                                    )} flex items-center justify-center text-white text-xs font-medium`}
+                                  >
+                                    {patient.avatar}
+                                  </div>
+                                  <span className="text-sm font-medium">
+                                    {patient.name}
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="p-3 text-sm">
+                                {patient.age}/{patient.gender}
+                              </td>
+                              <td className="p-3 text-sm">{patient.date}</td>
+                              <td className="p-3 text-sm">{patient.mode}</td>
+                              <td className="p-3 text-sm">{patient.condition}</td>
+                              <td className="p-3">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(
+                                    patient.status
+                                  )}`}
+                                >
+                                  {patient.status}
+                                </span>
+                              </td>
+                              <td className="p-3 text-sm">
+                                {patient.consultation === "Join now" ? (
+                                  <button className="text-teal-600 hover:text-teal-700 text-sm">
+                                    {patient.consultation}
+                                  </button>
+                                ) : (
+                                  patient.consultation
+                                )}
+                              </td>
+                              <td className="p-3">
+                                <button className="text-teal-600 hover:text-teal-700">
+                                  <FileText className="w-4 h-4" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td
+                              colSpan={9}
+                              className="px-6 py-6 text-center text-gray-500"
+                            >
+                              No records match “{searchTerm}”.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
         </div>
       </div>
     </div>

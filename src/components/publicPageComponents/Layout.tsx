@@ -47,7 +47,7 @@ export default function Layout({ children }: LayoutProps) {
       }`}
     >
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <main className="relative">
+      <main className="relative mt-15">
         <ThemeContext.Provider value={{darkMode}}>
           {children}
         </ThemeContext.Provider>

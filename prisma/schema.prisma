@@ -171,6 +171,32 @@ model UserAccess {
   updatedAt    DateTime      @updatedAt
 }
 
+//Careers Model
+model JobDescription {
+  id                  String     @id @default(uuid())
+  title               String
+  department          String
+  type                String
+  location            String
+  description         String
+
+  salary              String?            // Optional
+  responsibilities    String[]           @default([])  // Optional list
+  requirements        String[]           @default([])  // Optional list
+  benefits            String[]           @default([])  // Optional list
+  howToApply          String[]           @default([])  // Optional list
+  emoluments          String[]           @default([])  // Optional list
+  whyJoin             String[]           @default([])  // Optional list
+
+  applicationDeadline DateTime?         // Optional ISO date
+  postedDate          DateTime          @default(now()) // Defaults to now
+  category            String?           // Optional
+  jobType             String?           // Optional
+
+  @@map("job_descriptions") // Optional: maps to actual DB table name
+}
+
+
 enum Department {
   Manager
   Doctor
