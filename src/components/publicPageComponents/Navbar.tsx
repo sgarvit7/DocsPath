@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Moon, Sun, Menu, X, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 
 interface NavbarProps {
   darkMode: boolean;
@@ -43,20 +44,20 @@ export default function Navbar({ darkMode, toggleDarkMode }: NavbarProps) {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
       darkMode ? 'bg-gray-900/95' : 'bg-teal-700/95'
     } backdrop-blur-sm`}>
+
+      {/* <GeoTracker /> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <motion.div 
-            className="flex items-center space-x-2"
+            className="flex items-center mt-2 space-x-2"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-              <div className="w-6 h-6 bg-teal-600 rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center">
-                  <div className="w-1 h-1 bg-teal-600 rounded-full"></div>
-                </div>
-              </div>
+            <div className="w-15 h-15 rounded-lg flex items-center justify-center">
+              <Image src="/assets/docspath-logo.png" alt="logo" width={150} height={150}>
+                
+              </Image>
             </div>
             <span className="text-white font-bold text-xl">Docspath</span>
           </motion.div>

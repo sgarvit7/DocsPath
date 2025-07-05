@@ -1,186 +1,159 @@
-import React from 'react';
-import { 
-  BarChart3, 
-  Zap, 
-  TrendingUp, 
-  Shield, 
-  ThumbsUp,
-  Settings
-} from 'lucide-react';
+'use client';
 
-interface Feature {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+import { FC } from 'react';
+import Image from 'next/image';
+import { motion, Variants } from 'framer-motion';
+import {
+  BarChart2,
+  Plug,
+  Handshake,
+  ShieldCheck,
+  HeartHandshake,
+  ThumbsUp,
+} from 'lucide-react'; // any icon lib is fine
+
+/* ─────────────── Types ─────────────── */
+
+interface WhyDocsPathProps {
+  /** Toggle dark theme */
+  darkMode?: boolean;
 }
 
+/* ─────────────── Motion Variants ─────────────── */
 
-const WhyDocsPath: React.FC<{ darkMode?: boolean }> = ({ darkMode = false }) => {
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
 
-  const features: Feature[] = [
-    {
-      title: "Real-Time Analytics & Smart Dashboards",
-      description: "Get comprehensive insights instantly and make data-backed decisions—all from a clean, intuitive interface.",
-      icon: <BarChart3 className="w-8 h-8 text-teal-600" />,
-      position: 'top-left'
-    },
-    {
-      title: "Lightning-Fast Setup & Seamless Integration",
-      description: "Onboard in minutes, not months. Connect with your existing tools and infrastructure without disruption.",
-      icon: <Zap className="w-8 h-8 text-teal-600" />,
-      position: 'top-right'
-    },
-    {
-      title: "Built to Scale with You",
-      description: "From startups to superspecialties, our platform evolves with your growth—no need to change systems.",
-      icon: <TrendingUp className="w-8 h-8 text-teal-600" />,
-      position: 'bottom-left'
-    },
-    {
-      title: "Uncompromising Security & Privacy",
-      description: "HIPAA & GDPR compliant. Role-based access, bank-grade encryption, and total control over data sharing.",
-      icon: <Shield className="w-8 h-8 text-teal-600" />,
-      position: 'center'
-    },
-    {
-      title: "Customizable. Reliable. Always On.",
-      description: "99.9% uptime. Flexible modules tailored to your exact needs. Premium support, 24/7.",
-      icon: <Settings className="w-8 h-8 text-teal-600" />,
-      position: 'bottom-right'
-    }
-  ];
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: { opacity: 1, y: 0 },
+};
 
-  const FeatureCard: React.FC<{ feature: Feature; className?: string }> = ({ 
-    feature, 
-    className = "" 
-  }) => (
-    <div className={`p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 ${
-      darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'
-    } ${className}`}>
-      <div className="flex items-start space-x-4">
-        <div className="flex-shrink-0 mt-1">
-          {feature.icon}
-        </div>
-        <div>
-          <h3 className={`text-lg font-semibold mb-2 leading-tight ${
-            darkMode ? 'text-white' : 'text-gray-900'
-          }`}>
-            {feature.title}
-          </h3>
-          <p className={`text-sm leading-relaxed ${
-            darkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            {feature.description}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+/* ─────────────── Card Data ─────────────── */
 
-  const DoctorAvatar: React.FC = () => (
-    <div className="relative">
-      {/* Doctor illustration placeholder */}
-      <div className={`w-48 h-48 rounded-full flex items-center justify-center shadow-xl ${
-        darkMode ? 'bg-gray-700 border-4 border-gray-600' : 'bg-white border-4 border-teal-100'
-      }`}>
-        <div className="text-center">
-          <div className="w-16 h-16 bg-teal-600 rounded-full mx-auto mb-2 flex items-center justify-center">
-            <ThumbsUp className="w-8 h-8 text-white" />
-          </div>
-          <div className={`text-sm font-medium ${
-            darkMode ? 'text-gray-300' : 'text-gray-700'
-          }`}>
-            Healthcare Professional
-          </div>
-          <div className="text-xs text-teal-600 mt-1">
-            Approved & Recommended
-          </div>
-        </div>
-      </div>
-      
-      {/* Thumbs up indicators */}
-      <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-        <ThumbsUp className="w-4 h-4 text-white" />
-      </div>
-      <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-        <ThumbsUp className="w-4 h-4 text-white" />
-      </div>
-    </div>
-  );
+const cards = [
+  {
+    id: 1,
+    icon: <BarChart2 className="w-6 h-6 shrink-0" />,
+    title: 'Real‑Time Analytics &\nSmart Dashboards',
+    text:
+      'Track performance, identify trends, and make data‑backed decisions—' +
+      'all from a clean, intuitive interface.',
+  },
+  {
+    id: 2,
+    icon: <Plug className="w-6 h-6 shrink-0" />,
+    title: 'Lightning‑Fast Setup &\nSeamless Integration',
+    text:
+      'Onboard in days, not months. Connect with your existing tools and ' +
+      'infrastructure without disruption.',
+  },
+  {
+    id: 3,
+    icon: <Handshake className="w-6 h-6 shrink-0" />,
+    title: 'Built to Scale with You',
+    text:
+      'From startups to superspecialties, our platform evolves with your ' +
+      'growth—no need to change systems.',
+  },
+  {
+    id: 4,
+    icon: <ShieldCheck className="w-6 h-6 shrink-0" />,
+    title: 'Uncompromising Security & Privacy',
+    text:
+      'HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption, ' +
+      'and total control over data sharing.',
+  },
+  {
+    id: 5,
+    icon: <ThumbsUp className="w-6 h-6 shrink-0" />,
+    title: 'Customizable. Reliable.\nAlways On.',
+    text:
+      '99.9% uptime. Flexible modules tailored to your exact needs. ' +
+      'Premium support, 24/7.',
+  },
+  {
+    id: 6,
+    icon: <HeartHandshake className="w-6 h-6 shrink-0" />,
+    title: 'Customer‑Centric Support',
+    text:
+      'Dedicated success managers, onboarding specialists, and in‑app ' +
+      'guides keep your team moving fast.',
+  },
+];
+
+/* ─────────────── Component ─────────────── */
+
+export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
+  const cardBg     = darkMode ? 'bg-slate-800' : 'bg-white';
+  const cardBorder = darkMode ? 'border-slate-600' : 'border-teal-600/60';
+  const cardTitle  = darkMode ? 'text-white' : 'text-teal-900';
+  const cardText   = darkMode ? 'text-slate-300' : 'text-slate-700';
 
   return (
-    <div className={`py-16 transition-colors duration-300 ${
-      darkMode ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
-      {/* Header */}
-      <div className="bg-teal-600 py-8 mb-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-white text-center">
-            Why DocsPath?
-          </h2>
-        </div>
-      </div>
+    <section className="py-20 text-center">
+      <h2 className="text-3xl md:text-4xl bg-[#086861] w-full py-6 font-bold text-white mb-12">
+        Why DocsPath?
+      </h2>
 
-      <div className="container mx-auto px-4">
-        {/* Desktop Layout */}
-        <div className="hidden lg:block relative max-w-6xl mx-auto">
-          {/* Grid layout for desktop */}
-          <div className="grid grid-cols-12 gap-6 items-center">
-            {/* Top Left */}
-            <div className="col-span-4">
-              <FeatureCard feature={features[0]} />
-            </div>
-            
-            {/* Top Right */}
-            <div className="col-span-4 col-start-9">
-              <FeatureCard feature={features[1]} />
-            </div>
-            
-            {/* Center Doctor */}
-            <div className="col-span-4 col-start-5 row-start-2 flex justify-center">
-              <DoctorAvatar />
-            </div>
-            
-            {/* Bottom Left */}
-            <div className="col-span-4 row-start-3">
-              <FeatureCard feature={features[2]} />
-            </div>
-            
-            {/* Center Bottom */}
-            <div className="col-span-4 col-start-5 row-start-3">
-              <FeatureCard feature={features[3]} />
-            </div>
-            
-            {/* Bottom Right */}
-            <div className="col-span-4 col-start-9 row-start-3">
-              <FeatureCard feature={features[4]} />
-            </div>
-          </div>
-        </div>
+      {/* ── Grid wrapper ─────────────────────────────── */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="relative mx-auto max-w-6xl grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8"
+      >
+        {/* Doctor image (absolute on md+) */}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="pointer-events-none md:absolute md:inset-0 md:z-10 md:flex md:items-center md:justify-center"
+        >
+          <Image
+            src="/assets/prelogin-img/doctor.png"
+            alt="Doctor giving thumbs up"
+            width={400}
+            height={450}
+            className="md:w-72 md:h-auto object-contain select-none"
+            priority
+          />
+        </motion.div>
 
-        {/* Mobile/Tablet Layout */}
-        <div className="lg:hidden">
-          <div className="flex justify-center mb-8">
-            <DoctorAvatar />
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {features.map((feature, index) => (
-              <FeatureCard key={index} feature={feature} />
-            ))}
-          </div>
-        </div>
-      </div>
+        {/* Cards */}
+        {cards.map(({ id, icon, title, text }) => (
+          <motion.div
+            key={id}
+            variants={cardVariants}
+            whileHover={{ y: -4 }}
+            className={`relative z-20 flex items-start gap-3 rounded-xl border ${cardBg} ${cardBorder} p-6 shadow-sm`}
+          >
+            {/* icon */}
+            <div className={darkMode ? 'text-teal-400' : 'text-teal-600'}>
+              {icon}
+            </div>
 
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-teal-200 rounded-full opacity-10"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-teal-100 rounded-full opacity-15"></div>
-        <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-teal-300 rounded-full opacity-10"></div>
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 bg-teal-200 rounded-full opacity-20"></div>
-      </div>
-    </div>
+            {/* copy */}
+            <div className="text-left whitespace-pre-wrap">
+              <h3 className={`font-semibold leading-snug ${cardTitle}`}>
+                {title}
+              </h3>
+              <p className={`mt-2 text-sm leading-relaxed ${cardText}`}>
+                {text}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </section>
   );
 };
 

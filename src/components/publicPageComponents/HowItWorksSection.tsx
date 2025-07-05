@@ -1,153 +1,190 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import clsx from "clsx";
+import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+type Props = {
+  darkMode?: boolean;
+};
 
-interface HowItWorksSectionProps {
-  darkMode: boolean;
-}
+const stepData = [
+  {
+    title: "Sign Up & Set Up",
+    description: "Create your account and personalize your clinic’s dashboard.",
+  },
+  {
+    title: "Sync Everything",
+    description:
+      "Integrate your calendar, patient records, and billing tools—effortlessly.",
+  },
+  {
+    title: "Deliver Smarter Care",
+    description:
+      "Start offering high-quality, efficient care with digital support every step of the way.",
+  },
+];
 
-export default function HowItWorksSection({ darkMode }: HowItWorksSectionProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
+const logos = [
+  "/logo1.png",
+  "/logo2.png",
+  "/logo3.png",
+  "/logo4.png",
+  "/logo5.png",
+  "/logo6.png",
+  "/logo7.png",
+  "/logo8.png",
+];
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
-  };
+const duplicatedLogos = [...logos, ...logos]; // for seamless looping
+
+const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section className={`py-16 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className={`bg-teal-600 text-white py-8 px-6 rounded-t-2xl`}
-        >
-          <h2 className="text-3xl font-bold text-center">How It Works</h2>
-        </motion.div>
+    <section
+      className={clsx(
+        "w-full",
+        darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-[#E8F3F3] to-[#FFFFFF] text-gray-900"
+      )}
+    >
+      {/* Heading */}
+      <motion.h2
+        className="text-5xl bg-[#086861] py-8 px-20 text-white font-bold mb-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        How It Works
+      </motion.h2>
 
-        {/* Content */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className={`${darkMode ? 'bg-gray-800' : 'bg-white'} p-8 rounded-b-2xl shadow-lg`}
-        >
-          <motion.h3
-            variants={itemVariants}
-            className={`text-2xl font-semibold mb-12 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}
-          >
-            Get Started in 3 Simple Steps
-          </motion.h3>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Steps */}
-            <motion.div variants={itemVariants} className="space-y-8">
-              {/* Step 1 */}
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold">
-                    1
-                  </div>
-                </div>
-                <div className={`flex-1 ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} p-6 rounded-lg`}>
-                  <h4 className={`text-xl font-semibold mb-3 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                    Sign Up & Set Up
-                  </h4>
-                  <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Create your account and personalize your clinic&apos;s dashboard.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className={`w-10 h-10 ${darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-300 text-gray-600'} rounded-full flex items-center justify-center font-bold`}>
-                    2
-                  </div>
-                </div>
-                <div className={`flex-1 ${darkMode ? 'bg-gray-700/50' : 'bg-gray-100/50'} p-6 rounded-lg border-2 border-dashed ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
-                  <h4 className={`text-xl font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                    Configure & Customize
-                  </h4>
-                  <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Set up your preferences and integrate with existing systems.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0">
-                  <div className={`w-10 h-10 ${darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-300 text-gray-600'} rounded-full flex items-center justify-center font-bold`}>
-                    3
-                  </div>
-                </div>
-                <div className={`flex-1 ${darkMode ? 'bg-gray-700/50' : 'bg-gray-100/50'} p-6 rounded-lg border-2 border-dashed ${darkMode ? 'border-gray-600' : 'border-gray-300'}`}>
-                  <h4 className={`text-xl font-semibold mb-3 ${darkMode ? 'text-gray-300' : 'text-gray-500'}`}>
-                    Go Live & Transform
-                  </h4>
-                  <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Start managing your practice effortlessly with our platform.
-                  </p>
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300"
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 py-10 px-16 items-start">
+        {/* Left: Steps */}
+        <div className="flex flex-row lg:items-center items-center gap-6">
+          {/* Step Buttons */}
+          <div className="flex lg:flex-col flex-row gap-6 items-center">
+            {stepData.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveStep(i)}
+                className={clsx(
+                  "w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg border-2 transition",
+                  i === activeStep
+                    ? "bg-[#086861] text-white border-green-700"
+                    : darkMode
+                    ? "bg-gray-800 text-[#005C56] border-gray-600"
+                    : "bg-white text-[#005C5645] border-gray-300 shadow"
+                )}
               >
-                Start free trial
-              </motion.button>
-            </motion.div>
-
-            {/* Video Placeholder */}
-            <motion.div
-              variants={itemVariants}
-              className="bg-teal-600 rounded-2xl aspect-video flex items-center justify-center cursor-pointer hover:bg-teal-700 transition-colors duration-300"
-            >
-              <Play className="w-16 h-16 text-white" fill="white" />
-            </motion.div>
+                {i + 1}
+              </button>
+            ))}
           </div>
+          <div className="flex flex-col justify-center items-center">
+            <motion.h3
+              className="text-3xl font-extrabold text-[#005C56] mb-4 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+            >
+              Get Started in 3 Simple Steps
+            </motion.h3>
+            {/* Step Content */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeStep}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.3 }}
+                className={clsx(
+                  "p-10 m-10 rounded-xl shadow-md w-full max-w-md",
+                  darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                )}
+              >
+                <h3 className="text-2xl font-bold text-[#086861] mb-2">
+                  {stepData[activeStep].title}
+                </h3>
+                <p className="text-base">{stepData[activeStep].description}</p>
+              </motion.div>
+            </AnimatePresence>
 
-          {/* Trust Section */}
-          <motion.div
-            variants={itemVariants}
-            className="mt-16 text-center"
-          >
-            <h4 className={`text-2xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              Trusted by 10,000+ Doctors, Clinics, and Hospitals Worldwide
-            </h4>
-            
-            {/* Company Logos */}
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                <div
-                  key={i}
-                  className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg flex items-center justify-center`}
-                >
-                  <div className={`w-8 h-8 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'} rounded`}></div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+            {/* CTA Button for Step 1 only */}
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              className={clsx(
+                "mt-4 px-6 py-3 text-base md:w-full lg:w-md rounded-full font-semibold w-fit",
+                darkMode
+                  ? "bg-green-600 text-white"
+                  : "bg-[#086861] text-white shadow-lg"
+              )}
+            >
+              Start free trial
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Right: Video Placeholder */}
+        <motion.div
+          className={clsx(
+            "rounded-2xl flex items-center justify-center w-full h-64 md:h-80",
+            darkMode ? "bg-green-800" : "bg-[#086861]"
+          )}
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          {/* Play Icon */}
+          <FontAwesomeIcon icon={faPlay}  className="md:text-4xl lg:text-7xl text-white"/>
         </motion.div>
       </div>
+
+      {/* Logo Carousel */}
+      <motion.div
+        className="py-20 overflow-hidden select-none w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <p className="text-3xl px-20 font-bold mb-8">
+          Trusted by 10,000+ Doctors, Clinics & Hospitals Worldwide
+        </p>
+
+        <motion.div
+          className="flex gap-10"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 10,
+            ease: "linear",
+          }}
+        >
+          {duplicatedLogos.map((logo, idx) => (
+            <div
+              key={idx}
+              className={clsx(
+                "w-40 aspect-square rounded-2xl overflow-hidden bg-white p-4 shadow flex items-center justify-center",
+                darkMode && "bg-gray-100"
+              )}
+            >
+              <Image
+                src={logo}
+                alt={`logo-${idx}`}
+                width={160}
+                height={160}
+                className="object-contain w-full h-full"
+                priority={idx < 8}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   );
-}
+};
+
+export default HowItWorks;

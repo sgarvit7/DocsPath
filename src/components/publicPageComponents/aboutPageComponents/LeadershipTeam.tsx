@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/publicPageComponents/Layout";
+import {User} from 'lucide-react';
 
 interface TeamMember {
   id: number;
@@ -12,8 +12,10 @@ interface TeamMember {
   image: string;
 }
 
-export default function LeadershipTeam() {
-  const darkMode = useTheme();
+interface LeadershipProps{
+  darkMode?: boolean;
+}
+export default function LeadershipTeam({darkMode = false} : LeadershipProps) {
 
   const teamMembers: TeamMember[] = [
     {
@@ -100,25 +102,21 @@ export default function LeadershipTeam() {
               key={member.id}
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${
+              className={`rounded-xl shadow-lg overflow-hidden border-2 border-[#086861] transition-all duration-300 ${
                 darkMode 
                   ? 'bg-gray-700 hover:shadow-2xl' 
                   : 'bg-white hover:shadow-2xl'
               }`}
             >
               <div className="aspect-square relative overflow-hidden">
-                <div className={`w-full h-full flex items-center justify-center ${
-                  darkMode ? 'bg-gray-600' : 'bg-gray-200'
+                <div className={`w-full h-full flex items-center p-4 justify-center ${
+                  darkMode ? 'bg-gray-700' : 'bg-gray-white'
                 }`}>
                   {/* Placeholder for team member image */}
-                  <div className={`w-24 h-24 rounded-full flex items-center justify-center ${
-                    darkMode ? 'bg-gray-500' : 'bg-gray-300'
+                  <div className={`w-full h-full rounded-lg flex items-center justify-center ${
+                    darkMode ? 'bg-gray-300' : 'bg-gray-200'
                   }`}>
-                    <span className={`text-2xl font-bold ${
-                      darkMode ? 'text-gray-300' : 'text-gray-600'
-                    }`}>
-                      {member.name.split(' ').map(n => n[0]).join('')}
-                    </span>
+                    <User className="w-full h-full"></User>
                   </div>
                 </div>
               </div>
@@ -128,13 +126,8 @@ export default function LeadershipTeam() {
                 }`}>
                   {member.name}
                 </h3>
-                <p className={`text-sm font-medium mb-3 ${
-                  darkMode ? 'text-teal-400' : 'text-teal-600'
-                }`}>
-                  {member.role}
-                </p>
                 <p className={`text-sm leading-relaxed ${
-                  darkMode ? 'text-gray-300' : 'text-gray-600'
+                  darkMode ? 'text-gray-300' : 'text-[#005A51]'
                 }`}>
                   {member.description}
                 </p>

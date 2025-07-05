@@ -2,7 +2,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/publicPageComponents/Layout";
 import { Award } from "lucide-react";
 
 interface AwardItem {
@@ -12,8 +11,11 @@ interface AwardItem {
   image: string;
 }
 
-export default function Awards() {
-  const darkMode = useTheme();
+interface AwardsProps{
+  darkMode?: boolean;
+}
+
+export default function Awards({darkMode = false} : AwardsProps) {
 
   const awards: AwardItem[] = [
     {
@@ -85,15 +87,15 @@ export default function Awards() {
               key={award.id}
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 ${
+              className={`rounded-xl shadow-lg overflow-hidden p-4 border-2 border-[#08685EA1] transition-all duration-300 ${
                 darkMode 
-                  ? 'bg-gray-800 hover:shadow-2xl border border-gray-700' 
-                  : 'bg-white hover:shadow-2xl border border-gray-200'
+                  ? 'bg-gray-800 hover:shadow-2xl' 
+                  : 'bg-white hover:shadow-2xl'
               }`}
             >
               <div className="aspect-video relative overflow-hidden">
                 {/* Award ceremony image placeholder */}
-                <div className={`w-full h-full flex items-center justify-center ${
+                <div className={`w-full h-full flex items-center rounded-lg justify-center ${
                   darkMode ? 'bg-purple-900' : 'bg-purple-600'
                 } bg-gradient-to-br from-purple-600 to-pink-600`}>
                   <div className="text-center">
@@ -103,13 +105,13 @@ export default function Awards() {
                 </div>
               </div>
               <div className="p-6">
-                <h3 className={`text-lg font-bold mb-3 ${
+                <h3 className={`text-lg font-bold mb-3 text-center ${
                   darkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   {award.name}
                 </h3>
                 <p className={`text-sm leading-relaxed ${
-                  darkMode ? 'text-gray-300' : 'text-gray-600'
+                  darkMode ? 'text-gray-300' : 'text-[#005A51]'
                 }`}>
                   {award.description}
                 </p>

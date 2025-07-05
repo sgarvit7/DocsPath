@@ -1,15 +1,14 @@
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // or wherever your Prisma instance is
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const jobId = await params.id;
-
+export async function GET( req : NextRequest, {params} : { params: Promise<{id: string}>}) {
+  console.log((await params).id);
+  // console.log(req);
   try {
+
+    const id = (await params).id;
     const job = await prisma.jobDescription.findUnique({
-      where: { id: jobId },
+      where: { id : id},
     });
 
     if (!job) {
@@ -25,3 +24,6 @@ export async function GET(
     );
   }
 }
+
+
+

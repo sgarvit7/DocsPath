@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next(); // NextResponse.next() tells Next.js to continue processing the request as usual. You're using response to modify the outgoing headers before continuing.
 
   // Add CORS headers
-    const allowedOrigins = ['http://localhost:3000', 'http://192.168.29.11:3000', 'https://medmin.vercel.app'];
+    const allowedOrigins = ['http://localhost:3000', 'http://192.168.29.11:3000', 'https://docspath.vercel.app'];
     const origin = request.headers.get('Origin');
 
     if (origin && allowedOrigins.includes(origin)) {

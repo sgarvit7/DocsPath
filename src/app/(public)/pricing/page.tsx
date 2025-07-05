@@ -136,7 +136,7 @@ const PricingPlans: React.FC = () => {
 
   const PlanCard: React.FC<{ plan: Plan }> = ({ plan }) => (
     <div
-      className={`relative flex flex-col   /* 👈 NEW */
+      className={`relative flex flex-col  /* 👈 NEW */
                 w-[450px] rounded-lg p-10 shadow-lg
                 transition-all duration-300 hover:shadow-xl
                 ${
@@ -251,7 +251,7 @@ const PricingPlans: React.FC = () => {
         </div>
 
         {/* Plans Grid */}
-        <div className="flex justify-between items-stretch w-4/5 h-full gap-8 max-w-6xl mx-auto">
+        <div className="flex justify-center grid md:grid-col-1 lg:grid-cols-2  items-stretch w-4/5 h-full gap-20 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <PlanCard key={index} plan={plan} />
           ))}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Shield, 
   MessageCircle, 
@@ -13,8 +13,11 @@ interface IncludedFeature {
   icon: React.ReactNode;
 }
 
-const PricingSection: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+interface PricingSectionProps {
+  darkMode?: boolean; // optional, default to false if not provided
+}
+
+const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false }) => {
 
   const includedFeatures: IncludedFeature[] = [
     {
@@ -40,9 +43,9 @@ const PricingSection: React.FC = () => {
   ];
 
   const FeaturePill: React.FC<{ feature: IncludedFeature }> = ({ feature }) => (
-    <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-200 shadow-md hover:shadow-lg`}>
+    <div className={`inline-flex  items-center space-x-2 px-6 py-4 rounded-lg text-white bg-[#08685EA1] hover:bg-teal-700 transition-colors duration-200 shadow-md hover:shadow-lg`}>
       {feature.icon}
-      <span className="text-sm font-medium">{feature.text}</span>
+      <span className="text-lg  font-medium">{feature.text}</span>
     </div>
   );
 
@@ -64,24 +67,6 @@ const PricingSection: React.FC = () => {
         <div className="absolute top-1/3 left-20 w-8 h-8 transform -rotate-45 border-2 border-teal-200 opacity-40"></div>
       </div>
 
-      {/* Dark Mode Toggle */}
-      <div className="absolute top-6 right-6 flex items-center space-x-3 z-10">
-        <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-          Dark mode
-        </span>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
-            darkMode ? 'bg-teal-600' : 'bg-gray-300'
-          }`}
-        >
-          <div
-            className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${
-              darkMode ? 'translate-x-7' : 'translate-x-1'
-            }`}
-          />
-        </button>
-      </div>
 
       {/* Header */}
       <div className="bg-teal-600 py-8">
@@ -92,18 +77,18 @@ const PricingSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      <div className="relative z-10 mx-auto container px-4 py-16">
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
           {/* Header Section */}
-          <div className="text-center mb-12">
+          <div className="mb-12">
             <h2 className={`text-3xl font-bold mb-6 ${
-              darkMode ? 'text-white' : 'text-gray-900'
+              darkMode ? 'text-white' : 'text-[#086861]'
             }`}>
               No hidden costs. No guesswork
             </h2>
-            <p className={`text-lg leading-relaxed max-w-3xl mx-auto ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
+            <p className={`text-lg font-bold max-w-3xl ${
+              darkMode ? 'text-gray-300' : 'text-gray-900'
             }`}>
               Explore flexible plans built for solo practitioners, group clinics, and enterprise hospitals 
               with enterprise-grade features in every tier.
@@ -111,16 +96,16 @@ const PricingSection: React.FC = () => {
           </div>
 
           {/* All Plans Include Section */}
-          <div className={`p-8 rounded-2xl shadow-lg mb-12 ${
-            darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-100'
+          <div className={`p-8 rounded-2xl mb-12 ${
+            darkMode ? 'bg-gray-800' : 'bg-white'
           }`}>
-            <h3 className={`text-2xl font-semibold mb-8 text-center ${
+            <h3 className={`text-2xl font-semibold mb-8 ${
               darkMode ? 'text-white' : 'text-gray-900'
             }`}>
               All plans include:
             </h3>
             
-            <div className="flex flex-wrap justify-center gap-4 mb-6">
+            <div className="flex flex-wrap justify-center gap-4 space-x-10 mb-6">
               {includedFeatures.map((feature, index) => (
                 <FeaturePill key={index} feature={feature} />
               ))}
@@ -129,67 +114,33 @@ const PricingSection: React.FC = () => {
 
           {/* Separator Line */}
           <div className={`w-full h-px mb-12 ${
-            darkMode ? 'bg-gray-700' : 'bg-gray-300'
+            darkMode ? 'bg-gray-700' : 'bg-gray-900'
           }`}></div>
 
           {/* Call to Action Section */}
-          <div className="text-center">
+          <div className="text-left">
             <h3 className={`text-3xl font-bold mb-6 ${
               darkMode ? 'text-white' : 'text-gray-900'
             }`}>
               Start the Transformation Today
             </h3>
-            <p className={`text-lg leading-relaxed mb-8 max-w-2xl mx-auto ${
-              darkMode ? 'text-gray-300' : 'text-gray-600'
+            <p className={`text-lg leading-relaxed font-bold mb-8 max-w-full ${
+              darkMode ? 'text-gray-300' : 'text-black'
             }`}>
               Join over 10,000 doctors and healthcare providers who trust DocsPath to modernize their practice, 
               enhance patient satisfaction, and grow without limits.
             </p>
             
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-              <button className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 px-8 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center max-w-2xl mx-auto">
+              <button className="w-1/3 sm:w-auto bg-[#086861] hover:bg-teal-700 text-white font-semibold py-4 px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl">
                 Start Free Trial
               </button>
-              <button className={`w-full sm:w-auto border-2 border-teal-600 text-teal-600 hover:bg-teal-50 font-semibold py-4 px-8 rounded-full transition-all duration-200 transform hover:scale-105 ${
-                darkMode ? 'hover:bg-gray-800' : 'hover:bg-teal-50'
+              <button className={`w-1/3 sm:w-auto border-2 border-[#086861] font-semibold py-4 px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105 ${
+                darkMode ? 'text-white hover:bg-gray-800' : 'text-[#086861] hover:bg-teal-50'
               }`}>
                 Request a Demo
               </button>
-            </div>
-          </div>
-
-          {/* Statistics or Trust Indicators */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className={`p-6 rounded-xl ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            } shadow-lg`}>
-              <div className="text-3xl font-bold text-teal-600 mb-2">10,000+</div>
-              <div className={`text-sm ${
-                darkMode ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Healthcare Providers
-              </div>
-            </div>
-            <div className={`p-6 rounded-xl ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            } shadow-lg`}>
-              <div className="text-3xl font-bold text-teal-600 mb-2">99.9%</div>
-              <div className={`text-sm ${
-                darkMode ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Uptime Guarantee
-              </div>
-            </div>
-            <div className={`p-6 rounded-xl ${
-              darkMode ? 'bg-gray-800' : 'bg-white'
-            } shadow-lg`}>
-              <div className="text-3xl font-bold text-teal-600 mb-2">24/7</div>
-              <div className={`text-sm ${
-                darkMode ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                Premium Support
-              </div>
             </div>
           </div>
         </div>

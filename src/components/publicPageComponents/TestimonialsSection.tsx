@@ -1,186 +1,139 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
-
-interface TestimonialsSectionProps {
-  darkMode: boolean;
-}
+import { motion } from "framer-motion";
+import clsx from "clsx";
+import { Star } from "lucide-react";
+import Image from "next/image";
 
 interface Testimonial {
-  id: number;
+  stars: 1 | 2 | 3 | 4 | 5;
+  quote: string;
   name: string;
-  title: string;
-  content: string;
-  rating: number;
-  avatar: string;
+  role: string;
+  avatar?: string;
 }
 
-export default function TestimonialsSection({ darkMode }: TestimonialsSectionProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const testimonials: Testimonial[] = [
+  {
+    stars: 5,
+    quote:
+      "This platform has completely transformed the way I manage my clinic. AI‑powered automation has saved me hours of manual work.",
+    name: "Dr. Aakash Mehta",
+    role: "Cardiologist",
+  },
+  {
+    stars: 5,
+    quote:
+      "Patient engagement and appointment management have never been this seamless. Highly recommended for doctors.",
+    name: "Dr. Priya Nair",
+    role: "General Physician",
+  },
+  {
+    stars: 5,
+    quote:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Nulla facilisi. Sed mi quam, consectetur eu.",
+    name: "Dr. Ravi Desai",
+    role: "Orthopedic Surgeon",
+  },
+];
 
-  const testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: "Dr. Aakash Mehta",
-      title: "Cardiologist",
-      content: "This platform has completely transformed the way I manage my clinic. AI-powered automation has saved me hours of manual work.",
-      rating: 5,
-      avatar: "AM"
-    },
-    {
-      id: 2,
-      name: "Dr. Priya Nair",
-      title: "General Physician",
-      content: "Patient engagement and appointment management have never been this seamless. Highly recommend for doctors.",
-      rating: 5,
-      avatar: "PN"
-    },
-    {
-      id: 3,
-      name: "Dr. Sarah Johnson",
-      title: "Pediatrician",
-      content: "Love the intuitive interface and comprehensive features. It has streamlined our entire practice management process.",
-      rating: 5,
-      avatar: "SJ"
-    }
-  ];
+interface DoctorTestimonialsProps {
+  darkMode?: boolean;
+}
 
-  const nextTestimonial = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-  };
+/* ---------- Framer variants ---------- */
+const cardFade = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.15, duration: 0.5 },
+  }),
+};
 
-  const prevTestimonial = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
-  };
+const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
+  darkMode = false,
+}) => {
+  const bg = darkMode ? "bg-gray-900" : "bg-[#086861]";
+  const textHeading = "text-white";
+  const cardBg = "bg-white";
+  const borderColor = darkMode ? "border-teal-800" : "border-teal-100";
 
   return (
-    <section className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-teal-600 text-black'} py-16`}>
-      <div className="container mx-auto px-4">
+    <section className={clsx(bg, "py-16")}>
+      <div className="mx-auto max-w-7xl grid grid-col-1 md:grid-col-2 lg-grid-col-3 px-4 sm:px-6 lg:px-8">
+        <h2 className={clsx(textHeading, "text-3xl font-extrabold")}>
+          What Doctors Say About DocsPath
+        </h2>
+
+        {/* horizontal scroll wrapper */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          drag="x"
+          dragConstraints={{ left: -600, right: 0 }}
+          className="mt-8 flex gap-8 overflow-x-auto snap-x snap-mandatory"
         >
-          <motion.h2
-            variants={itemVariants}
-            className="text-3xl font-bold text-center mb-12"
-          >
-            What Doctors Say About DocsPath
-          </motion.h2>
-
-          <motion.div
-            variants={itemVariants}
-            className="relative"
-          >
-            <div className="flex justify-center space-x-6 overflow-hidden">
-              {testimonials.map((testimonial, index) => {
-                const isActive = index === currentIndex;
-                const isNext = index === (currentIndex + 1) % testimonials.length;
-                const isPrev = index === (currentIndex - 1 + testimonials.length) % testimonials.length;
-
-                return (
-                  <motion.div
-                    key={testimonial.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{
-                      opacity: isActive ? 1 : isPrev || isNext ? 0.7 : 0,
-                      scale: isActive ? 1 : 0.9,
-                      x: isActive ? 0 : isNext ? 100 : isPrev ? -100 : 0
-                    }}
-                    transition={{ duration: 0.5 }}
-                    className={`rounded-lg p-6 shadow-lg min-w-[320px] max-w-[320px] transition-colors duration-500 ${
-                      darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'
-                    } ${!isActive && !isPrev && !isNext ? 'hidden' : ''}`}
-                  >
-                    {/* Quote Icon */}
-                    <div className={`text-6xl leading-none mb-2 ${darkMode ? 'text-gray-500' : 'text-gray-200'}`}>&quot;</div>
-
-                    {/* Stars */}
-                    <div className="flex space-x-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-
-                    {/* Content */}
-                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-6 leading-relaxed`}>
-                      {testimonial.content}
-                    </p>
-
-                    {/* Doctor Info */}
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold ${
-                        darkMode ? 'bg-gray-700 text-teal-200' : 'bg-teal-100 text-teal-600'
-                      }`}>
-                        {testimonial.avatar}
-                      </div>
-                      <div>
-                        <h4 className={`${darkMode ? 'text-white' : 'text-gray-800'} font-semibold`}>{testimonial.name}</h4>
-                        <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{testimonial.title}</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevTestimonial}
-              className={`absolute left-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
-                darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white/20 hover:bg-white/30 text-white'
-              }`}
-              aria-label="Previous testimonial"
+          {testimonials.map((t, i) => (
+            <motion.div
+              key={t.name}
+              custom={i}
+              variants={cardFade}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.4 }}
+              whileHover={{ y: -4 }}
+              className={clsx(
+                cardBg,
+                borderColor,
+                "relative snap-center w-[23rem] shrink-0 border-b-4 border-r-4 border-white"
+              )}
             >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+              <div className="pb-3 pr-3 bg-[#086861]">
+                {/* fancy left quote mark */}
+            
+                <div className="p-6 bg-white rounded-md" style={{boxShadow: '0 4px 10px rgba(255, 255, 255, 0.3)'}}>
+                  {/* stars */}
+                  <div className="mb-1 flex gap-1 text-amber-400">
+                    {Array.from({ length: t.stars }).map((_, idx) => (
+                      <Star
+                        key={idx}
+                        size={16}
+                        fill="currentColor"
+                        className="shrink-0"
+                      />
+                    ))}
+                  </div>
 
-            <button
-              onClick={nextTestimonial}
-              className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-colors duration-300 ${
-                darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-white/20 hover:bg-white/30 text-white'
-              }`}
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+                  {/* quote */}
+                  <p className="text-sm text-gray-700">{t.quote}</p>
 
-            {/* Dots Indicator */}
-            <div className="flex justify-center space-x-2 mt-8">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                    index === currentIndex
-                      ? 'bg-white'
-                      : darkMode ? 'bg-white/40' : 'bg-white/60'
-                  }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
-          </motion.div>
+                  {/* footer */}
+                  <div className="mt-4 flex items-center gap-3">
+                    {t.avatar ? (
+                      <Image
+                        src={t.avatar}
+                        alt={t.name}
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-gray-300" />
+                    )}
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {t.name}
+                      </p>
+                      <p className="text-xs text-gray-500">{t.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>
   );
-}
+};
+
+export default DoctorTestimonials;

@@ -1,10 +1,12 @@
 // contexts/AuthContext.tsx
-'use client'
-import { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { useRouter, usePathname } from 'next/navigation';
-import { auth } from '../../firebase/config'; // Import your auth instance
-import LoadingScreen from '@/components/LoadingScreen';
+"use client";
+import { createContext, useContext, useEffect, useState } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { useRouter, usePathname } from "next/navigation";
+import { auth } from "../../firebase/config"; // Import your auth instance
+import LoadingScreen from "@/components/LoadingScreen";
+import { publicRoutes } from "@/lib/publicRoutes";
+import { match } from "path-to-regexp";
 
 // Define the shape of our authentication context
 interface AuthContextType {
@@ -16,9 +18,20 @@ interface AuthContextType {
 // Create the context
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const isPublicRoute = (pathname: string): boolean => {
+  return publicRoutes.some((route) => {
+    // Convert `[param]` to `:param` for path-to-regexp compatibility
+    const pathPattern = route
+      .replace(/\[([^\]]+)\]/g, ":$1") // turns /careers/[id] → /careers/:id
+      .replace(/\*$/, "(.*)"); // turns /teleconsultation/* → /teleconsultation/(.*)
+
+    const matcher = match(pathPattern, { decode: decodeURIComponent });
+    return matcher(pathname) !== false;
+  });
+};
+
 // Public routes that don't require authentication
 // const publicRoutes = ['/sign-in', '/sign-up', '/clinic-management/teleconsultation', '/clinic-management/teleconsultation/*'];
-const publicRoutes = ['/sign-in', '/sign-up','/','/about'];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -30,25 +43,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setMounted(true);
     // listener
-    const unsubscribe = onAuthStateChanged(auth, (user) => { // This sets up a listener that runs whenever the user: Logs in, Logs out, Refreshes the page. This is how Firebase tells you whether a user is currently signed in. It gives you the user directly If someone is logged in.
-    // console.log(user)
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // This sets up a listener that runs whenever the user: Logs in, Logs out, Refreshes the page. This is how Firebase tells you whether a user is currently signed in. It gives you the user directly If someone is logged in.
+      // console.log(user)
       setUser(user);
       setLoading(false);
-      
+
       // Check if the current route is protected and redirect if necessary
       // const isPublicRoute = publicRoutes.includes(pathname || '');
-      const isPublicRoute = publicRoutes.some((route) =>
-        route.endsWith('/*')
-          ? (pathname || '').startsWith(route.replace('/*', ''))
-          : route === pathname
-      );
-      
-      
-      // console.log(isPublicRoute)
-      // console.log(pathname)
-      if (!user && !isPublicRoute) {
-        // Redirect to login if user is not authenticated and trying to access a protected route
-        router.push(`/sign-in?returnUrl=${encodeURIComponent(pathname || '')}`); // returnUrl — so we remember where they wanted to go, and can bring them back after login.
+      const isPublic = isPublicRoute(pathname || "");
+
+      if (!user && !isPublic) {
+        router.push(`/sign-in?returnUrl=${encodeURIComponent(pathname || "")}`);
       }
     });
 
@@ -77,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
