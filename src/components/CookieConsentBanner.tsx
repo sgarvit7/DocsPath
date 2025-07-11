@@ -1,37 +1,47 @@
 "use client";
 
 import CookieConsent from "react-cookie-consent";
-import { useEffect, useState } from "react";
 
 const CookieConsentBanner = () => {
-  const [showBanner, setShowBanner] = useState(false);
-
-  useEffect(() => {
-    setShowBanner(true); // Avoid SSR mismatch
-  }, []);
-
-  if (!showBanner) return null;
-
   return (
     <CookieConsent
       location="bottom"
-      buttonText="Accept"
-      cookieName="mySiteCookieConsent"
+      cookieName="cookieConsent"
       style={{
-        background: "#2B373B",
-        color: "#ffffff",
+        background: "#ffffff",
+        color: "#1f2937",
+        borderTop: "1px solid #ccc",
         fontSize: "14px",
+        padding: "16px",
+        textAlign: "center",
       }}
+      buttonText="Accept"
+      declineButtonText="Reject"
+      enableDeclineButton
       buttonStyle={{
-        background: "#14b8a6",
-        color: "#fff",
-        fontSize: "13px",
-        borderRadius: "5px",
+        backgroundColor: "#14b8a6", // teal-500
+        color: "white",
         padding: "8px 16px",
+        borderRadius: "9999px",
+        fontWeight: "bold",
+        border: "none",
+        marginRight: "10px",
       }}
-      expires={150}
+      declineButtonStyle={{
+        backgroundColor: "#374151", // gray-700
+        color: "white",
+        padding: "8px 16px",
+        borderRadius: "9999px",
+        fontWeight: "bold",
+        border: "none",
+      }}
     >
-      This website uses cookies to enhance the user experience.
+      <div className="font-semibold mb-1">
+        We value your privacy and use cookies to improve your experience.
+      </div>
+      <p className="text-xs">
+        We use cookies to ensure basic functionality and to analyze usage. You can accept or reject cookies.
+      </p>
     </CookieConsent>
   );
 };

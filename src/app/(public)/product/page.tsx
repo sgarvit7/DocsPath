@@ -154,11 +154,11 @@ const HealthcareLanding: React.FC = () => {
           </div>
         </div> */}
 
-        <CoreCapabilities darkMode={darkMode} />
+        <CoreCapabilities darkMode={darkMode} id="features" />
 
         <WhyDocsPath darkMode={darkMode} />
 
-        <PricingPlans darkMode={darkMode} />
+        <PricingPlans darkMode={darkMode} id="pricing" />
       </div>
     </div>
   );

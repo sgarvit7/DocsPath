@@ -12,7 +12,6 @@ interface AudienceCollageProps {
 /*  Animation variant                                                         */
 /* -------------------------------------------------------------------------- */
 
-
 /* -------------------------------------------------------------------------- */
 /*  Data describing each collage block                                        */
 /* -------------------------------------------------------------------------- */
@@ -90,10 +89,12 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
     <section
       className={clsx(darkMode ? "bg-gray-900" : "bg-white", "py-10 px-20")}
     >
-      <h2 className="text-4xl font-bold">Who is this for?</h2>
-      <p className="max-w-4xl text-xl py-4">
+      <h2 className={clsx("text-4xl font-bold", darkMode && "text-white")}>
+        Who is this for?
+      </h2>
+      <p className={clsx("max-w-full text-xl py-4", darkMode && "text-white")}>
         Our Platform is designed for modern healthcare teams and visionaries who
-        want to grow smarter-not just bigger.
+        want to grow smarter—not just bigger.
       </p>
       <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 py-10">
         {/* First Block */}
@@ -117,16 +118,15 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
                 </p>
               </div>
               <div className="col-span-1 w-full h-full">
-                  <Image
-                src="/assets/prelogin-img/home/collage-1.png"
-                alt="Collage 1"
-                fill={false}
-                width={0}
-                height={0}
-                className="w-full h-full object-cover rounded-lg"
-              />
+                <Image
+                  src="/assets/prelogin-img/home/collage-1.png"
+                  alt="Collage 1"
+                  fill={false}
+                  width={0}
+                  height={0}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
-              
             </div>
           </motion.div>
 

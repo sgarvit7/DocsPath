@@ -95,7 +95,7 @@ const PersonalInfoPage: React.FC = () => {
         transition={{ duration: 0.3 }}
         className="space-y-6"
       >
-        <h3 className="text-lg font-medium text-gray-700 mb-6">
+        <h3 className="text-xl text-center font-medium text-gray-400 mb-6">
           Personal & Contact Information
         </h3>
 
@@ -107,7 +107,7 @@ const PersonalInfoPage: React.FC = () => {
               placeholder="Full Name"
               value={personalInfo.fullName}
               onChange={(e) => handleInputChange("fullName", e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 text-gray-700 placeholder-gray-400"
+              className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
             />
           </div>
 
@@ -120,7 +120,7 @@ const PersonalInfoPage: React.FC = () => {
               onChange={(e) =>
                 handleInputChange("emailAddress", e.target.value)
               }
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 text-gray-700 placeholder-gray-400"
+              className="w-full p-3 border text-xs pl-4 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
             />
           </div>
 
@@ -131,7 +131,7 @@ const PersonalInfoPage: React.FC = () => {
               placeholder="Phone Number"
               value={personalInfo.phoneNumber}
               onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 text-gray-700 placeholder-gray-400"
+              className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
             />
           </div>
 
@@ -145,7 +145,7 @@ const PersonalInfoPage: React.FC = () => {
                 onChange={(e) =>
                   handleInputChange("dateOfBirth", e.target.value)
                 }
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 text-gray-700 placeholder-gray-400"
+                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
               />
               <label className="block text-xs text-gray-500 mt-1">
                 Date Of Birth
@@ -156,7 +156,7 @@ const PersonalInfoPage: React.FC = () => {
               <select
                 value={personalInfo.gender}
                 onChange={(e) => handleInputChange("gender", e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-gray-50 text-gray-700 appearance-none bg-no-repeat bg-right pr-10"
+                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 appearance-none bg-no-repeat bg-right pr-10"
                 style={{
                   backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")`,
                   backgroundSize: "16px",
@@ -178,12 +178,12 @@ const PersonalInfoPage: React.FC = () => {
               type="file"
               accept="image/*"
               onChange={handleFileSelect}
-              className="hidden"
+              className="hidden text-xs pl-4"
               disabled={isUploading}
             />
             <div
               onClick={() => !isUploading && fileInputRef.current?.click()}
-              className={`w-full p-3 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between ${
+              className={`w-full p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between ${
                 isUploading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
@@ -194,7 +194,8 @@ const PersonalInfoPage: React.FC = () => {
                     <Image
                       src={`data:${personalInfo.profilePhoto.type};base64,${personalInfo.profilePhoto.base64}`}
                       alt="Profile preview"
-                      fill
+                      width={40}
+                      height={40}
                       className="object-cover"
                     />
                   </div>
@@ -203,7 +204,7 @@ const PersonalInfoPage: React.FC = () => {
                   className={
                     personalInfo.profilePhoto
                       ? "text-gray-700 text-sm"
-                      : "text-gray-400 text-sm"
+                      : "text-[#086861] text-sm"
                   }
                 >
                   {isUploading
@@ -274,7 +275,7 @@ const PersonalInfoPage: React.FC = () => {
             onClick={handleNext}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-teal-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#086861] text-lg text-white py-3 px-6 rounded-full font-bold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isUploading}
           >
             Next

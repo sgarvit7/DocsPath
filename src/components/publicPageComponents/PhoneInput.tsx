@@ -18,6 +18,12 @@ export default function CountrySelect() {
   useEffect(() => {
     const getCountries = async () => {
       try {
+        const storedCode = localStorage.getItem("countryCode");
+        const sanitizedCode = storedCode && storedCode.replace(/"/g, '');
+
+        if(sanitizedCode){
+          setCountryCode(sanitizedCode);
+        }
         setCountries(countriesArray);
         setLoading(false);
       } catch (err) {

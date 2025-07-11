@@ -1,21 +1,37 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Bell } from 'lucide-react';
-import HeroSection from '@/components/publicPageComponents/HeroSection';
-import CoreFeaturesSection from '@/components/publicPageComponents/CoreFeaturesSection';
-import HowItWorksSection from '@/components/publicPageComponents/HowItWorksSection';
-import TestimonialsSection from '@/components/publicPageComponents/TestimonialsSection';
-import AwardsSection from '@/components/publicPageComponents/AwardsSection';
-import FAQSection from '@/components/publicPageComponents/FAQSection';
+import { useEffect, useState } from "react";
+import { Bell } from "lucide-react";
+import HeroSection from "@/components/publicPageComponents/HeroSection";
+import CoreFeaturesSection from "@/components/publicPageComponents/CoreFeaturesSection";
+import HowItWorksSection from "@/components/publicPageComponents/HowItWorksSection";
+import TestimonialsSection from "@/components/publicPageComponents/TestimonialsSection";
+import AwardsSection from "@/components/publicPageComponents/AwardsSection";
+import FAQSection from "@/components/publicPageComponents/FAQSection";
 import WhoIsThisFor from "@/components/publicPageComponents/WhoIsThisFor";
-
+import { getCountryCodeFromCoords } from "@/utils/GeolocationTracker";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 
 export default function Page() {
-  const[darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        getCountryCodeFromCoords(latitude, longitude);
+      },
+      (error) => {
+        console.error("Error getting location:", error.message);
+      }
+    );
+  }, []);
+  
+
   return (
     <main className="min-h-screen">
-
       {/* Dark Mode Toggle */}
       <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-20">
         <Bell className="w-6 h-6" />

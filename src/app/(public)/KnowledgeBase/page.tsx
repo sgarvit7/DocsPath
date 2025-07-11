@@ -79,14 +79,14 @@ const KnowledgeBasePage = () => {
       <div className="transition-colors duration-300 pt-20 pb-20 dark:bg-gray-900">
         <div
           className="dark:bg-[#111827] bg-no-repeat w-full bg-center  py-6 px-4 sm:px-8 md:px-16 lg:px-20
-          bg-[url('/assets/prelogin-img/kbBackground.png')] dark:bg-[url('/assets/prelogin-img/kb2.png')] dark:bg-gray-600"
+          bg-[url('/assets/prelogin-img/kbBackground.png')] dark:bg-[url('/assets/prelogin-img/kb2.png')] dark:py-9"
           
         >
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-2xl sm:text-3xl font-bold text-teal-700 pt-15 mt-5 lg:mx-43 dark:text-[#101828]"
+            className="text-2xl sm:text-3xl font-bold text-teal-700 pt-15 mt-5 lg:mx-43 dark:text-[#101828] dark:pt-5"
           >
             Knowledge Base
           </motion.h1>

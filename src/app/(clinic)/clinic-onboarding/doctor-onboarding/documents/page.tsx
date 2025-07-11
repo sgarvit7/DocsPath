@@ -7,6 +7,7 @@ import { FileData } from '@/types/doctor';
 import { RootState } from '@/store/store';
 import OnboardingLayout from '../OnboardingLayout';
 import { useRouter } from 'next/navigation';
+import {FilePlus} from 'lucide-react';
 
 const VerificationDocumentPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -93,21 +94,29 @@ const VerificationDocumentPage: React.FC = () => {
     
     return (
       <div>
+        <label className="block text-xs text-gray-500 mt-1 ml-4">
+          {label} {isOptional && "(Optional)"}
+          {fileData && (
+            <span className="ml-2 text-green-600">
+              ({(fileData.size / 1024 / 1024).toFixed(2)} MB)
+            </span>
+          )}
+        </label>
         <input
           ref={fileRef}
           type="file"
           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
           onChange={(e) => handleFileSelect(fieldKey, e)}
-          className="hidden"
+          className="hidden rounded-full"
           disabled={isUploading}
         />
         <div 
           onClick={() => !isUploading && fileRef.current?.click()}
-          className={`w-full p-3 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between ${
+          className={`w-full p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between ${
             isUploading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
-          <span className={fileData ? "text-gray-700 text-sm" : "text-gray-400 text-sm"}>
+          <span className={fileData ? "text-[#086861] text-sm" : "text-[#08686180] text-sm"}>
             {isUploading ? 'Uploading...' : fileData ? fileData.name : "Choose File (PDF/DOC)"}
           </span>
           {isUploading ? (
@@ -116,19 +125,12 @@ const VerificationDocumentPage: React.FC = () => {
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-            <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg className="w-6 h-6 text-[#086861] rounded-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <FilePlus className="w-6 h-6"/>
             </svg>
           )}
         </div>
-        <label className="block text-xs text-gray-500 mt-1">
-          {label} {isOptional && "(Optional)"}
-          {fileData && (
-            <span className="ml-2 text-green-600">
-              ({(fileData.size / 1024 / 1024).toFixed(2)} MB)
-            </span>
-          )}
-        </label>
+        
       </div>
     );
   };
@@ -141,7 +143,7 @@ const VerificationDocumentPage: React.FC = () => {
         transition={{ duration: 0.3 }}
         className="space-y-6"
       >
-        <h3 className="text-lg font-medium text-gray-700 mb-6">Verification Document</h3>
+        <h3 className="text-xl text-center font-medium text-gray-400 mb-6">Verification Document</h3>
         
         <div className="space-y-4">
           {/* Government-Issued ID */}
@@ -187,7 +189,7 @@ const VerificationDocumentPage: React.FC = () => {
             onClick={handleBack}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-400 transition-colors"
+            className="flex-1 bg-gray-300 shadow-lg text-gray-700 py-3 px-6 rounded-full font-bold hover:bg-gray-400 transition-colors"
             disabled={isUploading}
           >
             Back
@@ -196,7 +198,7 @@ const VerificationDocumentPage: React.FC = () => {
             onClick={handleNext}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex-1 bg-teal-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-[#086861] shadow-xl text-white py-3 px-6 rounded-full font-bold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isUploading}
           >
             Next

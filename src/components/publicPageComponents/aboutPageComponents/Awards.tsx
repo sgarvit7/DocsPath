@@ -13,9 +13,10 @@ interface AwardItem {
 
 interface AwardsProps{
   darkMode?: boolean;
+  id?: string;
 }
 
-export default function Awards({darkMode = false} : AwardsProps) {
+export default function Awards({darkMode = false, id} : AwardsProps) {
 
   const awards: AwardItem[] = [
     {
@@ -58,7 +59,7 @@ export default function Awards({darkMode = false} : AwardsProps) {
   };
 
   return (
-    <section className={`py-16 px-4 sm:px-6 lg:px-8 ${
+    <section id={id} className={`py-16 px-4 sm:px-6 lg:px-8 ${
       darkMode ? 'bg-gray-900' : 'bg-white'
     }`}>
       <div className="max-w-7xl mx-auto">

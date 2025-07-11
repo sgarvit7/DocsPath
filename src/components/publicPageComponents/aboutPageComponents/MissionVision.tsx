@@ -5,6 +5,7 @@ import { Eye, Target } from "lucide-react";
 
 type MissionVisionProps = {
   darkMode: boolean;
+  id?: string;
 };
 
 const cardVariants: Variants = {
@@ -16,13 +17,13 @@ const cardVariants: Variants = {
   }),
 };
 
-export default function MissionVision({ darkMode }: MissionVisionProps) {
+export default function MissionVision({ darkMode, id }: MissionVisionProps) {
   const teal = "#04786f";
   const cardBg = darkMode ? "#1f2937" : "#eaf7f6";
   const textColor = darkMode ? "text-gray-300" : "text-gray-700";
 
   return (
-    <section
+    <section id={id}
       className={`py-16 px-4 sm:px-6 lg:px-8 ${
         darkMode ? "bg-gray-900" : "bg-white"
       }`}

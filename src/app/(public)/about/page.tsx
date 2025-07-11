@@ -54,11 +54,11 @@ export default function AboutPage() {
       </div>
 
       <AboutHero darkMode={darkMode} />
-      <MissionVision darkMode={darkMode} />
-      <LeadershipTeam darkMode={darkMode} />
+      <MissionVision darkMode={darkMode} id="mission"/>
+      <LeadershipTeam darkMode={darkMode} id="leadership" />
       <CareersBanner />
-      <Awards darkMode={darkMode} />
-      <Partnership darkMode={darkMode} />
+      <Awards darkMode={darkMode} id="awards" />
+      <Partnership darkMode={darkMode} id="partnership"/>
     </motion.div>
   );
 }

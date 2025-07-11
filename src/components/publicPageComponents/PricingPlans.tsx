@@ -15,9 +15,10 @@ interface IncludedFeature {
 
 interface PricingSectionProps {
   darkMode?: boolean; // optional, default to false if not provided
+  id?: string;
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false, id }) => {
 
   const includedFeatures: IncludedFeature[] = [
     {
@@ -50,7 +51,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false }) => 
   );
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
+    <div id={id} className={`min-h-screen transition-colors duration-300 ${
       darkMode ? 'bg-gray-900' : 'bg-gray-50'
     }`}>
       {/* Background Pattern */}

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Mail, Phone, Clock, MapPin, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import PreloginPhoneInput from "@/components/publicPageComponents/PreloginPhoneInput"
+import EmailInput from "@/components/publicPageComponents/EmailInput";
 
 interface FormData {
   name: string;
@@ -22,6 +24,8 @@ const ContactUs: React.FC = () => {
     subject: "",
     message: "",
   });
+
+  const [email, setEmail] = useState("");
 
   // Animation variants
   const containerVariants = {
@@ -258,20 +262,7 @@ const ContactUs: React.FC = () => {
                   >
                     Email Address
                   </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="you@example.com"
-                    required
-                    className={`w-full px-4 py-3 border rounded-lg font-sans text-base transition-all duration-300 focus:outline-none focus:ring-2 ${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-teal-400 focus:ring-teal-400/20"
-                        : "bg-white border-gray-300 text-gray-800 placeholder-gray-500 focus:border-teal-500 focus:ring-teal-200"
-                    }`}
-                  />
+                  <EmailInput value={email} onChange={setEmail} />
                 </motion.div>
 
                 <motion.div
@@ -287,21 +278,8 @@ const ContactUs: React.FC = () => {
                   >
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+91 98765 43210"
-                    pattern="[0-9]{10}"
-                    title="Please enter a 10-digit phone number"
-                    className={`w-full px-4 py-3 border rounded-lg font-sans text-base transition-all duration-300 focus:outline-none focus:ring-2 ${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-teal-400 focus:ring-teal-400/20"
-                        : "bg-white border-gray-300 text-gray-800 placeholder-gray-500 focus:border-teal-500 focus:ring-teal-200"
-                    }`}
-                  />
+                  <PreloginPhoneInput />
+                
                 </motion.div>
 
                 <motion.div

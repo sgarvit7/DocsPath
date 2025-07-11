@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import { Bell } from "lucide-react";
@@ -12,10 +12,42 @@ interface Feature {
 interface Plan {
   name: string;
   features: Feature[];
+  price: number;
 }
 
 const PricingPlans: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [countryCode, setCountryCode] = useState<string>("US");
+  const [currency, setCurrency] = useState<string>("");
+
+  useEffect(() => {
+    const storedCode = localStorage.getItem("countryCode") || "US";
+    const sanitizedCode = storedCode.replace(/"/g, '');
+    setCountryCode(storedCode);
+    console.log("Country Code: ", storedCode);
+    
+    const fetchCurrency = async () => {
+      try {
+        
+        const res = await fetch(
+          `https://restcountries.com/v3.1/alpha/${sanitizedCode}`
+        );
+        const data = await res.json();
+
+        if (!Array.isArray(data) || !data[0] || !data[0].currencies) {
+          console.error("Invalid country data received:", data);
+          return;
+        }
+
+        const currencyCode = Object.keys(data[0].currencies)[0];
+        const currencySymbol = data[0].currencies[currencyCode]?.symbol || "";
+        setCurrency(currencySymbol);
+      } catch (error) {
+        console.error("Failed to fetch currency:", error);
+      }
+    };
+    fetchCurrency();
+  }, []);
 
   const plans: Plan[] = [
     {
@@ -44,6 +76,7 @@ const PricingPlans: React.FC = () => {
         { text: "Selected third party integrations", included: true },
         { text: "Plug and play EHR", included: false },
       ],
+      price: 10000,
     },
     {
       name: "Premium",
@@ -97,6 +130,7 @@ const PricingPlans: React.FC = () => {
           included: true,
         },
       ],
+      price: 20000,
     },
   ];
 
@@ -146,7 +180,7 @@ const PricingPlans: React.FC = () => {
                 }`}
     >
       {/* Plan Header */}
-      <div className="absolute mb-6 -left-2">
+      <div className="absolute mb-6 -left-2 w-1/2">
         <div className="absolute -top-6 font-semibold text-white text-base">
           {/* Left tail */}
           <div className="absolute rotate-270 -bottom-2 left-0 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]" />
@@ -158,7 +192,7 @@ const PricingPlans: React.FC = () => {
               clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
             }}
           >
-            {plan.name}
+            {plan.name} {currency} {plan.price}
           </div>
         </div>
       </div>

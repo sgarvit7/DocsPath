@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
@@ -149,6 +149,16 @@ const DocumentUpload = () => {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("/clinic-management/dashboard/admin");
+      }, 3000); // 3 seconds delay
+
+      return () => clearTimeout(timer); // cleanup
+    }
+  }, [success]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -31,9 +31,10 @@ interface Segment {
 
 interface Props {
   darkMode?: boolean;
+  id?: string;
 }
 
-export default function CoreCapabilities({ darkMode = false }: Props) {
+export default function CoreCapabilities({ darkMode = false, id }: Props) {
   const capabilities: Capability[] = [
     {
       id: 1,
@@ -110,7 +111,7 @@ export default function CoreCapabilities({ darkMode = false }: Props) {
   };
 
   return (
-    <section
+    <section id={id}
       className={`relative overflow-hidden py-2 px-4 sm:px-6 lg:px-8 ${
         darkMode ? "bg-gray-900" : "bg-white"
       }`}

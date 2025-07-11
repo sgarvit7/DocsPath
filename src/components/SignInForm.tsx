@@ -14,6 +14,8 @@ import { useDispatch } from 'react-redux'
 import { setEmail } from '@/store/userSlice'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
+import EmailInput from './publicPageComponents/EmailInput'
 
 // import {useAuthState} from "react-firebase-hooks/auth"
 
@@ -132,7 +134,7 @@ export default function SignInForm() {
         {/* Left Side - Form */}
         <div className="flex-1 p-8 md:p-12">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-teal-800">Sign in to Medycall</h2>
+            <h2 className="text-3xl font-bold text-teal-800">Sign in to Docspath</h2>
             <p className="text-gray-500 mt-2">Begin Your Journey!</p>
           </div>
 
@@ -285,11 +287,8 @@ export default function SignInForm() {
             className="text-center"
           >
             <div className="mb-6 flex justify-center">
-              <div className="p-4 rounded-full border-4 border-white/30 inline-block">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9" />
-                </svg>
+              <div className="p-4 inline-block">
+                <Image src="/assets/docspath-logo.png" alt="Docspath" width={200} height={200} />
               </div>
             </div>
             <h2 className="text-3xl font-bold mb-4">Hello!</h2>

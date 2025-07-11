@@ -10,9 +10,10 @@ interface Partner {
 
 interface PartnershipProps {
   darkMode?: boolean;
+  id?: string;
 }
 
-export default function Partnership({ darkMode = false }: PartnershipProps) {
+export default function Partnership({ darkMode = false, id }: PartnershipProps) {
   const partners: Partner[] = [
     { id: 1, name: "Coinbase", logo: "Coinbase" },
     { id: 2, name: "NASA", logo: "NASA" },
@@ -25,7 +26,7 @@ export default function Partnership({ darkMode = false }: PartnershipProps) {
   ];
 
   return (
-    <section
+    <section id={id}
       className={`py-16 px-4 sm:px-6 lg:px-8 ${
         darkMode ? "bg-gray-800" : "bg-gray-50"
       }`}

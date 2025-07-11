@@ -51,6 +51,8 @@ export default function GeoTracker() {
           coords.longitude
         );
         setCountryCode(country);
+        console.log(countryCode);
+        localStorage.setItem("countryCode", JSON.stringify(country));
       }
     };
 
@@ -58,14 +60,9 @@ export default function GeoTracker() {
   }, [coords]);
 
   return (
-    <div className="p-4">
-      {coords ? (
-        <div>
-          <p>📍 Country Code: {countryCode}</p>
-        </div>
-      ) : (
-        <p>{error ? `❌ ${error}` : "Fetching location..."}</p>
-      )}
+    <div>
+      <div>Country Code: {countryCode}</div>
     </div>
   );
+
 }

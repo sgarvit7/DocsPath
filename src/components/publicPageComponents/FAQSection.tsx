@@ -72,13 +72,23 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
 
   return (
     <section
-      className={`pt-16 px-15 ${
+      className={`relative pt-16 px-4 ${
         darkMode ? "bg-gray-800" : "bg-white"
-      } relative overflow-hidden`}
+      } overflow-hidden`}
     >
-      
+      {/* ✅ Background Image */}
+      <div className="absolute inset-0 z-0  w-full">
+        <Image
+          src={darkMode?"/assets/prelogin-img/home/faq-pattern-black.png":"/assets/prelogin-img/home/faq-pattern-light-1.png"}
+          alt="Background"
+          fill
+          className=" bg-contain"
+          priority
+        />
+      </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      {/* 🔳 Foreground Content */}
+      <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-3 gap-12 items-start">
           {/* FAQ Content */}
           <motion.div
@@ -97,7 +107,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
               Frequently asked questions
             </motion.h2>
 
-            <div className="space-y-4 p-10">
+            <div className="space-y-4 p-6 md:p-10">
               {faqs.map((faq) => (
                 <motion.div
                   key={faq.id}
@@ -167,7 +177,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
                   </AnimatePresence>
                 </motion.div>
               ))}
-            </div>  
+            </div>
           </motion.div>
 
           {/* Illustration/Image */}
@@ -183,7 +193,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
               {/* Image anchored to bottom */}
               <div className="absolute bottom-0 left-0 right-0 top-1/2">
                 <Image
-                  src="/assets/prelogin-img/home/faq.png"
+                  src={darkMode?"/assets/prelogin-img/home/faq-dark.jpg":"/assets/prelogin-img/home/faq.png"}
                   alt="FAQ"
                   fill // ✅ Required for layout to work
                   className="object-cover"
@@ -194,10 +204,12 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
 
               {/* Circle on top-right corner */}
               <div className="w-50 h-50 -right-5 bottom-50 absolute flex items-center justify-center z-10">
-                <Image src="/assets/prelogin-img/home/question-mark.png" alt="?" fill className="flex justify-center items-end"/>
+                <Image src={darkMode?"/assets/prelogin-img/home/question-mark-dark.png":"/assets/prelogin-img/home/question-mark.png"}
+                 alt="?" fill className="flex justify-center items-end"/>
               </div>
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

@@ -15,6 +15,10 @@ import { auth } from '../../firebase/config'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { sendMagicLink } from '@/utils/emailMagicLink'
+import Image from 'next/image'
+import EmailInput from './publicPageComponents/EmailInput'
+import { setEmail } from '@/store/userSlice'
+import PreloginPhoneInput from "./publicPageComponents/PreloginPhoneInput";
 
 interface FormData {
   name: string
@@ -300,12 +304,8 @@ useEffect(() => {
         {/* Left Section */}
         <div className="bg-teal-700 text-white p-8 md:w-1/3 flex flex-col items-center justify-center text-center">
           <div className="mb-6">
-            <div className="w-20 h-20 mx-auto mb-4">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <path d="M12 4C13.1046 4 14 4.89543 14 6H16C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6H10C10 4.89543 10.8954 4 12 4Z" fill="white"/>
-                <path fillRule="evenodd" clipRule="evenodd" d="M18 8H6C4.89543 8 4 8.89543 4 10V16C4 18.2091 5.79086 20 8 20H16C18.2091 20 20 18.2091 20 16V10C20 8.89543 19.1046 8 18 8ZM12 14C10.8954 14 10 13.1046 10 12H14C14 13.1046 13.1046 14 12 14Z" fill="white"/>
-                <path d="M12 14C13.1046 14 14 13.1046 14 12H10C10 13.1046 10.8954 14 12 14Z" fill="white"/>
-              </svg>
+            <div className="w-32 h-32 mx-auto mb-4">
+              <Image src="/assets/docspath-logo.png" alt="Docspath" width={200} height={200} />
             </div>
           </div>
           <h2 className="text-3xl font-bold mb-2">Welcome</h2>
@@ -336,23 +336,13 @@ useEffect(() => {
             </div>
 
             <div className="relative">
-              <input
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="+91"
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
-              />
-              <span className="absolute left-3 top-3 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                </svg>
-              </span>
+              <PreloginPhoneInput />
             </div>
 
             <div className="relative">
               <div className="flex">
-                <input
+                <EmailInput value={form.email} onChange={setEmail} />
+                {/* <input
                   name="email"
                   type="email"
                   value={form.email}
@@ -360,8 +350,8 @@ useEffect(() => {
                   placeholder="Email"
                   className={`flex-1 p-3 border ${isCurrentEmailVerified ? 'border-green-500 bg-green-50' : 'border-gray-300'} rounded-l-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10`}
                   disabled={isCurrentEmailVerified}
-                />
-                <motion.button
+                /> */}
+                {/* <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="button"
@@ -376,7 +366,7 @@ useEffect(() => {
                   }`}
                 >
                   {isCurrentEmailVerified ? 'Verified' : isSendingVerification ? 'Sending...' : 'Verify Email'}
-                </motion.button>
+                </motion.button> */}
               </div>
               <span className="absolute left-3 top-3 text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

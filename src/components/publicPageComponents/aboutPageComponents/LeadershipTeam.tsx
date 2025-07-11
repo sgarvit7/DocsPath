@@ -14,8 +14,9 @@ interface TeamMember {
 
 interface LeadershipProps{
   darkMode?: boolean;
+  id?: string;
 }
-export default function LeadershipTeam({darkMode = false} : LeadershipProps) {
+export default function LeadershipTeam({darkMode = false, id} : LeadershipProps) {
 
   const teamMembers: TeamMember[] = [
     {
@@ -68,7 +69,7 @@ export default function LeadershipTeam({darkMode = false} : LeadershipProps) {
   };
 
   return (
-    <section className={`py-16 px-4 sm:px-6 lg:px-8 ${
+    <section id={id} className={`py-16 px-4 sm:px-6 lg:px-8 ${
       darkMode ? 'bg-gray-800' : 'bg-gray-50'
     }`}>
       <div className="max-w-7xl mx-auto">

@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 type Props = {
   darkMode?: boolean;
 };
@@ -43,11 +44,14 @@ const duplicatedLogos = [...logos, ...logos]; // for seamless looping
 const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
   const [activeStep, setActiveStep] = useState(0);
 
+  const router = useRouter();
   return (
     <section
       className={clsx(
         "w-full",
-        darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-b from-[#E8F3F3] to-[#FFFFFF] text-gray-900"
+        darkMode
+          ? "bg-gray-900 text-white"
+          : "bg-gradient-to-b from-[#E8F3F3] to-[#FFFFFF] text-gray-900"
       )}
     >
       {/* Heading */}
@@ -84,7 +88,10 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
           </div>
           <div className="flex flex-col justify-center items-center">
             <motion.h3
-              className="text-3xl font-extrabold text-[#005C56] mb-4 text-center"
+              className={clsx(
+                "text-3xl font-extrabold mb-4 text-center",
+                darkMode ? "text-green-600" : "text-[#005C56]"
+              )}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.25 }}
@@ -104,7 +111,12 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
                   darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
                 )}
               >
-                <h3 className="text-2xl font-bold text-[#086861] mb-2">
+                <h3
+                  className={clsx(
+                    "text-2xl font-bold mb-2",
+                    darkMode ? "text-green-600" : "text-[#086861]"
+                  )}
+                >
                   {stepData[activeStep].title}
                 </h3>
                 <p className="text-base">{stepData[activeStep].description}</p>
@@ -115,6 +127,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
 
             <motion.button
               whileHover={{ scale: 1.05 }}
+              onClick={() => router.push("/sign-up")}
               className={clsx(
                 "mt-4 px-6 py-3 text-base md:w-full lg:w-md rounded-full font-semibold w-fit",
                 darkMode
@@ -138,7 +151,10 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
           transition={{ delay: 0.4 }}
         >
           {/* Play Icon */}
-          <FontAwesomeIcon icon={faPlay}  className="md:text-4xl lg:text-7xl text-white"/>
+          <FontAwesomeIcon
+            icon={faPlay}
+            className="md:text-4xl lg:text-7xl text-white"
+          />
         </motion.div>
       </div>
 
