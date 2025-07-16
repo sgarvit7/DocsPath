@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useAnimationFrame } from "framer-motion";
 import {
   Calendar,
   Bot,
@@ -11,277 +11,198 @@ import {
   Sun,
   Users,
 } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import clsx from "clsx";
 
 interface CoreFeaturesSectionProps {
   darkMode: boolean;
 }
 
 export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProps) {
-  const animationProps = {
-    initial: { opacity: 0, y: 50 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
-    viewport: { once: true },
-  };
+  const radius = 280;
+  const centerX = 400;
+  const centerY = 400;
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+
+  const cards = [
+    {
+      icon: <Sun className="w-10 h-10 text-white" />, title: "Smart Doctor Dashboard", desc: "Everything you need, at a glance from appointments to analytics. Intuitive, customizable, and fast."
+    },
+    {
+      icon: <Calendar className="w-10 h-10 text-white" />, title: "One-Tap Appointment", desc: "Automate bookings, manage OPD queues, and reduce no-shows—without lifting a finger."
+    },
+    {
+      icon: <Bot className="w-10 h-10 text-white" />, title: "Intelligent Communication", desc: "Handle patient queries, confirmations, reminders, and follow-ups—24/7."
+    },
+    {
+      icon: <FileText className="w-10 h-10 text-white" />, title: "Automated Billing", desc: "Instant invoicing, claims management, and payment tracking—all without manual work."
+    },
+    {
+      icon: <File className="w-10 h-10 text-white" />, title: "EHR + E-Prescriptions", desc: "Access, update, and share digital health records securely and accurately."
+    },
+    {
+      icon: <Lock className="w-10 h-10 text-white" />, title: "Role-Based Access", desc: "Full HIPAA/GDPR compliance with customizable staff permissions."
+    },
+    {
+      icon: <ClipboardList className="w-10 h-10 text-white" />, title: "Real-Time Dashboards", desc: "Make smarter decisions with real-time reports."
+    },
+    {
+      icon: <Users className="w-10 h-10 text-white" />, title: "Integrated OPD + Telemedicine", desc: "Manage in-clinic and online appointments from a single platform."
+    },
+  ];
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rotationRef = useRef(0);
+  const circleRef = useRef<HTMLDivElement>(null);
+
+  useAnimationFrame((_, delta) => {
+    if (isHovered || isMobile) return;
+
+    if (containerRef.current && circleRef.current) {
+      rotationRef.current += delta * 0.01;
+      containerRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
+      circleRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
+
+      Array.from(containerRef.current.children).forEach((child, index) => {
+        const baseAngle = (index * 360) / cards.length;
+        const card = child as HTMLDivElement;
+        const inner = card.querySelector('.inner-card') as HTMLDivElement;
+
+        const rotation = hoveredCard === index ? 0 : rotationRef.current;
+        card.style.transform = `translate(-50%, -50%) rotate(${baseAngle}deg) translate(${radius}px) rotate(-${rotation + baseAngle}deg)`;
+        if (inner) inner.style.transform = `rotate(${hoveredCard === index ? -(rotation + baseAngle) : 0}deg)`;
+      });
+    }
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center px-6 py-20 relative ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-      }`}
+      className={clsx(
+        "min-h-screen flex items-center justify-center px-6 py-20 relative font-roboto w-full",
+        darkMode ? "bg-black text-white" : "bg-white text-gray-900"
+      )}
     >
-      {/* Desktop & Tablet Layout */}
-      <div className="relative w-[800px] h-[800px] hidden md:block">
-        <div
-          className={`absolute z-10 w-80 h-80 rounded-full flex items-center justify-center text-3xl font-bold shadow-xl left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
-            darkMode ? "bg-gray-800 text-white" : "bg-teal-700 text-white"
-          }`}
-        >
-          Core Features
+{isMobile ? (
+  <div
+    className={clsx(
+      "w-full min-h-screen px-4 py-10 flex flex-col items-center ",
+      darkMode && "bg-black"
+    )}
+  >
+    <h2
+      className={clsx(
+        "text-3xl font-bold text-center mb-10",
+        darkMode ? "text-white" : "text-teal-700"
+      )}
+    >
+      Core Features
+    </h2>
+
+    {cards.map((card, index) => (
+      <div
+        key={index}
+        className={clsx(
+          "w-full max-w-md p-6 mb-6 rounded-3xl shadow-lg transition-transform duration-300 hover:scale-105",
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        )}
+      >
+        <div className="w-16 h-16 mb-4 mx-auto rounded-full bg-teal-700 flex items-center justify-center">
+          {card.icon}
         </div>
-
-        {/* Each Feature (same structure with color logic) */}
-        <motion.div
-          {...animationProps}
-          className={`absolute w-150 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ top: "24%", left: "64%" }}
+        <h3
+          className={clsx(
+            "text-xl font-semibold font-[afacad] mb-2",
+            darkMode ? "text-white" : "text-teal-600"
+          )}
         >
-          <div className="flex">
-            <div className="absolute w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <Sun className="w-10 h-10 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold ml-25 text-teal-600 dark:text-white">
-              Smart Doctor Dashboard
-              <p className="mt-2 w-80 text-sm text-gray-600 dark:text-gray-300">
-                Everything you need, at a glance from appointments to analytics.
-                Intuitive, customizable, and fast.
-              </p>
-            </h3>
-          </div>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-80 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ top: "3%", left: "31%", borderRadius: "50%" }}
+          {card.title}
+        </h3>
+        <p
+          className={clsx(
+            "text-sm font-[afacad] text-center",
+            darkMode ? "text-gray-300" : "text-gray-600"
+          )}
         >
-          <div className="flex items-center gap-3">
-            <h3 className="text-lg font-semibold text-teal-600 dark:text-white">
-              One-Tap Appointment
-            </h3>
-          </div>
-          <p className="mt-2 text-md text-gray-600 dark:text-gray-300">
-            Automate bookings, manage OPD queues, and reduce no-shows—without
-            lifting a finger.
-          </p>
-          <span className="w-20 h-20 rounded-full bg-teal-700 flex mx-auto items-center justify-center">
-            <Calendar className="w-10 h-10 text-white" />
-          </span>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-80 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ top: "17%", left: "-9%" }}
-        >
-          <h3 className="text-lg font-semibold text-teal-600 dark:text-white">
-            Intelligent Communication
-          </h3>
-          <div className="flex items-center mt-2">
-            <p className="text-md text-gray-600 dark:text-gray-300">
-              Handle patient queries, confirmations, reminders, and follow-ups—
-              24/7.
-            </p>
-            <div className="absolute ml-60 mt-20 w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <Bot className="w-10 h-10 text-white" />
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-130 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ top: "44%", left: "-25%" }}
-        >
-          <div className="flex items-center gap-10">
-            <h3 className="text-lg font-semibold ml-30 text-teal-600 dark:text-white">
-              Automated Billing
-            </h3>
-            <div className="w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <FileText className="w-10 h-10 text-white" />
-            </div>
-          </div>
-          <p className="text-md pr-40 text-gray-600 dark:text-gray-300">
-            Instant invoicing, claims management, and payment tracking—all
-            without manual work.
-          </p>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-80 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ bottom: "15%", left: "-3%" }}
-        >
-          <div className="flex items-center gap-3">
-            <h3 className="text-lg font-semibold text-teal-600 dark:text-white">
-              EHR + E-Prescriptions
-            </h3>
-            <div className="w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <File className="w-10 h-10 text-white" />
-            </div>
-          </div>
-          <p className="text-md pr-8 text-gray-600 dark:text-gray-300">
-            Access, update, and share digital health records securely and
-            accurately.
-          </p>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-80 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ bottom: "5%", left: "36%", borderRadius: "50%" }}
-        >
-          <div className="items-center gap-3">
-            <div className="w-20 h-20 rounded-full bg-teal-700 flex items-center mx-auto justify-center">
-              <Lock className="w-10 h-10 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-center text-teal-600 my-2 dark:text-white">
-              Role-Based Access
-            </h3>
-          </div>
-          <p className="text-md text-gray-600 text-center dark:text-gray-300">
-            Full HIPAA/GDPR compliance with customizable staff permissions.
-          </p>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-150 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ bottom: "27%", left: "69%" }}
-        >
-          <div className="flex items-center">
-            <div className="absolute w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <ClipboardList className="w-10 h-10 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold ml-25 text-teal-600 dark:text-white">
-              Real-Time Dashboards
-            </h3>
-          </div>
-          <p className="mt-2 text-md ml-20 text-gray-600 dark:text-gray-300">
-            Make smarter decisions with real-time reports.
-          </p>
-        </motion.div>
-
-        <motion.div
-          {...animationProps}
-          className={`absolute w-120 p-4 ${
-            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-          }`}
-          style={{ top: "42%", right: "-31%" }}
-        >
-          <div className="flex">
-            <div className="absolute w-20 h-20 rounded-full bg-teal-700 flex items-center justify-center">
-              <Users className="w-10 h-10 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold ml-25 text-teal-600 dark:text-white">
-              Integrated OPD + Telemedicine
-            </h3>
-          </div>
-          <p className="mt-2 text-md text-gray-600 ml-23 dark:text-gray-300">
-            Manage in-clinic and online appointments from a single platform.
-          </p>
-        </motion.div>
+          {card.desc}
+        </p>
       </div>
+    ))}
+  </div>
+) : (
 
-      {/* Mobile Layout */}
-      <div className="block md:hidden w-full max-w-md text-center space-y-5">
-        <div
-          className={`text-3xl py-3 rounded-xl shadow-xl font-bold ${
-            darkMode ? "text-white bg-gray-800" : "text-white bg-teal-700"
-          }`}
-        >
-          Core Features
+        <div className="relative w-[800px] h-[800px] hidden md:block">
+          <div className="absolute  w-60 h-62 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div
+              className={clsx(
+                "absolute inset-0 flex items-center justify-center text-3xl font-bold shadow-xl rounded-full font-roboto",
+                darkMode ? "bg-teal-700 text-white" : "bg-teal-700 text-white"
+              )}
+            >
+              <div
+                ref={circleRef}
+                className="absolute inset-0 rounded-full border-[5px] border-dotted  border-white"
+                style={{ animation: "spin 50s linear infinite" }}
+              />
+              Core Features
+            </div>
+          </div>
+
+          <div
+            className="absolute w-full h-full left-0 top-0"
+            ref={containerRef}
+            style={{ transformOrigin: `${centerX}px ${centerY}px` }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => {
+              setIsHovered(false);
+              setHoveredCard(null);
+            }}
+          >
+            {cards.map((card, index) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+                className={clsx(
+                  "absolute w-72 p-4 text-center rounded-xl flex flex-col items-center justify-center gap-2 dark:hover:shadow-xl transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl hover:overflow-hidden",
+                  darkMode ? " text-white" : "text-gray-900"
+
+                )}
+                style={{
+                  left: centerX,
+                  top: centerY,
+                  borderRadius: "50px",
+                  perspective: "1000px",
+                  zIndex: hoveredCard === index ? 999 : 1
+                }}
+              >
+                <div className="inner-card flex flex-col items-center justify-center transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-teal-700 flex items-center justify-center">
+                    {card.icon}
+                  </div>
+                  <h3 className="text-lg font-[afacad] font-semibold text-end text-teal-600 dark:text-white">
+                    {card.title}
+                  </h3>
+                  <p className="text-md text-end font-[afacad] text-gray-600 dark:text-gray-300">
+                    {card.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {[
-          {
-            icon: <Sun className="w-6 h-6 text-white" />,
-            title: "Smart Doctor Dashboard",
-            desc:
-              "Everything you need, from appointments to analytics. Intuitive and fast.",
-          },
-          {
-            icon: <Calendar className="w-6 h-6 text-white" />,
-            title: "One-Tap Appointment",
-            desc:
-              "Manage OPD queues, bookings, and reduce no-shows automatically.",
-          },
-          {
-            icon: <Bot className="w-6 h-6 text-white" />,
-            title: "Communication Tools",
-            desc: "Respond to patient queries, 24/7, using intelligent assistants.",
-          },
-          {
-            icon: <FileText className="w-6 h-6 text-white" />,
-            title: "Automated Billing",
-            desc: "Instant invoicing, claims & payment tracking—no manual work.",
-          },
-          {
-            icon: <File className="w-6 h-6 text-white" />,
-            title: "EHR + E-Prescriptions",
-            desc: "Securely access, update and share digital health records.",
-          },
-          {
-            icon: <Lock className="w-6 h-6 text-white" />,
-            title: "Role-Based Access",
-            desc: "Compliant with HIPAA/GDPR with custom staff permissions.",
-          },
-          {
-            icon: <ClipboardList className="w-6 h-6 text-white" />,
-            title: "Dashboards & Insights",
-            desc: "Smarter decisions with real-time care and revenue data.",
-          },
-          {
-            icon: <Users className="w-6 h-6 text-white" />,
-            title: "OPD + Telemedicine",
-            desc: "Consult in-clinic or virtually from a single interface.",
-          },
-        ].map((item, index) => (
-          <div key={index} className="space-y-2">
-            <div className="mx-auto w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center">
-              {item.icon}
-            </div>
-            <h3
-              className={`font-semibold text-lg ${
-                darkMode ? "text-white" : "text-teal-700"
-              }`}
-            >
-              {item.title}
-            </h3>
-            <p
-              className={`text-sm px-2 ${
-                darkMode ? "text-gray-300" : "text-gray-600"
-              }`}
-            >
-              {item.desc}
-            </p>
-          </div>
-        ))}
-      </div>
+      )}
     </div>
   );
 }

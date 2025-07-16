@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Bell } from "lucide-react";
 import HeroSection from "@/components/publicPageComponents/HeroSection";
 import CoreFeaturesSection from "@/components/publicPageComponents/CoreFeaturesSection";
@@ -9,25 +9,12 @@ import TestimonialsSection from "@/components/publicPageComponents/TestimonialsS
 import AwardsSection from "@/components/publicPageComponents/AwardsSection";
 import FAQSection from "@/components/publicPageComponents/FAQSection";
 import WhoIsThisFor from "@/components/publicPageComponents/WhoIsThisFor";
-import { getCountryCodeFromCoords } from "@/utils/GeolocationTracker";
-import CookieConsentBanner from "@/components/CookieConsentBanner";
+
 
 export default function Page() {
   const [darkMode, setDarkMode] = useState(false);
 
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        getCountryCodeFromCoords(latitude, longitude);
-      },
-      (error) => {
-        console.error("Error getting location:", error.message);
-      }
-    );
-  }, []);
   
 
   return (

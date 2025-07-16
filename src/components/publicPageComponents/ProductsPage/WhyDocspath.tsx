@@ -1,158 +1,205 @@
-'use client';
+"use client";
 
-import { FC } from 'react';
-import Image from 'next/image';
-import { motion, Variants } from 'framer-motion';
+import { FC } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   BarChart2,
   Plug,
   Handshake,
   ShieldCheck,
-  HeartHandshake,
   ThumbsUp,
-} from 'lucide-react'; // any icon lib is fine
-
-/* ─────────────── Types ─────────────── */
+} from "lucide-react";
 
 interface WhyDocsPathProps {
-  /** Toggle dark theme */
   darkMode?: boolean;
 }
 
-/* ─────────────── Motion Variants ─────────────── */
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
+const floatAnim = {
+  animate: {
+    y: [0, -20, 0],
     transition: {
-      staggerChildren: 0.15,
+      duration: 1,
+      repeat: Infinity,
+      ease: "easeInOut",
     },
   },
+  hover: {
+    y: 0,
+  },
 };
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 35 },
-  visible: { opacity: 1, y: 0 },
-};
-
-/* ─────────────── Card Data ─────────────── */
-
-const cards = [
-  {
-    id: 1,
-    icon: <BarChart2 className="w-6 h-6 shrink-0" />,
-    title: 'Real‑Time Analytics &\nSmart Dashboards',
-    text:
-      'Track performance, identify trends, and make data‑backed decisions—' +
-      'all from a clean, intuitive interface.',
-  },
-  {
-    id: 2,
-    icon: <Plug className="w-6 h-6 shrink-0" />,
-    title: 'Lightning‑Fast Setup &\nSeamless Integration',
-    text:
-      'Onboard in days, not months. Connect with your existing tools and ' +
-      'infrastructure without disruption.',
-  },
-  {
-    id: 3,
-    icon: <Handshake className="w-6 h-6 shrink-0" />,
-    title: 'Built to Scale with You',
-    text:
-      'From startups to superspecialties, our platform evolves with your ' +
-      'growth—no need to change systems.',
-  },
-  {
-    id: 4,
-    icon: <ShieldCheck className="w-6 h-6 shrink-0" />,
-    title: 'Uncompromising Security & Privacy',
-    text:
-      'HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption, ' +
-      'and total control over data sharing.',
-  },
-  {
-    id: 5,
-    icon: <ThumbsUp className="w-6 h-6 shrink-0" />,
-    title: 'Customizable. Reliable.\nAlways On.',
-    text:
-      '99.9% uptime. Flexible modules tailored to your exact needs. ' +
-      'Premium support, 24/7.',
-  },
-  {
-    id: 6,
-    icon: <HeartHandshake className="w-6 h-6 shrink-0" />,
-    title: 'Customer‑Centric Support',
-    text:
-      'Dedicated success managers, onboarding specialists, and in‑app ' +
-      'guides keep your team moving fast.',
-  },
-];
-
-/* ─────────────── Component ─────────────── */
 
 export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
-  const cardBg     = darkMode ? 'bg-slate-800' : 'bg-white';
-  const cardBorder = darkMode ? 'border-slate-600' : 'border-teal-600/60';
-  const cardTitle  = darkMode ? 'text-white' : 'text-teal-900';
-  const cardText   = darkMode ? 'text-slate-300' : 'text-slate-700';
+  const cardBase =
+    "max-w-sm border border-teal-600/60 shadow-xl rounded-xl p-5 flex gap-3 transition-all duration-300";
 
   return (
-    <section className="py-20 text-center">
-      <h2 className="text-3xl md:text-4xl bg-[#086861] w-full py-6 font-bold text-white mb-12">
-        Why DocsPath?
+    <section
+      className={`relative w-full py-28 overflow-hidden ${
+        darkMode ? "dark bg-black text-white" : "bg-[#f8fdfd]"
+      }`}
+    >
+      <h2 className="text-3xl md:text-4xl bg-[#086861] w-full py-6 font-bold text-white text-center mb-12">
+        Why DocsPath?
       </h2>
 
-      {/* ── Grid wrapper ─────────────────────────────── */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        className="relative mx-auto max-w-6xl grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8"
-      >
-        {/* Doctor image (absolute on md+) */}
+      {/* Doctor Image */}
+      <div className="relative z-0 flex justify-center">
+        <Image
+          src={darkMode?"/assets/prelogin-img/doctor-dark.jpg":"/assets/prelogin-img/doctor.png"}
+          alt="Doctor"
+          width={400}
+          height={400}
+          className="relative z-10 object-contain"
+        />
+      </div>
+
+      {/* Floating Cards for Desktop */}
+      <div className="hidden md:block relative max-w-7xl h-[500px] mx-auto mt-[-350px] z-0">
+        {/* Top Left */}
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="pointer-events-none md:absolute md:inset-0 md:z-10 md:flex md:items-center md:justify-center"
+          className={`${cardBase} absolute top-[10px] left-[60px] bg-white dark:bg-gray-800 text-black dark:text-white`}
+          variants={floatAnim}
+          animate="animate"
+          whileHover="hover"
         >
-          <Image
-            src="/assets/prelogin-img/doctor.png"
-            alt="Doctor giving thumbs up"
-            width={400}
-            height={450}
-            className="md:w-72 md:h-auto object-contain select-none"
-            priority
-          />
+          <BarChart2 className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <div className="text-left">
+            <h3 className="font-semibold text-teal-900 dark:text-white">
+              Real‑Time Analytics & Smart Dashboards
+            </h3>
+            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+              Track performance, identify trends, and make data‑backed
+              decisions—all from a clean, intuitive interface.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Cards */}
-        {cards.map(({ id, icon, title, text }) => (
-          <motion.div
-            key={id}
-            variants={cardVariants}
-            whileHover={{ y: -4 }}
-            className={`relative z-20 flex items-start gap-3 rounded-xl border ${cardBg} ${cardBorder} p-6 shadow-sm`}
-          >
-            {/* icon */}
-            <div className={darkMode ? 'text-teal-400' : 'text-teal-600'}>
-              {icon}
-            </div>
+        {/* Top Right */}
+        <motion.div
+          className={`${cardBase} absolute top-[10px] right-[60px] bg-white dark:bg-gray-800 text-black dark:text-white`}
+          variants={floatAnim}
+          animate="animate"
+          whileHover="hover"
+        >
+          <Plug className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <div className="text-left">
+            <h3 className="font-semibold text-teal-900 dark:text-white">
+              Lightning‑Fast Setup & Seamless Integration
+            </h3>
+            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+              Onboard in days, not months. Connect with your existing tools and
+              infrastructure without disruption.
+            </p>
+          </div>
+        </motion.div>
 
-            {/* copy */}
-            <div className="text-left whitespace-pre-wrap">
-              <h3 className={`font-semibold leading-snug ${cardTitle}`}>
-                {title}
+        {/* Bottom Left */}
+        <motion.div
+          className={`${cardBase} absolute bottom-[120px] left-[30px] bg-white dark:bg-gray-800 text-black dark:text-white`}
+          variants={floatAnim}
+          animate="animate"
+          whileHover="hover"
+        >
+          <Handshake className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <div className="text-left">
+            <h3 className="font-semibold text-teal-900 dark:text-white">
+              Built to Scale with You
+            </h3>
+            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+              From startups to superspecialties, our platform evolves with your
+              growth—no need to change systems.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Center Bottom */}
+        <motion.div
+          className={`${cardBase} absolute bottom-[-40px] left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 text-black dark:text-white`}
+          variants={floatAnim}
+          animate="animate"
+          whileHover="hover"
+        >
+          <ShieldCheck className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <div className="text-left">
+            <h3 className="font-semibold text-teal-900 dark:text-white">
+              Uncompromising Security & Privacy
+            </h3>
+            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+              HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption,
+              and total control over data sharing.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Bottom Right */}
+        <motion.div
+          className={`${cardBase} absolute bottom-[120px] right-[30px] bg-white dark:bg-gray-800 text-black dark:text-white`}
+          variants={floatAnim}
+          animate="animate"
+          whileHover="hover"
+        >
+          <ThumbsUp className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <div className="text-left">
+            <h3 className="font-semibold text-teal-900 dark:text-white">
+              Customizable. Reliable. Always On.
+            </h3>
+            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+              99.9% uptime. Flexible modules tailored to your exact needs.
+              Premium support, 24/7.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Mobile View */}
+      <div className="block md:hidden px-4 space-y-6 mt-12">
+        {[
+          {
+            icon: <BarChart2 className="text-teal-600 w-6 h-6 mt-1" />,
+            title: "Real‑Time Analytics & Smart Dashboards",
+            desc: "Track performance, identify trends, and make data‑backed decisions—all from a clean, intuitive interface.",
+          },
+          {
+            icon: <Plug className="text-teal-600 w-6 h-6 mt-1" />,
+            title: "Lightning‑Fast Setup & Seamless Integration",
+            desc: "Onboard in days, not months. Connect with your existing tools and infrastructure without disruption.",
+          },
+          {
+            icon: <Handshake className="text-teal-600 w-6 h-6 mt-1" />,
+            title: "Built to Scale with You",
+            desc: "From startups to superspecialties, our platform evolves with your growth—no need to change systems.",
+          },
+          {
+            icon: <ShieldCheck className="text-teal-600 w-6 h-6 mt-1" />,
+            title: "Uncompromising Security & Privacy",
+            desc: "HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption, and total control over data sharing.",
+          },
+          {
+            icon: <ThumbsUp className="text-teal-600 w-6 h-6 mt-1" />,
+            title: "Customizable. Reliable. Always On.",
+            desc: "99.9% uptime. Flexible modules tailored to your exact needs. Premium support, 24/7.",
+          },
+        ].map((item, i) => (
+          <motion.div
+            key={i}
+            whileHover={{ scale: 1.02 }}
+            className={`rounded-xl p-5 flex gap-3 border shadow-md ${
+              darkMode ? "bg-gray-800 text-white border-teal-500" : "bg-white border-teal-300"
+            }`}
+          >
+            {item.icon}
+            <div>
+              <h3 className="font-semibold text-teal-900 dark:text-white">
+                {item.title}
               </h3>
-              <p className={`mt-2 text-sm leading-relaxed ${cardText}`}>
-                {text}
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                {item.desc}
               </p>
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 };

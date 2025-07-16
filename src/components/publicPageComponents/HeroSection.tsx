@@ -25,7 +25,7 @@ const textFade = {
 };
 
 const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
-  const bgMain = darkMode ? "bg-gray-900" : "bg-white";
+  const bgMain = darkMode ? "bg-[black]" : "bg-white";
   const textPrimary = darkMode ? "text-teal-400" : "text-[#086861]";
   const textHeading = darkMode ? "text-white" : "text-gray-900";
   const textBody = darkMode ? "text-gray-300" : "text-[#086861]";
@@ -165,13 +165,13 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
             custom={5}
             className="relative col-span-1"
           >
-            <div
+            {/* <div
               aria-hidden
               className={clsx(
                 "absolute -right-10 -top-12 h-96 w-96 rounded-full",
                 darkMode && "!bg-teal-500/20"
               )}
-            />
+            /> */}
             <Image
               src="/assets/prelogin-img/home/hero-doctor.png"
               alt="Doctor using DocsPath"

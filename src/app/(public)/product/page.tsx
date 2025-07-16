@@ -26,7 +26,7 @@ const HealthcareLanding: React.FC = () => {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "bg-gray-900" : "bg-gray-50"
+        darkMode ? "bg-[black]" : "bg-gray-50"
       }`}
     >
       {/* Dark Mode Toggle */}
@@ -57,7 +57,7 @@ const HealthcareLanding: React.FC = () => {
         {/* Header Section */}
         <div
           className={`relative overflow-hidden transition-colors duration-300 ${
-            darkMode ? "bg-gray-800" : "bg-white"
+            darkMode ? "bg-[black]" : "bg-white"
           }`}
         >
           {/* Background Pattern */}

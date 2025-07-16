@@ -51,11 +51,27 @@ export default function Awards({ darkMode = false }: AwardsProps) {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 50, scale: 0.95, rotate: -2 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 },
+      scale: 1,
+      rotate: 0,
+      transition: {
+        duration: 1,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const hoverAnimation = {
+    scale: 1.03,
+    rotate: 1,
+    boxShadow: "0px 12px 20px rgba(0,0,0,0.2)",
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 10,
     },
   };
 
@@ -68,7 +84,11 @@ export default function Awards({ darkMode = false }: AwardsProps) {
       {/* ✅ Background Image added here */}
       <div className="absolute w-1/3  ml-250 inset-0 z-0  pointer-events-none">
         <Image
-          src={darkMode?"/assets/prelogin-img/home/hero-dark-4.png":"/assets/prelogin-img/home/hero-light-4.png"}
+          src={
+            darkMode
+              ? "/assets/prelogin-img/home/hero-dark-4.png"
+              : "/assets/prelogin-img/home/hero-light-4.png"
+          }
           alt="Background"
           fill
           className="bg-contain"
@@ -103,7 +123,7 @@ export default function Awards({ darkMode = false }: AwardsProps) {
             <motion.div
               key={award.id}
               variants={itemVariants}
-              whileHover={{ y: -10 }}
+              whileHover={hoverAnimation}
               className={`rounded-xl shadow-lg overflow-hidden p-4 border-2 border-[#08685EA1] transition-all duration-300 ${
                 darkMode
                   ? "bg-gray-800 hover:shadow-2xl"

@@ -52,7 +52,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false, id })
 
   return (
     <div id={id} className={`min-h-screen transition-colors duration-300 ${
-      darkMode ? 'bg-gray-900' : 'bg-gray-50'
+      darkMode ? 'bg-[black]' : 'bg-gray-50'
     }`}>
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
@@ -133,11 +133,11 @@ const PricingSection: React.FC<PricingSectionProps> = ({ darkMode = false, id })
             </p>
             
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center max-w-2xl mx-auto">
-              <button className="w-1/3 sm:w-auto bg-[#086861] hover:bg-teal-700 text-white font-semibold py-4 px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center  max-w-2xl lg:mx-auto">
+              <button className="lg:w-auto sm:w-2/3 bg-[#086861] hover:bg-teal-700 text-white font-semibold py-4 px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl">
                 Start Free Trial
               </button>
-              <button className={`w-1/3 sm:w-auto border-2 border-[#086861] font-semibold py-4 px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105 ${
+              <button className={`lg:w-auto sm:w-2/3 border-2 border-[#086861] font-semibold py-4 px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105 ${
                 darkMode ? 'text-white hover:bg-gray-800' : 'text-[#086861] hover:bg-teal-50'
               }`}>
                 Request a Demo

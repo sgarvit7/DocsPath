@@ -1,4 +1,3 @@
-// components/home/CoreCapabilities.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -29,12 +28,11 @@ interface Segment {
   icon: ReactNode;
 }
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLElement> {
   darkMode?: boolean;
-  id?: string;
 }
 
-export default function CoreCapabilities({ darkMode = false, id }: Props) {
+export default function CoreCapabilities({ darkMode = false, ...props }: Props) {
   const capabilities: Capability[] = [
     {
       id: 1,
@@ -111,13 +109,25 @@ export default function CoreCapabilities({ darkMode = false, id }: Props) {
   };
 
   return (
-    <section id={id}
-      className={`relative overflow-hidden py-2 px-4 sm:px-6 lg:px-8 ${
-        darkMode ? "bg-gray-900" : "bg-white"
-      }`}
+    <section
+      {...props}
+      className={`relative min-h-screen py-2 px-4 sm:px-6 lg:px-8 overflow-hidden`}
     >
-      <div className="mx-auto max-w-7xl border-t py-10">
-        {/* Capabilities Section */}
+      <div className="absolute inset-0 -z-0 h-full w-full">
+        <Image
+          src={
+            darkMode
+              ? "/assets/prelogin-img/product-bg-dark-1.png"
+              : "/assets/prelogin-img/product-bg-light-1.png"
+          }
+          alt="Background"
+          fill
+          className="bg-contain"
+          priority
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl border-t py-10">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -144,8 +154,9 @@ export default function CoreCapabilities({ darkMode = false, id }: Props) {
               <motion.article
                 key={cap.id}
                 variants={item}
-                whileHover={{ y: -4 }}
-                className={`flex gap-6 rounded-xl border p-6 shadow-sm transition-all ${
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className={`flex gap-6 rounded-xl border p-6 shadow-sm hover:shadow-xl transition-all ${
                   darkMode
                     ? "border-gray-700 bg-gray-800 hover:border-teal-500"
                     : "border-gray-200 bg-white hover:border-teal-600"
@@ -181,10 +192,8 @@ export default function CoreCapabilities({ darkMode = false, id }: Props) {
           })}
         </motion.div>
 
-        {/* Divider */}
         <div className="my-20 h-0.5 w-full bg-gray-200 dark:bg-gray-700" />
 
-        {/* Who We’re Built For Section */}
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -203,46 +212,102 @@ export default function CoreCapabilities({ darkMode = false, id }: Props) {
         >
           Designed to Serve Every Corner of Modern Medicine
         </p>
+        {/* seg.description */}
+        {/* {seg.title} */}
+        {/*  {seg.icon} */}
 
-        <div className="flex items-stretch grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Card Section */}
-          <motion.div
-            variants={container}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="flex flex-col gap-8 space-y-6"
-          >
-            {segments.map((seg, idx) => (
-              <motion.div
-                key={seg.id}
-                variants={item}
-                className={`rounded-xl border p-6 transition-all ${
-                  darkMode
-                    ? "bg-gray-800 border-gray-700"
-                    : "bg-teal-50 border-teal-300"
-                } ${idx === 1 ? "border-2 border-blue-500" : ""}`}
-              >
-                <div
-                  className={`mb-3 flex items-center text-lg font-semibold ${
-                    darkMode ? "text-white" : "text-teal-800"
-                  }`}
-                >
-                  {seg.icon}
-                  <span className="ml-2">{seg.title}</span>
-                </div>
-                <p
-                  className={`text-sm leading-relaxed ${
-                    darkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
-                >
-                  {seg.description}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
+        {/* <div className="flex items-stretch grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
+<div className="flex items-stretch grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <motion.div
+    variants={container}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    className="flex flex-col gap-8 space-y-6"
+  >
+    {/* Card 1 */}
+    <motion.div
+      variants={item}
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
+        darkMode ? "bg-gray-800 border-gray-700" : "bg-[white] border-teal-300"
+      }`}
+    >
+      <div
+        className={`mb-3 flex items-center text-lg font-semibold ${
+          darkMode ? "text-white" : "text-[#004540]"
+        }`}
+      >
+        {/* Replace with your actual icon */}
+          {segments[0].icon}
+        <span className="ml-2">{segments[0].title}</span>
+      </div>
+      <p
+        className={`text-sm leading-relaxed ${
+          darkMode ? "text-gray-300" : "text-black"
+        }`}
+      >
+        {segments[0].description} 
+      </p>
+    </motion.div>
 
-          {/* Image Section */}
+    {/* Card 2 */}
+    <motion.div
+      variants={item}
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
+        darkMode
+          ? "bg-gray-800 border-gray-700"
+          : "bg-[#E7F2F1] border-teal-300"
+      } border-2 border-blue-500`}
+    >
+      <div
+        className={`mb-3 flex items-center text-lg font-semibold ${
+          darkMode ? "text-white" : "text-[#004540]"
+        }`}
+      >
+        {segments[1].icon}
+        <span className="ml-2">{segments[1].title}</span>
+      </div>
+      <p
+        className={`text-sm leading-relaxed ${
+          darkMode ? "text-gray-300" : "text-black"
+        }`}
+      >
+        {segments[1].description} 
+      </p>
+    </motion.div>
+
+    {/* Card 3 */}
+    <motion.div
+      variants={item}
+      whileHover={{ scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
+        darkMode ? "bg-gray-800 border-gray-700" : "bg-[#95C2BF] border-teal-300"
+      }`}
+    >
+      <div
+        className={`mb-3 flex items-center text-lg font-semibold ${
+          darkMode ? "text-white" : "text-[#004540]"
+        }`}
+      >
+        {segments[2].icon}
+        <span className="ml-2">{segments[2].title} </span>
+      </div>
+      <p
+        className={`text-sm leading-relaxed ${
+          darkMode ? "text-gray-300" : "text-black"
+        }`}
+      >
+        {segments[2].description} 
+      </p>
+    </motion.div>
+  </motion.div>
+{/* </div> */}
+
           <div className="flex justify-center items-center">
             <Image
               src="/assets/prelogin-img/WhoBuiltFor.png"

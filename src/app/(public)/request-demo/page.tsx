@@ -4,32 +4,59 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAuth } from "@/contexts/AuthContext"; // adjust if needed
-import EmailInput from "@/components/publicPageComponents/EmailInput";
+import { useAuth } from "@/contexts/AuthContext";
+import { Inter, Roboto} from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export default function RequestDemoPage() {
-  const inputClass =
-    "w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#1F6E66] dark:bg-gray-800 dark:border-gray-600 dark:text-white";
+  const inputClass = clsx(
+    "w-full px-4 py-2 border-b-2  focus:outline-none focus:ring-2 focus:ring-[#1F6E66] dark:bg-gray-800 dark:border-gray-600 dark:text-white",
+    roboto.className
+  );
 
   const [agreed, setAgreed] = useState(false);
+  const [formErrors, setFormErrors] = useState({ email: false });
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
-    // org: "",
-    // role: "",
+    org: "",
+    role: "",
     date: "",
     notes: "",
   });
 
-  const { user } = useAuth(); // AuthContext
+  const fieldMeta: Record<
+    keyof typeof formData,
+    { label: string; type: string; placeholder: string }
+  > = {
+    fullName: { label: "Full Name", type: "text", placeholder: "John Doe" },
+    email: { label: "Email", type: "email", placeholder: "you@example.com" },
+    phone: { label: "Mobile Number", type: "tel", placeholder: "+1 (555) 123-4567" },
+    org: { label: "Hospital / Clinic Name", type: "text", placeholder: "Your Clinic Name" },
+    role: { label: "Designation", type: "text", placeholder: "Doctor, Admin..." },
+    date: { label: "Preferred Demo Date", type: "date", placeholder: "" },
+    notes: { label: "Notes", type: "text", placeholder: "" },
+  };
+
+  const { user } = useAuth();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setFormErrors((prev) => ({
+        ...prev,
+        email: !emailPattern.test(value),
+      }));
+    }
   };
 
   const handleAutofill = () => {
@@ -39,159 +66,111 @@ export default function RequestDemoPage() {
       fullName: user.displayName || "",
       email: user.email || "",
       phone: user.phoneNumber || "",
-       
+      org: "",
+      role: "",
       date: new Date().toISOString().split("T")[0],
       notes: "",
     });
   };
 
+  const isFormValid =
+    agreed &&
+    !formErrors.email &&
+    formData.fullName &&
+    formData.email &&
+    formData.phone &&
+    formData.date;
+
   return (
-    <div className={clsx("min-h-screen flex flex-col")}>
-      <div className="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col min-h-screen">
-        {/* Main Content */}
-        <main className="flex-grow container mx-auto px-4 py-8 lg:py-12">
+    <div className={clsx("min-h-screen flex flex-col", inter.className)}>
+      <div className={clsx("bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col min-h-screen", inter.className)}>
+        <main className={clsx("flex-grow container mx-auto px-4 py-8 lg:py-12", inter.className)}>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg flex flex-col lg:flex-row min-h-[600px]"
+            className={clsx("bg-white dark:bg-gray-800 rounded-xl shadow-lg flex flex-col lg:flex-row min-h-[600px]", inter.className)}
           >
-            {/* Left Panel */}
-            <div className="lg:w-1/2 bg-[#1F6E66] text-white rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none flex flex-col items-center justify-center text-center">
+            <div className={clsx("lg:w-1/2 bg-[#1F6E66] text-white rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none flex flex-col items-center justify-center text-center", inter.className)}>
               <Image
                 src="/assets/prelogin-img/request-demo.png"
                 alt="image"
                 width={0}
                 height={0}
-                className="w-full h-full"
+                className={clsx("w-full h-full")}
               />
             </div>
 
-            {/* Right Panel */}
-            <div className="lg:w-1/2 p-6 lg:p-10">
-              <h3 className="text-3xl font-bold mb-2 text-center lg:text-left">
-                Request a Demo
-              </h3>
-              <p className="mb-6 text-center lg:text-left text-sm text-gray-600 dark:text-gray-300">
-                Fill out the form below to schedule a personalized
-                demonstration.
-              </p>
-              <form className="space-y-5">
-                {[
-                  {
-                    label: "Full Name",
-                    type: "text",
-                    name: "fullName",
-                    placeholder: "John Doe",
-                  },
-                  {
-                    label: "Email",
-                    type: "email",
-                    name: "email",
-                    placeholder: "you@example.com",
-                  },
-                  {
-                    label: "Mobile Number",
-                    type: "tel",
-                    name: "phone",
-                    placeholder: "+1 (555) 123-4567",
-                  },
-                  {
-                    label: "Hospital / Clinic Name",
-                    type: "text",
-                    name: "org",
-                    placeholder: "Your Clinic Name",
-                  },
-                  {
-                    label: "Designation",
-                    type: "text",
-                    name: "role",
-                    placeholder: "Doctor, Admin...",
-                  },
-                  {
-                    label: "Preferred Demo Date",
-                    type: "date",
-                    name: "date",
-                    placeholder: "",
-                  },
-                ].map((field) => (
-                  <div key={field.name}>
-                    <label className="block text-sm font-semibold mb-2">
-                      {field.label}
-                    </label>
-                    <input
-                      type={field.type}
-                      name={field.name}
-                      placeholder={field.placeholder}
-                      value={formData[field.name as keyof typeof formData]}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required={field.type !== "tel"}
-                    />
-                  </div>
-                ))}
+            <div className={clsx("lg:w-1/2 p-6 lg:p-10", inter.className)}>
+              <h3 className={clsx("text-3xl font-bold mb-2 text-center lg:text-left", inter.className)}>Request a Demo</h3>
+              
+              <form className={clsx("space-y-5", inter.className)} onSubmit={(e) => e.preventDefault()}>
+                {(Object.keys(fieldMeta) as (keyof typeof formData)[]).filter((key) => key !== "notes").map((fieldName) => {
+                  const field = fieldMeta[fieldName];
+                  return (
+                    <div key={fieldName} className={inter.className}>
+                      <label className={clsx("block text-sm font-thin text-[#7B809A] mb-2")}>{field.label}</label>
+                      <input
+                        type={field.type}
+                        name={fieldName}
+                        placeholder={field.placeholder}
+                        value={formData[fieldName] || ""}
+                        onChange={handleChange}
+                        className={inputClass}
+                        required={field.type !== "tel"}
+                      />
+                      {fieldName === "email" && formErrors.email && (
+                        <p className={clsx("text-red-500 text-sm mt-1")}>Please enter a valid email (e.g. you@example.com).</p>
+                      )}
+                    </div>
+                  );
+                })}
 
-                <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Additional Notes
-                  </label>
+                <div className={inter.className}>
+                  <label className={clsx("block text-sm font-semibold mb-2")}>Additional Notes</label>
                   <textarea
                     name="notes"
                     rows={3}
                     value={formData.notes}
                     onChange={handleChange}
                     className={inputClass}
-                    placeholder="Any specific features you'd like to see?"
+                    placeholder={fieldMeta.notes.placeholder}
                   />
                 </div>
 
-                {/* Terms and Submit */}
-                <div className="mt-6 space-y-4">
-                  {/* Terms */}
-                  <label className="flex items-center space-x-3 text-sm cursor-pointer">
-      {/* Toggle Switch */}
-      <div className="relative">
-        <input
-          type="checkbox"
-          checked={agreed}
-          onChange={(e) => setAgreed(e.target.checked)}
-          className="sr-only peer"
-        />
-         <div className="w-10 h-5 bg-gray-300 peer-checked:bg-teal-600 rounded-full transition-colors duration-200 shadow-inner"></div>
-        <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"></div>
-      </div>
-                    <span>
-                      I agree to the{" "}
-                      <a
-                        href="#"
-                        className="text-blue-700 font-medium hover:underline"
-                      >
-                        Terms and Conditions
-                      </a>
+                <div className={clsx("mt-6 space-y-4")}>
+                  <label className={clsx("flex items-center space-x-3 text-sm cursor-pointer")}>
+                    <div className={clsx("relative")}>
+                      <input
+                        type="checkbox"
+                        checked={agreed}
+                        onChange={(e) => setAgreed(e.target.checked)}
+                        className={clsx("sr-only peer")}
+                      />
+                      <div className={clsx("w-10 h-5 bg-gray-300 peer-checked:bg-teal-600 rounded-full transition-colors duration-200 shadow-inner")} />
+                      <div className={clsx("absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5")} />
+                    </div>
+                    <span className={clsx("text-[#7B809A]",inter.className)}>
+                      I agree to the <a href="#" className={clsx("text-[#344767] font-semibold underline hover:underline")}>Terms and Conditions</a>
                     </span>
                   </label>
 
-                  {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={!agreed}
-                    className={`w-full px-6 py-3 rounded-md font-semibold text-white transition 
-                    ${
-                      agreed
-                        ? "bg-[#025f54] hover:bg-[#014e44]"
-                        : "bg-gray-400 cursor-not-allowed"
-                    }`}
+                    disabled={!isFormValid}
+                    className={clsx("w-full px-6 py-3 rounded-md font-semibold text-white transition", {
+                      "bg-[#005A51] hover:bg-[#014e44]": isFormValid,
+                      "bg-gray-400 cursor-not-allowed": !isFormValid,
+                    })}
                   >
-                    Submit 
+                    Submit
                   </button>
 
-                  {/* Autofill Button */}
-                  <div className="text-center">
+                  <div className={clsx("text-center")}>
                     <button
                       type="button"
                       onClick={handleAutofill}
-                      className="text-sm text-blue-700 underline hover:text-blue-900"
-                    >
+                      className={clsx("text-md text-[#344767] underline cursor-pointer hover:text-blue-900",roboto.className)}>
                       Autofill from profile
                     </button>
                   </div>

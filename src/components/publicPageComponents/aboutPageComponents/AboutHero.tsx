@@ -1,7 +1,7 @@
 /* app/components/AboutSection.tsx (Next 13+/app router) */
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import { Globe } from "lucide-react";
+import Image from "next/image";
 
 type AboutSectionProps = {
   /** Theme flag supplied by parent */
@@ -44,9 +44,9 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
       >
         {/* Globe */}
         <motion.div
-          whileHover={{ rotate: 5, scale: 1.05 }}
+          whileHover={{ rotate: 180, scale: 1.05 }}
           transition={{ type: "spring", stiffness: 300 }}
-          className="relative w-50 h-50 shrink-0 z-10"
+          className="relative w-80 h-80 lg:-ml-25 shrink-0 z-10"
         >
           {/* soft halo behind the globe */}
           <span
@@ -60,17 +60,20 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
             aria-hidden
           />
           {/* Globe Icon */}
-          <div className="w-full h-full flex items-center justify-center bg-teal-600 rounded-full">
-            <Globe
-              className="w-24 h-24 text-white"
-              aria-label="Earth globe icon"
+          <div className="w-full h-full flex  items-center justify-center bg-[#DBE8E6] rounded-full">
+            <Image
+                src={"/assets/prelogin-img/about/globe.png"}
+                alt="00"
+                width={290}
+                height={100}
+                className=""
             />
           </div>
         </motion.div>
 
         {/* About Us Pill behind the globe and stretched */}
         <div
-          className="rounded-xl px-16 py-10 z-0 w-full lg:ml-[-50px] min-h-[120px]"
+          className="rounded-xl min-w-lg px-16 py-10 z-0 w-full lg:ml-[-50px] min-h-[120px]"
           style={{
             backgroundColor: "#066965",
             color: "#ffffff",

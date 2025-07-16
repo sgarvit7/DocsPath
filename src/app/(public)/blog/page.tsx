@@ -60,7 +60,7 @@ export default function Home() {
           }`}
         >
           <div
-            className={`absolute top-[-2px] left-[2px] w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200 ${
+            className={`absolute top-[-2px]  w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200 ${
               darkMode ? "translate-x-5" : "translate-x-0"
             }`}
           />

@@ -3,6 +3,10 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
+import clsx from "clsx";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], weight: ["100","200","300","400","500","600","700","800","900"] });
 
 const sectionVariant = {
   hidden: { opacity: 0, y: 20 },
@@ -28,33 +32,41 @@ export default function LegalCompliancePage() {
   };
 
   return (
-    <div>
+    <div className={inter.className}>
       {/* Dark Mode Toggle Button */}
       <div className="absolute top-4 right-4 z-10 flex bg-[#08686130] p-2 rounded-full items-center space-x-3 cursor-pointer">
-        <Bell className={`${darkMode ? "text-white" : "text-black"} w-6 h-6`} />
-        <span className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+        <Bell className={clsx("w-6 h-6", darkMode ? "text-white" : "text-black")} />
+        <span
+          className={clsx(
+            "text-sm",
+            darkMode ? "text-gray-300" : "text-gray-600",
+            inter.className
+          )}
+        >
           Dark mode
         </span>
         <button
           onClick={handleDarkModeToggle}
-          className={`relative w-10 h-5 rounded-full border border-black transition-colors duration-200 ${
+          className={clsx(
+            "relative w-10 h-5 rounded-full border border-black transition-colors duration-200",
             darkMode ? "bg-teal-600" : "bg-white"
-          }`}
+          )}
         >
           <div
-            className={`absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200 ${
+            className={clsx(
+              "absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200",
               darkMode ? "translate-x-6" : "translate-x-1"
-            }`}
+            )}
           />
         </button>
       </div>
 
-      <main className="min-h-screen bg-white dark:bg-gray-900 lg:px-70 text-gray-900 dark:text-white px-6 md:px-20 py-18">
+      <main className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-20 py-18">
         <motion.h1
           initial="hidden"
           animate="visible"
           variants={sectionVariant}
-          className="text-5xl font-bold mb-8"
+          className={clsx("text-4xl font-bold mb-8", inter.className)}
         >
           Legal & Compliance
         </motion.h1>
@@ -68,16 +80,28 @@ export default function LegalCompliancePage() {
             variants={sectionVariant}
             className="mb-10"
           >
-            <h2 className="text-3xl font-semibold text-teal-600 dark:text-teal-400 mb-2">
+            <h2
+              className={clsx(
+                "text-3xl font-extrabold text-[#005A51] dark:text-teal-400 mb-5",
+                inter.className
+              )}
+            >
               {section.heading}
             </h2>
 
             {section.content.map((item, subIdx) => (
-              <div key={subIdx} className="mb-4">
+              <div key={subIdx} className="mb-8">
                 {item.subheading && (
-                  <p className="font-semibold text-xl mb-1">{item.subheading}</p>
+                  <p className={clsx("font-bold text-xl my-8", inter.className)}>
+                    {item.subheading}
+                  </p>
                 )}
-                <ul className="list-disc list-inside space-y-1 text-md text-gray-800 dark:text-gray-300">
+                <ul
+                  className={clsx(
+                    "list-disc list-inside space-y-1 text-lg font-semibold  dark:text-gray-300",
+                    inter.className
+                  )}
+                >
                   {item.points.map((point, i) => (
                     <li key={i}>{point}</li>
                   ))}
@@ -95,6 +119,10 @@ const sections = [
   {
     heading: "1. Terms & Conditions",
     content: [
+      {
+        subheading:"By using our platform, you agree to abide by the terms and conditions outlined here. Our service facilitates appointment scheduling, telemedicine consultations, and hospital management for licensed medical professionals and authorized administrators.",
+        points:[]
+      },
       {
         subheading: "1.1 User Eligibility",
         points: [

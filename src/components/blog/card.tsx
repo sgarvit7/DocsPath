@@ -3,6 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { Inter } from "next/font/google";
+import clsx from "clsx";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700"],
+});
 
 interface BlogCardProps {
   title: string;
@@ -19,21 +26,25 @@ export default function BlogCard({
 }: BlogCardProps) {
   return (
     <motion.div
-      className="relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl  shadow-md p-6 pt-5 flex flex-col justify-between"
+      className={clsx(
+        "relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-md p-6 pt-5 flex flex-col justify-between",
+        inter.className
+      )}
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 200 }}
     >
-      <div className="flex   ">
+      <div className="flex">
         {/* Blog Badge */}
-        <div className="absolute top-4 left-4 bg-teal-700 text-white w-11 h-11 text-sm font-medium rounded-full shadow-sm flex items-center justify-center">
+        <div className="absolute top-4 left-4 bg-[#086861] text-white w-11 h-11 text-sm font-medium rounded-full shadow-sm flex items-center justify-center">
           Blog
         </div>
 
         {/* Subheading */}
-        <p className=" text-sm ml-13 font-bold text-[black] dark:text-teal-300 mb-2">
+        <p className="text-sm ml-13 font-bold text-[black] dark:text-teal-300 mb-2">
           Our news specially for Medical Professionals
         </p>
       </div>
+
       {/* Image */}
       <div className="w-full h-40 relative rounded-lg overflow-hidden mb-3 mt-3">
         <Image src={image} alt={title} fill className="object-cover" />
@@ -51,7 +62,7 @@ export default function BlogCard({
 
       {/* CTA */}
       <Link href={link} passHref>
-        <button className="mt-2 mb-2 lg:ml-45 bg-teal-800 hover:bg-teal-700 text-white text-sm cursor-pointer px-4 py-2 rounded-3xl self-start">
+        <button className="mt-2 mb-2 lg:ml-45 bg-[#086861] hover:bg-teal-700 text-white dark:bg-teal-400 dark:text-black text-sm cursor-pointer px-4 py-2 rounded-3xl self-start">
           Read more
         </button>
       </Link>

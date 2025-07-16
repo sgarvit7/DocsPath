@@ -77,12 +77,16 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
       } overflow-hidden`}
     >
       {/* ✅ Background Image */}
-      <div className="absolute inset-0 z-0  w-full">
+      <div className="absolute inset-0 z-0 w-full">
         <Image
-          src={darkMode?"/assets/prelogin-img/home/faq-pattern-black.png":"/assets/prelogin-img/home/faq-pattern-light-1.png"}
+          src={
+            darkMode
+              ? "/assets/prelogin-img/home/faq-pattern-black.png"
+              : "/assets/prelogin-img/home/faq-pattern-light-1.png"
+          }
           alt="Background"
           fill
-          className=" bg-contain"
+          className="bg-contain"
           priority
         />
       </div>
@@ -100,7 +104,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
           >
             <motion.h2
               variants={itemVariants}
-              className={`text-5xl font-bold mb-8 ${
+              className={`text-4xl md:text-5xl font-bold mb-8 ${
                 darkMode ? "text-white" : "text-gray-800"
               }`}
             >
@@ -180,35 +184,57 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
             </div>
           </motion.div>
 
-          {/* Illustration/Image */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="col-span-1 flex justify-end items-start"
-          >
-            {/* Doctor Image Container */}
-            <div className="relative w-200 h-150 rounded-2xl overflow-hidden">
-              {/* Image anchored to bottom */}
-              <div className="absolute bottom-0 left-0 right-0 top-1/2">
-                <Image
-                  src={darkMode?"/assets/prelogin-img/home/faq-dark.jpg":"/assets/prelogin-img/home/faq.png"}
-                  alt="FAQ"
-                  fill // ✅ Required for layout to work
-                  className="object-cover"
-                  sizes="100vw"
-                  priority
-                />
-              </div>
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, delay: 0.2 }}
+  viewport={{ once: true }}
+  className="w-full flex justify-center items-center order-first lg:order-last lg:col-span-1 mb-10 lg:mb-0"
+>
+  <div className="relative flex flex-col items-center justify-end w-full max-w-[320px] sm:max-w-[400px] md:max-w-[480px] h-[420px] sm:h-[500px] md:h-[600px] lg:h-[620px]">
 
-              {/* Circle on top-right corner */}
-              <div className="w-50 h-50 -right-5 bottom-50 absolute flex items-center justify-center z-10">
-                <Image src={darkMode?"/assets/prelogin-img/home/question-mark-dark.png":"/assets/prelogin-img/home/question-mark.png"}
-                 alt="?" fill className="flex justify-center items-end"/>
-              </div>
-            </div>
-          </motion.div>
+    {/* Floating Question Mark just above head */}
+    <motion.div
+      animate={{ y: [0, -10, 0] }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      className="relative z-20 w-16 h-16 sm:w-24 sm:h-24 mb-[-12px]"
+    >
+      <Image
+        src={
+          darkMode
+            ? "/assets/prelogin-img/home/question-mark-dark.png"
+            : "/assets/prelogin-img/home/question-mark.png"
+        }
+        alt="?"
+        width={100}
+        height={100}
+        className="w-full h-full object-contain"
+      />
+    </motion.div>
+
+    {/* Large Doctor Image */}
+    <div className="w-full flex justify-center z-10">
+      <Image
+        src={
+          darkMode
+            ? "/assets/prelogin-img/home/faq-dark.jpg"
+            : "/assets/prelogin-img/home/faq.png"
+        }
+        alt="FAQ Doctor"
+        width={600}
+        height={600}
+        className="w-full max-w-[90%] h-auto object-contain"
+        priority
+      />
+    </div>
+  </div>
+</motion.div>
+
+
 
         </div>
       </div>

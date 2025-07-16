@@ -87,7 +87,7 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
 
   return (
     <section
-      className={clsx(darkMode ? "bg-gray-900" : "bg-white", "py-10 px-20")}
+      className={clsx(darkMode ? "bg-[black]" : "bg-white", "py-10 px-20")}
     >
       <h2 className={clsx("text-4xl font-bold", darkMode && "text-white")}>
         Who is this for?
