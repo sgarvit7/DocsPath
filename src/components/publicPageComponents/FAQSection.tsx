@@ -4,6 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
+import { Inter, Roboto } from "next/font/google";
+import clsx from "clsx";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 
 interface FAQSectionProps {
   darkMode: boolean;
@@ -73,7 +84,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
   return (
     <section
       className={`relative pt-16 px-4 ${
-        darkMode ? "bg-gray-800" : "bg-white"
+        darkMode ? "bg-gray-900" : "bg-white"
       } overflow-hidden`}
     >
       {/* ✅ Background Image */}
@@ -81,7 +92,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
         <Image
           src={
             darkMode
-              ? "/assets/prelogin-img/home/faq-pattern-black.png"
+              ? "/assets/prelogin-img/home/faq-pattern-black-1.png"
               : "/assets/prelogin-img/home/faq-pattern-light-1.png"
           }
           alt="Background"
@@ -104,9 +115,10 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
           >
             <motion.h2
               variants={itemVariants}
-              className={`text-4xl md:text-5xl font-bold mb-8 ${
-                darkMode ? "text-white" : "text-gray-800"
-              }`}
+              className={ clsx ("text-4xl md:text-5xl font-extrabold mb-8 ",
+                darkMode ? "text-white" : "text-gray-800",
+                inter.className
+  )}
             >
               Frequently asked questions
             </motion.h2>
@@ -129,9 +141,10 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
                     } transition-colors duration-200`}
                   >
                     <span
-                      className={`font-semibold pr-4 ${
-                        darkMode ? "text-white" : "text-[#005C56]"
-                      }`}
+                      className={clsx("font-bold pr-4 ",
+                        darkMode ? "text-white" : "text-[#005C56]",
+                        roboto.className
+              )}
                     >
                       {faq.question}
                     </span>
@@ -169,9 +182,9 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
                       >
                         <div className="p-6">
                           <p
-                            className={`${
+                            className={clsx(roboto.className,
                               darkMode ? "text-gray-300" : "text-gray-600"
-                            } leading-relaxed`}
+                             ," leading-relaxed")}
                           >
                             {faq.answer}
                           </p>
@@ -206,7 +219,7 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
       <Image
         src={
           darkMode
-            ? "/assets/prelogin-img/home/question-mark-dark.png"
+            ? "/assets/prelogin-img/home/question-mark-dark-1.png"
             : "/assets/prelogin-img/home/question-mark.png"
         }
         alt="?"
@@ -221,8 +234,8 @@ export default function FAQSection({ darkMode }: FAQSectionProps) {
       <Image
         src={
           darkMode
-            ? "/assets/prelogin-img/home/faq-dark.jpg"
-            : "/assets/prelogin-img/home/faq.png"
+            ? "/assets/prelogin-img/home/faq-1.png"
+            : "/assets/prelogin-img/home/faq-1.png"
         }
         alt="FAQ Doctor"
         width={600}

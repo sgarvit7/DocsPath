@@ -5,6 +5,12 @@ import clsx from "clsx";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState, useMemo } from "react";
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 
 interface Testimonial {
   stars: 1 | 2 | 3 | 4 | 5;
@@ -54,9 +60,9 @@ const cardFade = {
 const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
   darkMode = false,
 }) => {
-  const bg = darkMode ? "bg-[black]" : "bg-[#086861]";
+  const bg = darkMode ? "bg-gray-900" : "bg-[#086861]";
   const textHeading = "text-white";
-  const cardBg = darkMode ? "bg-gray-800" : "bg-white";
+  const cardBg = darkMode ? "bg-gray-600" : "bg-white";
   const borderColor = darkMode ? "border-teal-800" : "border-teal-100";
 
   const controls = useAnimation();
@@ -85,7 +91,7 @@ const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
   return (
     <section className={clsx(bg, "py-16 overflow-hidden")}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className={clsx(textHeading, "text-3xl font-extrabold")}>
+        <h2 className={clsx(textHeading, "text-3xl font-extrabold",roboto.className)}>
           What Doctors Say About DocsPath
         </h2>
 
@@ -147,7 +153,7 @@ const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
                         />
                       ))}
                     </div>
-                    <p className="text-sm text dark:text-gray-200">
+                    <p className= {clsx("text-sm text ",roboto.className,darkMode?"text-white":"text-black")}>
                       {t.quote}
                     </p>
                     <div className="mt-4 flex items-center gap-3">
@@ -163,10 +169,10 @@ const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
                         <div className="h-8 w-8 rounded-full bg-gray-300" />
                       )}
                       <div>
-                        <p className="text-sm font-semibold text-white">
+                        <p  className={clsx("text-sm font-semibold  ",roboto.className, darkMode?"text-[white]":"text-[black]")}>
                           {t.name}
                         </p>
-                        <p className="text-xs text-gray-400">{t.role}</p>
+                        <p className={clsx("text-xs text-gray-400",roboto.className)}>{t.role}</p>
                       </div>
                     </div>
                   </div>

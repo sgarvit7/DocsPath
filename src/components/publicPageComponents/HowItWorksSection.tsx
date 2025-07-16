@@ -7,6 +7,17 @@ import clsx from "clsx";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 
 type Props = {
   darkMode?: boolean;
@@ -30,14 +41,14 @@ const stepData = [
 ];
 
 const logos = [
-  "/logo1.png",
-  "/logo2.png",
-  "/logo3.png",
-  "/logo4.png",
-  "/logo5.png",
-  "/logo6.png",
-  "/logo7.png",
-  "/logo8.png",
+  "/assets/prelogin-img/logo/logo1.png",
+  "/assets/prelogin-img/logo/logo2.png",
+  "/assets/prelogin-img/logo/logo3.png",
+  "/assets/prelogin-img/logo/logo4.png",
+  "/assets/prelogin-img/logo/logo5.jpg",
+  "/assets/prelogin-img/logo/logo6.png",
+  "/assets/prelogin-img/logo/logo3.png",
+  "/assets/prelogin-img/logo/logo5.jpg"
 ];
 
 const duplicatedLogos = [...logos, ...logos];
@@ -51,13 +62,13 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
       className={clsx(
         "w-full",
         darkMode
-          ? "bg-[black] text-white"
+          ? "bg-gray-900 text-white"
           : "bg-gradient-to-b from-[#E8F3F3] to-[#FFFFFF] text-gray-900"
       )}
     >
       {/* Heading */}
       <motion.h2
-        className="text-3xl sm:text-4xl md:text-5xl bg-[#086861] py-6 sm:py-8 px-4 sm:px-10 md:px-20 text-white font-bold mb-4 text-center"
+        className={clsx("text-3xl sm:text-4xl md:text-5xl bg-[#086861] py-6 sm:py-12 px-4 sm:px-10 md:px-20 text-white font-bold mb-4 ",inter.className)}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -79,15 +90,18 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 className={clsx(
-                  "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-base sm:text-lg border-2 transition",
+                  "w-10 h-10 sm:w-12 sm:h-12 rounded-full cursor-pointer flex items-center justify-center font-bold text-base sm:text-lg border-2 transition",
                   i === activeStep
                     ? "bg-[#086861] text-white border-green-700"
                     : darkMode
                     ? "bg-gray-800 text-[#005C56] border-gray-600"
                     : "bg-white text-[#005C5645] border-gray-300 shadow"
+                    
                 )}
               >
-                {i + 1}
+                                {i + 1}
+                
+                
               </motion.button>
             ))}
           </div>
@@ -96,8 +110,9 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
           <div className="flex flex-col justify-center items-center text-center px-4">
             <motion.h3
               className={clsx(
-                "text-2xl sm:text-3xl font-extrabold mb-4",
+                "text-2xl sm:text-3xl font-black mb-4",
                 darkMode ? "text-green-600" : "text-[#005C56]"
+                , inter.className
               )}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -114,8 +129,8 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.4 }}
                 className={clsx(
-                  "p-6 sm:p-8 m-6 sm:m-10 rounded-xl shadow-md w-full max-w-xs sm:max-w-md",
-                  darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                  " sm:p-8 m-6 sm:m-10 rounded-xl shadow-2xl w-full max-w-xs sm:max-w-md",
+                  darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900",inter.className
                 )}
               >
                 <motion.h3
@@ -123,7 +138,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
                   className={clsx(
-                    "text-xl sm:text-2xl font-bold mb-2",
+                    "text-2xl sm:text-2xl text-start font-bold mb-2",
                     darkMode ? "text-green-600" : "text-[#086861]"
                   )}
                 >
@@ -133,7 +148,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-sm sm:text-base"
+                  className="text-xl font-light text-start mt-5 sm:text-base"
                 >
                   {stepData[activeStep].description}
                 </motion.p>
@@ -149,10 +164,11 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
               transition={{ delay: 0.6, type: "spring" }}
               onClick={() => router.push("/sign-up")}
               className={clsx(
-                "mt-2 sm:mt-4 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base md:w-full lg:w-md rounded-full font-semibold w-fit",
+                "mt-2 sm:mt-4 px-4 sm:px-6 py-2 sm:py-3 text-md cursor-pointer sm:text-base md:w-full lg:w-sm rounded-full font-bold w-fit",
                 darkMode
                   ? "bg-green-600 text-white"
                   : "bg-[#086861] text-white shadow-lg"
+                  ,inter.className
               )}
             >
               Start free trial
@@ -194,7 +210,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <p className="text-xl sm:text-2xl md:text-3xl px-4 sm:px-8 md:px-20 font-bold mb-6 sm:mb-8 text-center sm:text-left">
+        <p className={clsx("text-xl sm:text-2xl md:text-3xl px-4 sm:px-8 md:px-20 font-extrabold mb-6 sm:mb-8 text-center sm:text-left",roboto.className)}>
           Trusted by 10,000+ Doctors, Clinics & Hospitals Worldwide
         </p>
 

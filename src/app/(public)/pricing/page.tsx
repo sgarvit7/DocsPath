@@ -208,7 +208,7 @@ const PricingPlans: React.FC = () => {
 
       {/* Button stays at the bottom of every card */}
       <button
-        className="w-1/2 mx-auto text-white font-semibold px-10 py-3
+        className="w-1/2 mx-auto text-white cursor-pointer font-semibold px-10 py-3
                  rounded-full border border-white
                  shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
         style={{ backgroundColor: "#086861" }}

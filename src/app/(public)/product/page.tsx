@@ -26,7 +26,7 @@ const HealthcareLanding: React.FC = () => {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "bg-[black]" : "bg-gray-50"
+        darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
       {/* Dark Mode Toggle */}
@@ -57,7 +57,7 @@ const HealthcareLanding: React.FC = () => {
         {/* Header Section */}
         <div
           className={`relative overflow-hidden transition-colors duration-300 ${
-            darkMode ? "bg-[black]" : "bg-white"
+            darkMode ? "bg-gray-900" : "bg-white"
           }`}
         >
           {/* Background Pattern */}
@@ -73,15 +73,15 @@ const HealthcareLanding: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
               <div className="col-span-3">
                 <h1
-                  className={`text-4xl lg:text-5xl font-bold mb-6 transition-colors duration-300 ${
+                  className={`text-4xl lg:text-5xl font-extrabold mb-6 transition-colors duration-300 ${
                     darkMode ? "text-white" : "text-[#086861]"
                   }`}
                 >
                   Powering the Future of Healthcare
                 </h1>
                 <p
-                  className={`text-lg mb-4 transition-colors duration-300 ${
-                    darkMode ? "text-gray-300" : "text-gray-700"
+                  className={`text-xl mb-4 transition-colors font-mdduration-300 ${
+                    darkMode ? "text-gray-300" : "text-[black]"
                   }`}
                 >
                   DocsPath is more than a tool. It’s a comprehensive
@@ -89,8 +89,8 @@ const HealthcareLanding: React.FC = () => {
                   optimize operations, and elevate the standard of care.
                 </p>
                 <p
-                  className={`text-lg mb-4 transition-colors duration-300 ${
-                    darkMode ? "text-gray-300" : "text-gray-700"
+                  className={`text-xl mb-4 transition-colors font-md duration-300 ${
+                    darkMode ? "text-gray-300" : "text-[black]"
                   }`}
                 >
                   Whether you&apos;re running a high-volume hospital or a private

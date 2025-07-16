@@ -13,7 +13,12 @@ import {
 } from "react-icons/md";
 import { ReactNode } from "react";
 import Image from "next/image";
-
+import { Roboto } from "next/font/google";
+import clsx from "clsx";
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 interface Capability {
   id: number;
   title: string;
@@ -111,13 +116,13 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
   return (
     <section
       {...props}
-      className={`relative min-h-screen py-2 px-4 sm:px-6 lg:px-8 overflow-hidden`}
+      className={`relative min-h-screen py-2 px-4 sm:px-6 lg:px-8 overflow-hidden ${darkMode?"bg-gray-900":"bg-white"}`}
     >
       <div className="absolute inset-0 -z-0 h-full w-full">
         <Image
           src={
             darkMode
-              ? "/assets/prelogin-img/product-bg-dark-1.png"
+              ? "/assets/prelogin-img/product-bg-dark-2.png"
               : "/assets/prelogin-img/product-bg-light-1.png"
           }
           alt="Background"
@@ -133,7 +138,7 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className={`mb-16 text-center text-3xl font-bold ${
+          className={`mb-16 text-center text-4xl font-extrabold ${
             darkMode ? "text-white" : "text-gray-900"
           }`}
         >
@@ -163,7 +168,7 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
                 } ${extraClasses}`}
               >
                 <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-lg ${
+                  className={`flex h-20 w-20 items-center justify-center rounded-lg ${
                     darkMode
                       ? "bg-teal-700/20 text-teal-300"
                       : "bg-teal-600/10 text-teal-600"
@@ -173,16 +178,18 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
                 </div>
                 <div>
                   <h3
-                    className={`mb-2 text-lg font-semibold ${
-                      darkMode ? "text-white" : "text-gray-900"
-                    }`}
+                    className={clsx("mb-2 text-lg font-bold" 
+                      ,darkMode ? "text-white" : "text-[#344767]"
+                      ,roboto.className
+            )}
                   >
                     {cap.title}
                   </h3>
                   <p
-                    className={`text-sm ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
+                    className={clsx("text-md font-bold" ,
+                      darkMode ? "text-gray-300" : "text-[#005A51]"
+                      ,roboto.className
+                    )}
                   >
                     {cap.description}
                   </p>
@@ -235,16 +242,16 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
       }`}
     >
       <div
-        className={`mb-3 flex items-center text-lg font-semibold ${
+        className={`mb-3 flex items-center text-xl font-bold ${
           darkMode ? "text-white" : "text-[#004540]"
         }`}
       >
         {/* Replace with your actual icon */}
-          {segments[0].icon}
-        <span className="ml-2">{segments[0].title}</span>
+          {/* {segments[0].icon} */}
+        <span className="">{segments[0].title}</span>
       </div>
       <p
-        className={`text-sm leading-relaxed ${
+        className={`text-md leading-relaxed ${
           darkMode ? "text-gray-300" : "text-black"
         }`}
       >
@@ -264,15 +271,15 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
       } border-2 border-blue-500`}
     >
       <div
-        className={`mb-3 flex items-center text-lg font-semibold ${
+        className={`mb-3 flex items-center text-xl font-bold ${
           darkMode ? "text-white" : "text-[#004540]"
         }`}
       >
-        {segments[1].icon}
-        <span className="ml-2">{segments[1].title}</span>
+        {/* {segments[1].icon} */}
+        <span className="">{segments[1].title}</span>
       </div>
       <p
-        className={`text-sm leading-relaxed ${
+        className={`text-md leading-relaxed ${
           darkMode ? "text-gray-300" : "text-black"
         }`}
       >
@@ -290,15 +297,15 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
       }`}
     >
       <div
-        className={`mb-3 flex items-center text-lg font-semibold ${
+        className={`mb-3 flex items-center text-xl font-bold ${
           darkMode ? "text-white" : "text-[#004540]"
         }`}
       >
-        {segments[2].icon}
-        <span className="ml-2">{segments[2].title} </span>
+        {/* {segments[2].icon} */}
+        <span className="">{segments[2].title} </span>
       </div>
       <p
-        className={`text-sm leading-relaxed ${
+        className={`text-md leading-relaxed ${
           darkMode ? "text-gray-300" : "text-black"
         }`}
       >

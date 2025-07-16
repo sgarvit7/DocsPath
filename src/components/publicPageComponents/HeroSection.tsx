@@ -2,15 +2,30 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+
 import clsx from "clsx";
 import { Afacad } from "next/font/google";
+import {
+  Building2,
+  FileText,
+  UserPlus,
+} from "lucide-react"; 
+import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 
 const afacad = Afacad({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
+const geist = Geist({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 interface HomeHeroProps {
   darkMode?: boolean;
 }
@@ -25,11 +40,11 @@ const textFade = {
 };
 
 const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
-  const bgMain = darkMode ? "bg-[black]" : "bg-white";
+  const bgMain = darkMode ? "bg-gray-900" : "bg-white";
   const textPrimary = darkMode ? "text-teal-400" : "text-[#086861]";
   const textHeading = darkMode ? "text-white" : "text-gray-900";
   const textBody = darkMode ? "text-gray-300" : "text-[#086861]";
-  const cardBg = darkMode ? "bg-gray-900" : "bg-white";
+  const cardBg = darkMode ? "bg-gray-600" : "bg-white";
 
   return (
     <section
@@ -46,7 +61,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
         className={clsx(
           "absolute inset-0 z-10 bg-no-repeat bg-contain bg-top",
           darkMode
-            ? 'bg-[url("/assets/prelogin-img/home/dark-pattern.png")]'
+            ? 'bg-[url("/assets/prelogin-img/home/dark-pattern-1.png")]'
             : 'bg-[url("/assets/prelogin-img/home/hero-section-pattern.png")]'
         )}
       />
@@ -61,7 +76,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
 
 
       {/* Main Content */}
-      <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-4">
+      <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-4 lg:pt-13">
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-3 lg:items-center">
           {/* Left Column */}
           <div className="space-y-8 md:col-span-1 lg:col-span-2">
@@ -72,12 +87,12 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               custom={0}
               className={clsx(
                 textHeading,
-                "text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-tight"
+                "text-4xl sm:text-6xl lg:text-6xl font-extrabold leading-tight",inter.className
               )}
             >
               Transform Your Practice
               <br />
-              <span className={clsx(textPrimary, "inline-block")}>
+              <span className={clsx(textPrimary, "font-black inline-block",inter.className)}>
                 Effortlessly
               </span>
             </motion.h1>
@@ -89,25 +104,27 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               custom={1}
               className={clsx(textHeading, "max-w-xl text-base sm:text-xl")}
             >
-              Welcome to <span className={textPrimary}>DocsPath</span> — a
+             <p className="text-2xl mb-10"> Welcome to <span className={clsx(textPrimary,"font-bold")}>DocsPath</span> ... </p> a
               smarter way to run your clinic. From automated scheduling to
               intelligent patient communication and real‑time analytics,
               everything you need is unified in one powerful platform.
             </motion.p>
-
+ 
             <motion.ul
               variants={textFade}
               initial="hidden"
               animate="visible"
               custom={2}
-              className="flex flex-wrap gap-x-3 gap-y-1 text-sm sm:text-base font-medium"
+              className="flex flex-wrap   gap-y-1 text-sm sm:text-base font-medium"
             >
+              
               {[
                 "Streamline Appointments",
                 "Simplify Billing",
                 "Digitize Records",
-                "Deliver SmartCare",
+                
               ].map((tag) => (
+               
                 <li
                   key={tag}
                   className={clsx(
@@ -117,8 +134,16 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
                   )}
                 >
                   {tag}
-                </li>
-              ))}
+                   </li>
+                   ) )}
+                  <span  className={clsx(
+                    "underline-offset-4 hover:underline px-2",
+                    textPrimary,
+                    
+                  )}>Deliver SmartCare </span>
+               
+                
+             
             </motion.ul>
 
             <motion.p
@@ -128,7 +153,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               custom={3}
               className={clsx(
                 textHeading,
-                "text-base sm:text-lg md:text-xl lg:text-2xl"
+                "text-base sm:text-lg md:text-xl lg:text-xl"
               )}
             >
               Built for doctors. Trusted by thousands. Ready for you.
@@ -139,17 +164,18 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               initial="hidden"
               animate="visible"
               custom={4}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap lg:-ml-20 lg:mt-23 gap-4"
             >
-              <button className="rounded-full bg-teal-600 px-6 py-3 text-sm sm:text-base font-semibold text-white shadow hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-300">
+              <button className={clsx("rounded-full bg-[#086861] px-6 py-3 cursor-pointer lg:text-xl lg:w-1/3  sm:text-base font-bold text-white shadow hover:bg-teal-700 focus:outline-none  focus:ring-teal-300",inter.className)}>
                 Start Free Trial
               </button>
               <button
                 className={clsx(
-                  "rounded-full border-2 px-6 py-3 text-sm sm:text-base font-semibold",
+                  "rounded-full border-2  px-6 py-3 lg:text-xl lg:w-1/3 sm:text-base cursor-pointer font-bold",
                   darkMode
                     ? "border-gray-700    text-gray-100 hover:bg-gray-700"
                     : "border-[#086861] text-gray-700 hover:bg-gray-100"
+                    , geist.className
                 )}
               >
                 Request a Demo
@@ -188,7 +214,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
       <div className="mt-10 relative z-10">
         <div className="relative py-4 ">
           <h2 className="max-w-2xl bg-[#086861] rounded-br-2xl rounded-tr-2xl px-20 py-8 text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white sm:px-6 lg:px-8">
-            <div className="text-center">Why Docspath?</div>
+            <div className={clsx("text-center",inter.className)}>Why Docspath?</div>
           </h2>
         </div>
 
@@ -218,38 +244,52 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
             <p
               className={clsx(
                 textBody,
-                "text-base sm:text-lg font-medium leading-relaxed"
+                "lg:text-xl sm:text-lg font-semibold leading-relaxed"
               )}
             >
               Managing a clinic shouldn&rsquo;t feel like a second job. DocsPath
               gives you a powerful command center to control every part of your
-              practice from the front desk to follow‑ups—
+              practice 
+              <p>from the front desk to follow‑ups—
               <span className="font-semibold"> with zero hassle</span>.
             </p>
+            </p>
 
-            {[
-              "Built for busy clinics and hospitals",
-              "Designed to reduce paperwork, errors, and burnout",
-              "Empowers you to spend more time on patients, not admin",
-            ].map((feat) => (
-              <div
-                key={feat}
-                className={clsx(
-                  cardBg,
-                  "flex items-center gap-3 rounded-2xl px-6 py-4 shadow-lg"
-                )}
-              >
-                <Check className="shrink-0 text-teal-600" size={22} />
-                <span
-                  className={clsx(
-                    textHeading,
-                    "text-sm sm:text-lg lg:text-xl font-medium"
-                  )}
-                >
-                  {feat}
-                </span>
-              </div>
-            ))}
+{[
+  {
+    text: "Built for busy clinics and hospitals",
+    icon: <Building2 className="shrink-0 text-teal-600" size={22} />,
+  },
+  {
+    text: "Designed to reduce paperwork, errors, and burnout",
+    icon: <FileText className="shrink-0 text-teal-600" size={22} />,
+  },
+  {
+    text: "Empowers you to spend more time on patients, not admin",
+    icon: <UserPlus className="shrink-0 text-teal-600" size={22} />,
+  },
+].map(({ text, icon }) => (
+  <div
+    key={text}
+    className={clsx(
+      cardBg,
+      "flex items-center gap-3 rounded-2xl px-6 py-4 shadow-lg"
+    )}
+  >
+    
+    {icon}
+    
+    <span
+      className={clsx(
+        textHeading,
+        "text-sm sm:text-lg lg:text-xl font-medium"
+      )}
+    >
+      {text}
+    </span>
+  </div>
+))}
+
           </motion.div>
         </div>
       </div>

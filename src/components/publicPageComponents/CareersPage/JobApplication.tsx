@@ -133,7 +133,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
 
         <button
           type="submit"
-          className="w-full bg-[#005A51] hover:bg-teal-700 text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          className="w-full bg-[#005A51] hover:bg-teal-700 cursor-pointer text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
         >
           Submit Application
         </button>

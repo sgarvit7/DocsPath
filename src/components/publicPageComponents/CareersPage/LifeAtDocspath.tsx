@@ -117,7 +117,7 @@ const LifeAtDocspath: React.FC<{ darkMode?: boolean }> = ({ darkMode = false }) 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-1/2 px-4 py-3 bg-[#005A51] text-white font-semibold rounded-lg hover:bg-teal-900 focus:outline-none focus:ring-2 focus:ring-teal-300 transition disabled:opacity-50"
+                className="w-full sm:w-1/2 px-4 py-3 bg-[#005A51] cursor-pointer text-white font-semibold rounded-lg hover:bg-teal-900 focus:outline-none focus:ring-2 focus:ring-teal-300 transition disabled:opacity-50"
               >
                 {isSubmitting ? "Signing up..." : "Sign up"}
               </button>

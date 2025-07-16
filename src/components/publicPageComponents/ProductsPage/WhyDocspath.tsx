@@ -36,17 +36,17 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
   return (
     <section
       className={`relative w-full py-28 overflow-hidden ${
-        darkMode ? "dark bg-black text-white" : "bg-[#f8fdfd]"
+        darkMode ? "dark bg-gray-900 text-white" : "bg-[#f8fdfd]"
       }`}
     >
-      <h2 className="text-3xl md:text-4xl bg-[#086861] w-full py-6 font-bold text-white text-center mb-12">
+      <h2 className="text-4xl md:text-4xl bg-[#086861] w-full py-6 font-extrabold text-white text-center mb-12">
         Why DocsPath?
       </h2>
 
       {/* Doctor Image */}
       <div className="relative z-0 flex justify-center">
         <Image
-          src={darkMode?"/assets/prelogin-img/doctor-dark.jpg":"/assets/prelogin-img/doctor.png"}
+          src={darkMode?"/assets/prelogin-img/doctor-1.png":"/assets/prelogin-img/doctor-1.png"}
           alt="Doctor"
           width={400}
           height={400}
@@ -63,12 +63,12 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           animate="animate"
           whileHover="hover"
         >
-          <BarChart2 className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
-          <div className="text-left">
-            <h3 className="font-semibold text-teal-900 dark:text-white">
+          <BarChart2 className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
+          <div className="">
+            <h3 className="font-semibold  text-xl dark:text-white">
               Real‑Time Analytics & Smart Dashboards
             </h3>
-            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
               Track performance, identify trends, and make data‑backed
               decisions—all from a clean, intuitive interface.
             </p>
@@ -82,12 +82,12 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           animate="animate"
           whileHover="hover"
         >
-          <Plug className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <Plug className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
           <div className="text-left">
-            <h3 className="font-semibold text-teal-900 dark:text-white">
+            <h3 className="font-semibold text-xl dark:text-white">
               Lightning‑Fast Setup & Seamless Integration
             </h3>
-            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
               Onboard in days, not months. Connect with your existing tools and
               infrastructure without disruption.
             </p>
@@ -101,12 +101,12 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           animate="animate"
           whileHover="hover"
         >
-          <Handshake className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <Handshake className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
           <div className="text-left">
-            <h3 className="font-semibold text-teal-900 dark:text-white">
+            <h3 className="font-semibold text-xl dark:text-white">
               Built to Scale with You
             </h3>
-            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
               From startups to superspecialties, our platform evolves with your
               growth—no need to change systems.
             </p>
@@ -120,12 +120,12 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           animate="animate"
           whileHover="hover"
         >
-          <ShieldCheck className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <ShieldCheck className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
           <div className="text-left">
-            <h3 className="font-semibold text-teal-900 dark:text-white">
+           <h3 className="font-semibold text-xl dark:text-white">
               Uncompromising Security & Privacy
             </h3>
-            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
               HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption,
               and total control over data sharing.
             </p>
@@ -139,12 +139,12 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           animate="animate"
           whileHover="hover"
         >
-          <ThumbsUp className="text-teal-600 w-6 h-6 shrink-0 mt-1" />
+          <ThumbsUp className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
           <div className="text-left">
-            <h3 className="font-semibold text-teal-900 dark:text-white">
+           <h3 className="font-semibold text-xl dark:text-white">
               Customizable. Reliable. Always On.
             </h3>
-            <p className="mt-1 text-sm text-slate-700 dark:text-gray-300">
+            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
               99.9% uptime. Flexible modules tailored to your exact needs.
               Premium support, 24/7.
             </p>

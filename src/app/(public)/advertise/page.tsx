@@ -222,7 +222,7 @@ const AdvertisePage: React.FC = () => {
 
         {/* CTA Button */}
         <div className="mt-23 mb-10  text-end pr-4 sm:pr-10 lg:pr-[320px] pb-4">
-          <button className="px-6 py-3 bg-[#086861] hover:bg-teal-600 text-white rounded-full font-semibold transition">
+          <button className="px-6 py-3 bg-[#086861] cursor-pointer hover:bg-teal-600 text-white rounded-full font-semibold transition">
             <a href="/sales-card">
             Get started Now
             </a>

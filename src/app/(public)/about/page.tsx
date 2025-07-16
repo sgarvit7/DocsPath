@@ -18,7 +18,7 @@ export default function AboutPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.4 }}
       className="min-h-screen mt-10"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -56,7 +56,7 @@ export default function AboutPage() {
       <AboutHero darkMode={darkMode} />
       <MissionVision darkMode={darkMode} id="mission"/>
       <LeadershipTeam darkMode={darkMode} id="leadership" />
-      <CareersBanner />
+      <CareersBanner darkMode={darkMode}/>
       <Awards darkMode={darkMode} id="awards" />
       <Partnership darkMode={darkMode} id="partnership"/>
     </motion.div>

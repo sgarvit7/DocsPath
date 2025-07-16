@@ -145,7 +145,7 @@ export default function Whitepapers() {
                   </a>
                   <button
                     onClick={() => setSelectedPaper(paper)}
-                    className={clsx("flex items-center gap-2 justify-center bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-black dark:text-white text-sm font-medium px-5 py-2 rounded-xl transition", inter.className)}
+                    className={clsx("flex items-center gap-2 cursor-pointer justify-center bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-black dark:text-white text-sm font-medium px-5 py-2 rounded-xl transition", inter.className)}
                   >
                     <Eye className="w-4 h-4" />
                     View

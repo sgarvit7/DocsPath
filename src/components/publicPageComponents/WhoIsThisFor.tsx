@@ -3,6 +3,11 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import clsx from "clsx";
+import { Inter } from "next/font/google";
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 
 interface AudienceCollageProps {
   darkMode?: boolean;
@@ -87,12 +92,12 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
 
   return (
     <section
-      className={clsx(darkMode ? "bg-[black]" : "bg-white", "py-10 px-20")}
+      className={clsx(darkMode ? "bg-gray-900" : "bg-white", "py-10 px-20")}
     >
-      <h2 className={clsx("text-4xl font-bold", darkMode && "text-white")}>
+      <h2 className={clsx("text-4xl font-extrabold", darkMode && "text-white",inter.className)}>
         Who is this for?
       </h2>
-      <p className={clsx("max-w-full text-xl py-4", darkMode && "text-white")}>
+      <p className={clsx("max-w-full text-xl py-4", darkMode && "text-white",inter.className)}>
         Our Platform is designed for modern healthcare teams and visionaries who
         want to grow smarter—not just bigger.
       </p>
@@ -108,11 +113,11 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
           >
             <div className="flex gap-4 col-span-1 w-full h-full">
               <div className="max-w-lg h-full p-6 rounded-lg bg-teal-800 text-white shadow-md">
-                <h2 className="text-xl font-bold leading-snug">
+                <h2 className={clsx("text-xl font-extrabold leading-snug",inter.className)}>
                   Hospitals &<br />
                   Specialty Clinics
                 </h2>
-                <p className="mt-4 text-sm leading-relaxed">
+                <p className={clsx("mt-4 text-sm leading-relaxed",inter.className)}>
                   Reduce overhead, enhance team coordination, and accelerate
                   patient care—without expanding your staff.
                 </p>
@@ -165,11 +170,11 @@ const AudienceCollage: React.FC<AudienceCollageProps> = ({
             className="w-full h-1/2 object-cover rounded-lg"
           />
           <div className="max-w-lg h-full p-6 rounded-lg bg-teal-800 text-white shadow-md">
-            <h2 className="text-xl font-bold leading-snug">
+            <h2 className={clsx("text-xl font-extrabold leading-snug",inter.className)}>
               Independent Doctors &<br />
               Telemedicine Providers
             </h2>
-            <p className="mt-4 text-sm leading-relaxed">
+            <p className={clsx("mt-3 text-md leading-relaxed",inter.className)}>
               Launch a fully functional AI-enabled clinic in minutes. Automate
               your backend and focus on care.
             </p>

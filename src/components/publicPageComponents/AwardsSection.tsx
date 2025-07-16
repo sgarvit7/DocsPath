@@ -1,8 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award } from "lucide-react";
+
 import Image from "next/image";
+import { Inter, Roboto } from "next/font/google";
+import clsx from "clsx";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","900"],
+});
 
 interface AwardItem {
   id: number;
@@ -78,7 +89,7 @@ export default function Awards({ darkMode = false }: AwardsProps) {
   return (
     <section
       className={`relative py-16 px-4 sm:px-6 lg:px-8 ${
-        darkMode ? "bg-[black]" : "bg-white"
+        darkMode ? "bg-gray-900" : "bg-white"
       } overflow-hidden`}
     >
       {/* ✅ Background Image added here */}
@@ -86,7 +97,7 @@ export default function Awards({ darkMode = false }: AwardsProps) {
         <Image
           src={
             darkMode
-              ? "/assets/prelogin-img/home/hero-dark-4.png"
+              ? "/assets/prelogin-img/home/hero-dark-41.png"
               : "/assets/prelogin-img/home/hero-light-4.png"
           }
           alt="Background"
@@ -104,11 +115,12 @@ export default function Awards({ darkMode = false }: AwardsProps) {
           className="text-center mb-12"
         >
           <h2
-            className={`text-3xl font-bold ${
+            className={clsx("text-5xl text-start font-extrabold ",
               darkMode ? "text-white" : "text-gray-900"
-            }`}
+              , inter.className
+            )}
           >
-            Our Awards
+            Recognized and Awarded
           </h2>
         </motion.div>
 
@@ -130,32 +142,26 @@ export default function Awards({ darkMode = false }: AwardsProps) {
                   : "bg-white hover:shadow-2xl"
               }`}
             >
-              <div className="aspect-video relative overflow-hidden">
-                <div
-                  className={`w-full h-full flex items-center rounded-lg justify-center ${
-                    darkMode ? "bg-purple-900" : "bg-purple-600"
-                  } bg-gradient-to-br from-purple-600 to-pink-600`}
-                >
-                  <div className="text-center">
-                    <Award className="w-16 h-16 text-white mx-auto mb-4" />
-                    <div className="text-white text-sm font-medium">
-                      Award Ceremony
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Image
+              src={"/assets/prelogin-img/award.png"}
+              alt="award"
+              width={500}
+              height={200}
+              />
               <div className="p-6">
                 <h3
-                  className={`text-lg font-bold mb-3 text-center ${
+                  className={clsx("text-lg font-semibold mb-3 text-center" ,
                     darkMode ? "text-white" : "text-gray-900"
-                  }`}
+                    , roboto.className
+          )}
                 >
                   {award.name}
                 </h3>
                 <p
-                  className={`text-sm leading-relaxed ${
+                  className={clsx("text-sm leading-relaxed text-center ",
                     darkMode ? "text-gray-300" : "text-[#005A51]"
-                  }`}
+                    , roboto.className
+          )}
                 >
                   {award.description}
                 </p>

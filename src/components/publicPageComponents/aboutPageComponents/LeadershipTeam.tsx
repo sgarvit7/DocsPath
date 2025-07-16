@@ -76,7 +76,7 @@ export default function LeadershipTeam({ darkMode = false, id }: LeadershipProps
     <section
       id={id}
       className={`py-16 px-4 sm:px-6 lg:px-8 ${
-        darkMode ? "bg-gray-800" : "bg-gray-50"
+        darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
       <div className="max-w-7xl mx-auto">

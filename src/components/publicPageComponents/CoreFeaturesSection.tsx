@@ -13,10 +13,20 @@ import {
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import clsx from "clsx";
+import { Afacad , Inter } from "next/font/google";
 
 interface CoreFeaturesSectionProps {
   darkMode: boolean;
 }
+const afacad = Afacad({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700","800","900"],
+});
+
 
 export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProps) {
   const radius = 280;
@@ -90,8 +100,8 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
   return (
     <div
       className={clsx(
-        "min-h-screen flex items-center justify-center px-6 py-20 relative font-roboto w-full",
-        darkMode ? "bg-black text-white" : "bg-white text-gray-900"
+        "min-h-screen flex items-center justify-center px-6  relative font-roboto w-full",
+        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       )}
     >
 {isMobile ? (
@@ -105,6 +115,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
       className={clsx(
         "text-3xl font-bold text-center mb-10",
         darkMode ? "text-white" : "text-teal-700"
+        , inter.className
       )}
     >
       Core Features
@@ -147,13 +158,14 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
             <div
               className={clsx(
                 "absolute inset-0 flex items-center justify-center text-3xl font-bold shadow-xl rounded-full font-roboto",
-                darkMode ? "bg-teal-700 text-white" : "bg-teal-700 text-white"
+                darkMode ? "bg-teal-700 text-white" : "bg-[#086861] text-white"
+                , inter.className
               )}
             >
               <div
                 ref={circleRef}
-                className="absolute inset-0 rounded-full border-[5px] border-dotted  border-white"
-                style={{ animation: "spin 50s linear infinite" }}
+                className="absolute inset-0 rounded-full border-[2px]   border-white"
+                // style={{ animation: "spin 50s linear infinite" }}
               />
               Core Features
             </div>
@@ -175,7 +187,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
                 onMouseEnter={() => setHoveredCard(index)}
                 onMouseLeave={() => setHoveredCard(null)}
                 className={clsx(
-                  "absolute w-72 p-4 text-center rounded-xl flex flex-col items-center justify-center gap-2 dark:hover:shadow-xl transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl hover:overflow-hidden",
+                  "absolute w-72 p-4 text-center rounded-xl flex flex-col items-center justify-center gap-2 dark:hover:shadow-xl transition-transform duration-300 ease-in-out hover:scale-110 hover:shadow-2xl  hover:overflow-hidden",
                   darkMode ? " text-white" : "text-gray-900"
 
                 )}
@@ -188,13 +200,13 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
                 }}
               >
                 <div className="inner-card flex flex-col items-center justify-center transition-transform duration-300">
-                  <div className="w-16 h-16 rounded-full bg-teal-700 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[#086861] flex items-center justify-center">
                     {card.icon}
                   </div>
-                  <h3 className="text-lg font-[afacad] font-semibold text-end text-teal-600 dark:text-white">
+                  <h3 className={clsx("text-lg  font-semibold text-end text-teal-600 dark:text-white",afacad.className)}>
                     {card.title}
                   </h3>
-                  <p className="text-md text-end font-[afacad] text-gray-600 dark:text-gray-300">
+                  <p className={clsx("text-md text-end  text-gray-600 dark:text-gray-300",afacad.className)}>
                     {card.desc}
                   </p>
                 </div>

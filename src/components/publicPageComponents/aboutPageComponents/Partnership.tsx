@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Partner {
   id: number;
@@ -15,14 +16,14 @@ interface PartnershipProps {
 
 export default function Partnership({ darkMode = false, id }: PartnershipProps) {
   const partners: Partner[] = [
-    { id: 1, name: "Coinbase", logo: "Coinbase" },
-    { id: 2, name: "NASA", logo: "NASA" },
-    { id: 3, name: "Netflix", logo: "NETFLIX" },
-    { id: 4, name: "Pinterest", logo: "Pinterest" },
-    { id: 5, name: "Microsoft", logo: "Microsoft" },
-    { id: 6, name: "Google Cloud", logo: "Google Cloud" },
-    { id: 7, name: "Amazon Web Services", logo: "Amazon Web Services" },
-    { id: 8, name: "IBM Watson", logo: "IBM Watson" },
+    { id: 1, name: "Coinbase", logo: "/assets/prelogin-img/logo2/logo1.png" },
+    { id: 2, name: "NASA", logo: "/assets/prelogin-img/logo2/logo2.jpeg" },
+    { id: 3, name: "Netflix", logo: "/assets/prelogin-img/logo2/logo3.jpeg" },
+    { id: 4, name: "Pinterest", logo: "/assets/prelogin-img/logo2/logo4.png" },
+    { id: 5, name: "Microsoft", logo: "/assets/prelogin-img/logo2/logo5.png" },
+    { id: 6, name: "Google Cloud", logo: "/assets/prelogin-img/logo2/logo6.png" },
+    { id: 7, name: "Amazon Web Services", logo: "/assets/prelogin-img/logo2/logo7.jpeg" },
+    { id: 8, name: "IBM Watson", logo: "/assets/prelogin-img/logo2/logo8.jpeg" },
   ];
 
   return (
@@ -47,7 +48,7 @@ export default function Partnership({ darkMode = false, id }: PartnershipProps) 
             Partnership
           </h2>
           <p
-            className={`mx-auto max-w-3xl text-lg ${
+            className={`mx-auto max-w-6xl text-xl ${
               darkMode ? "text-gray-300" : "text-gray-700"
             }`}
           >
@@ -78,7 +79,14 @@ export default function Partnership({ darkMode = false, id }: PartnershipProps) 
                     : "text-gray-600 hover:text-black"
                 }`}
               >
-                {partner.logo}
+                 <Image
+                                src={partner.logo}
+                                alt={`logo-${idx}`}
+                                width={100}
+                                height={100}
+                                className="object-contain "
+                                priority={idx < 8}
+                              />
               </div>
             ))}
           </motion.div>

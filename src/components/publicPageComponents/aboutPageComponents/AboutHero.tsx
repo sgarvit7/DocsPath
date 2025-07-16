@@ -32,9 +32,9 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
       variants={container}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.3 }}
-      className={`w-full overflow-hidden py-20 px-4 lg:px-16 flex flex-col lg:flex-row items-center gap-12 ${
-        isDark ? "bg-gray-950 text-white" : "bg-white text-gray-900"
+      viewport={{ once: true }}
+      className={`w-full overflow-hidden py-15 px-4 lg:px-16 flex flex-col lg:flex-row items-center gap-12 ${
+        isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
     >
       {/* ---------- Left: Globe + About Card ---------- */}
@@ -43,33 +43,42 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
         className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6 relative w-full"
       >
         {/* Globe */}
-        <motion.div
-          whileHover={{ rotate: 180, scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="relative w-80 h-80 lg:-ml-25 shrink-0 z-10"
-        >
-          {/* soft halo behind the globe */}
-          <span
-            className="absolute inset-0 rounded-full"
-            style={{
-              boxShadow: isDark
-                ? "0 0 0 20px rgba(255,255,255,0.04)"
-                : "0 0 0 20px rgba(219, 232, 230, 1)",
-              borderRadius: "50%",
-            }}
-            aria-hidden
-          />
-          {/* Globe Icon */}
-          <div className="w-full h-full flex  items-center justify-center bg-[#DBE8E6] rounded-full">
-            <Image
-                src={"/assets/prelogin-img/about/globe.png"}
-                alt="00"
-                width={290}
-                height={100}
-                className=""
-            />
-          </div>
-        </motion.div>
+{/* Globe */}
+<motion.div
+  initial={{ rotate: 0 }}
+  animate={{ rotate: 360 }}
+  whileHover={{ scale: 1.05 }}
+  transition={{
+    repeat: Infinity,
+    repeatType: "loop",
+    ease: "linear",
+    duration: 20, // adjust speed here
+  }}
+  className="relative w-80 h-80 lg:-ml-25 shrink-0 z-10"
+>
+  {/* soft halo behind the globe */}
+  <span
+    className="absolute inset-0 rounded-full"
+    style={{
+      boxShadow: isDark
+        ? "0 0 0 20px rgba(255,255,255,0.5)"
+        : "0 0 0 20px rgba(219, 232, 230, 1)",
+      borderRadius: "50%",
+    }}
+    aria-hidden
+  />
+  {/* Globe Icon */}
+  <div className="w-full h-full flex items-center justify-center bg-[#DBE8E6] rounded-full">
+    <Image
+      src={"/assets/prelogin-img/about/globe.png"}
+      alt="00"
+      width={290}
+      height={100}
+      className=""
+    />
+  </div>
+</motion.div>
+
 
         {/* About Us Pill behind the globe and stretched */}
         <div
