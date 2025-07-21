@@ -8,6 +8,7 @@ export const publicRoutes = [
   '/advertise',
   '/careers',
   '/product',
+  '/jobDescription',
   // ↓ dynamic segment
   '/careers/[id]',
   '/contact',
