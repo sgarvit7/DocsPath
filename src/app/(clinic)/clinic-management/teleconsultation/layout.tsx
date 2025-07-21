@@ -1,9 +1,9 @@
-import { SignalProvider } from "@/contexts/SignalContext";
+// import { SignalProvider } from "@/contexts/SignalContext";
 
 export default function TeleconsultationLayout({
-  children,
+  // children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <SignalProvider>{children}</SignalProvider>;
+  // return <SignalPnrovider>{children}</SignalProvider>;
 }

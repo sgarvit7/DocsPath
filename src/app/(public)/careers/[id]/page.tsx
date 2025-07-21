@@ -17,6 +17,7 @@ export default function JobDetail() {
       try {
         const response = await axios.get<JobDescription>(`/api/jobs/${params.id}`);
         setJob(response.data);
+        console.log(job,loading,error)
       } catch (err) {
         console.error("Failed to fetch job:", err);
         setError("Failed to fetch job. Please try again later.");
@@ -30,9 +31,9 @@ export default function JobDetail() {
 
   return (
     <JobDescriptionPage
-      jobPosting={job}
-      loading={loading}
-      error={error}
+      // jobPosting={job}
+      // loading={loading}
+      // error={error}
     />
   );
 }

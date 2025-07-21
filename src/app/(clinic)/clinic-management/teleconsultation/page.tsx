@@ -3,7 +3,7 @@
 // import { useRouter } from "next/navigation";
 // import React from "react";
 
-// export default function Page() {
+export default function Page() {
 //   const router = useRouter()
 //   // const {onlineUsers, call, callCredentials, updateCallStatus, roomName, callResponse} = useSignal();
 //   // console.log(signal.onlineUsers);
@@ -19,7 +19,8 @@
 
 //   console.log(onlineUsers);
 
-//   return (
+  return (
+    <div>Teleconsultations</div>
 //     <>
 //       <div className="text-red-500">call status: {callResponse?callResponse:"No connection established"}</div>
 //       <div className="text-green-500">room name: {roomName}</div>
@@ -103,5 +104,5 @@
 //         </div>
 //       </div>}
 //     </>
-//   );
-// }
+  );
+}

@@ -243,3 +243,9 @@
 //   }
 //   return context;
 // }
+
+export default function useSignal() {
+  return(
+    <div>hello</div>
+  )
+}
