@@ -79,7 +79,7 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           <div>
           <div className="flex gap-2">
           <Image
-          src = "/assets/prelogin-img/WD/analytics.png"
+          src = "/assets/prelogin-img/WD/Analytics.png"
          alt="Doctor"
           width={100}
           height={100}
@@ -109,7 +109,7 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
           <div>
           <div className="flex gap-4">
           <Image
-          src = "/assets/prelogin-img/WD/cloud.png"
+          src = "/assets/prelogin-img/WD/Cloud.png"
            alt="Doctor"
           width={100}
           height={100}
