@@ -117,7 +117,7 @@ const KnowledgeBasePage = () => {
       <div className={clsx("transition-colors duration-300 pt-17 pb-9 dark:bg-gray-900")}>
         <div
           className={clsx(
-            "dark:bg-[#111827] bg-no-repeat w-full bg-center py-6 px-4 sm:px-8 md:px-16 lg:px-20 bg-[url('/assets/prelogin-img/kbBackground.png')] dark:bg-[url('/assets/prelogin-img/kb2.png')] dark:py-9"
+            "dark:bg-[#111827] bg-no-repeat w-full bg-center py-6 px-4 sm:px-8 md:px-16 lg:px-20 bg-[url('/assets/prelogin-img/KBbackground.png')] dark:bg-[url('/assets/prelogin-img/kb2.png')] dark:py-9"
           )}
         >
           <motion.h1
