@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-
+import { motion, Variants} from "framer-motion";
 import Image from "next/image";
+import { useState } from "react";
+
 type MissionVisionProps = {
   darkMode: boolean;
   id?: string;
@@ -15,6 +16,25 @@ const cardVariants: Variants = {
     y: 0,
     transition: { delay: i * 0.2, duration: 0.6 },
   }),
+};
+
+const RotatingImage = ({ src, alt }: { src: string; alt: string }) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      animate={{ rotate: hovered ? -360 : 360 }}
+      transition={{
+        repeat: Infinity,
+        duration: 20,
+        ease: "linear",
+      }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+    >
+      <Image src={src} alt={alt} width={120} height={120} />
+    </motion.div>
+  );
 };
 
 export default function MissionVision({ darkMode, id }: MissionVisionProps) {
@@ -73,11 +93,9 @@ export default function MissionVision({ darkMode, id }: MissionVisionProps) {
               className="w-38 h-38 lg:-mr-10 rounded-full flex items-center justify-center ring-4 ring-white"
               style={{ backgroundColor: teal }}
             >
-               <Image
-              src={"/assets/prelogin-img/vision.png"}
-              alt="mission"
-              width={120}
-              height={120}
+              <RotatingImage
+                src="/assets/prelogin-img/vision.png"
+                alt="vision"
               />
             </div>
           </div>
@@ -99,12 +117,9 @@ export default function MissionVision({ darkMode, id }: MissionVisionProps) {
               className="w-38 h-38 lg:-ml-20 rounded-full flex items-center justify-center ring-4 ring-white"
               style={{ backgroundColor: teal }}
             >
-            
-              <Image
-              src={"/assets/prelogin-img/mission.png"}
-              alt="mission"
-              width={120}
-              height={120}
+              <RotatingImage
+                src="/assets/prelogin-img/mission.png"
+                alt="mission"
               />
             </div>
           </div>

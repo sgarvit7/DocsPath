@@ -117,3 +117,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+body{
+  cursor: url('/assets/cursor2.png') 0 0, auto;
+}

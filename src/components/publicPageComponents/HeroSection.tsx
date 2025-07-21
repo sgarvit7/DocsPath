@@ -5,11 +5,7 @@ import { motion } from "framer-motion";
 
 import clsx from "clsx";
 import { Afacad } from "next/font/google";
-import {
-  Building2,
-  FileText,
-  UserPlus,
-} from "lucide-react"; 
+
 import { Inter } from "next/font/google";
 import { Geist } from "next/font/google";
 
@@ -199,7 +195,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               )}
             /> */}
             <Image
-              src="/assets/prelogin-img/home/hero-doctor.png"
+              src="/assets/prelogin-img/home/doctor11.png"
               alt="Doctor using DocsPath"
               width={500}
               height={560}
@@ -225,12 +221,20 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6 }}
           >
-            <Image
+            {/* <Image
               src="/assets/prelogin-img/home/doctor-group.png"
               alt="Team of doctors"
               width={800}
               height={600}
               className="mx-auto"
+            /> */}
+
+            <Image
+              src="/assets/prelogin-img/home/doctor-group1.png"
+              alt="Team of doctors"
+              width={950}
+              height={600}
+              className="lg:-ml-25 sm:mx-auto"
             />
           </motion.div>
 
@@ -258,15 +262,15 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
 {[
   {
     text: "Built for busy clinics and hospitals",
-    icon: <Building2 className="shrink-0 text-teal-600" size={22} />,
+    icon: "/assets/prelogin-img/home/icon1.png",
   },
   {
     text: "Designed to reduce paperwork, errors, and burnout",
-    icon: <FileText className="shrink-0 text-teal-600" size={22} />,
+    icon: "/assets/prelogin-img/home/icon2.png" ,
   },
   {
     text: "Empowers you to spend more time on patients, not admin",
-    icon: <UserPlus className="shrink-0 text-teal-600" size={22} />,
+    icon: "/assets/prelogin-img/home/icon3.png",
   },
 ].map(({ text, icon }) => (
   <div
@@ -277,8 +281,12 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
     )}
   >
     
-    {icon}
-    
+    <Image
+    src={icon}
+    alt=""
+    width={35}
+    height={0}
+    />
     <span
       className={clsx(
         textHeading,

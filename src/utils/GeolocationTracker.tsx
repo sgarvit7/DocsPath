@@ -38,6 +38,7 @@ export default function GeoTracker() {
         });
       },
       (err) => {
+        console.log(error)
         setError(err.message);
       }
     );

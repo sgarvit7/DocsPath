@@ -106,16 +106,18 @@ const CommitmentCard = () => (
 );
 
 export default function TrustCompliancePage() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
     }
-  }, [darkMode]);
+    return false;
+  });
 
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   return (
     <div>
       {/* Dark Mode Toggle */}

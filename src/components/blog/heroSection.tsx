@@ -16,7 +16,7 @@ export default function HeroSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className={clsx(
-        "relative bg-[url('/assets/prelogin-img/blog/blogHero1.jpg')] dark:bg-[url('/assets/prelogin-img/blog/darkblogHero1.png')] bg-no-repeat bg-cover md:h-[700px] sm:h-auto dark:bg-teal-900 py-18 lg:py-15 px-6 md:px-12 flex flex-col lg:flex-row gap-10",
+        "relative bg-[url('/assets/prelogin-img/blog/blogHero11.png')] dark:bg-[url('/assets/prelogin-img/blog/darkblog.avif']  bg-no-repeat bg-cover md:h-[700px] sm:h-auto dark:bg-teal-900 py-18 lg:py-15 px-6 md:px-12 flex flex-col lg:flex-row gap-10",
         inter.className
       )}
     >

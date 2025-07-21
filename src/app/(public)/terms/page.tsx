@@ -14,44 +14,44 @@ const fadeInUp = {
 };
 
 export default function TermsPage() {
-  const [darkMode, setDarkMode] = useState(false);
+ const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
 
+  // Update localStorage and optionally add a dark class to <body> or <html>
   useEffect(() => {
-    document.title = "Terms of Service";
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDarkMode(prefersDark);
-    document.documentElement.classList.toggle("dark", prefersDark);
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    document.documentElement.classList.toggle("dark", newMode);
-  };
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
 
   return (
     <div className="dark:bg-gray-900">
       {/* Dark mode toggle */}
       <div className="absolute top-4 right-4 z-10 flex bg-[#08686130] p-2 rounded-full items-center space-x-3 cursor-pointer">
-        <Bell className={clsx("w-6 h-6", darkMode ? "text-white" : "text-black")} />
-        <span className={clsx("text-sm", inter.className, darkMode ? "text-gray-300" : "text-gray-600")}>
-          Dark mode
-        </span>
-        <button
-          onClick={toggleDarkMode}
-          className={clsx(
-            "relative w-10 h-5 rounded-full border border-black transition-colors duration-200",
-            darkMode ? "bg-teal-600" : "bg-white"
-          )}
-        >
-          <div
-            className={clsx(
-              "absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200",
-              darkMode ? "translate-x-6" : "translate-x-1"
-            )}
-          />
-        </button>
-      </div>
+              <Bell className={clsx(darkMode ? "text-white" : "text-black", "w-6 h-6", inter.className)} />
+              <span className={clsx("text-sm", darkMode ? "text-gray-300" : "text-gray-600", inter.className)}>
+                Dark mode
+              </span>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={clsx(
+                  "relative w-10 h-5 rounded-full border border-black transition-colors duration-200",
+                  darkMode ? "bg-teal-600" : "bg-white",
+                  inter.className
+                )}
+              >
+                <div
+                  className={clsx(
+                    "absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200",
+                    darkMode ? "translate-x-6" : "translate-x-1"
+                  )}
+                />
+              </button>
+            </div>
+      
 
       {/* Main content */}
       <main className={clsx("min-h-screen lg:max-w-7xl  lg:mx-auto md:px-20 py-18 bg-white dark:bg-gray-900 text-gray-900 dark:text-white", inter.className)}>

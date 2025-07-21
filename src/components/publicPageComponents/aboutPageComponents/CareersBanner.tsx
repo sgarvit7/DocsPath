@@ -4,6 +4,7 @@ import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
 
 interface CareersBannerProps {
   darkMode?: boolean;
@@ -39,18 +40,21 @@ export default function CareersBanner({ darkMode = false }: CareersBannerProps) 
           {/* Title & subtitle */}
           <h2
             className={clsx(
-              "text-3xl font-extrabold flex items-center gap-1",
+              "text-3xl font-extrabold flex items-center gap-3",
               darkMode ? "text-white" : "text-white"
             )}
           >
-            <span role="img" aria-label="Suit person">
-              🧑‍💼
-            </span>
+            <Image
+            src={"/assets/prelogin-img/about/cb.png"}
+            alt=""
+            height={40}
+            width={45}
+            />
             Careers
           </h2>
           <h3
             className={clsx(
-              "text-lg font-semibold",
+              "text-lg ml-13 font-semibold",
               darkMode ? "text-gray-100" : "text-white"
             )}
           >
@@ -58,7 +62,7 @@ export default function CareersBanner({ darkMode = false }: CareersBannerProps) 
           </h3>
           <p
             className={clsx(
-              "max-w-4xl leading-relaxed",
+              "max-w-4xl ml-13 leading-relaxed",
               darkMode ? "text-gray-300" : "text-white"
             )}
           >

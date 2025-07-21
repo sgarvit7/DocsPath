@@ -3,6 +3,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import FloatingHelpButton from "./FloatingHelpButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,6 +49,7 @@ export default function Layout({ children }: LayoutProps) {
     >
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       <main className="relative mt-15">
+        <FloatingHelpButton/>
         <ThemeContext.Provider value={{darkMode}}>
           {children}
         </ThemeContext.Provider>

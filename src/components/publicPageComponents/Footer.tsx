@@ -71,7 +71,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
               <h2 className="text-2xl font-bold">Docspath</h2>
             </motion.div>
             <div className="text-sm">
-              <p>Copyright © 2025 Medycall</p>
+              <p>Copyright © 2025 DocsPath</p>
               <p>Powered by Healtheck</p>
               <GeoTracker />
             </div>

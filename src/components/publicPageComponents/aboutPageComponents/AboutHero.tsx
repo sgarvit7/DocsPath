@@ -54,7 +54,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
     ease: "linear",
     duration: 20, // adjust speed here
   }}
-  className="relative w-80 h-80 lg:-ml-25 shrink-0 z-10"
+  className="relative w-80 h-80 lg:-ml-18 shrink-0 z-10"
 >
   {/* soft halo behind the globe */}
   <span

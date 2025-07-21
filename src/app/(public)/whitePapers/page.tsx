@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Download, Eye, X, Bell } from "lucide-react";
@@ -42,7 +42,18 @@ const whitepapers = [
 
 export default function Whitepapers() {
   const [selectedPaper, setSelectedPaper] = useState<null | typeof whitepapers[0]>(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
 
   return (
     <section
@@ -51,7 +62,7 @@ export default function Whitepapers() {
         inter.className,
         darkMode
           ? "dark bg-gray-900"
-          : "bg-[radial-gradient(circle_at_center,_#ffffff_70%,_#d1fae5_100%)]"
+          : "bg-[radial-gradient(circle_at_center,_#ffffff_55%,_#ddf3f1_100%)]"
       )}
     >
       {/* Dark mode toggle */}

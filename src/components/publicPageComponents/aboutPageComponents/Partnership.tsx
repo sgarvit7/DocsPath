@@ -16,14 +16,30 @@ interface PartnershipProps {
 
 export default function Partnership({ darkMode = false, id }: PartnershipProps) {
   const partners: Partner[] = [
-    { id: 1, name: "Coinbase", logo: "/assets/prelogin-img/logo2/logo1.png" },
-    { id: 2, name: "NASA", logo: "/assets/prelogin-img/logo2/logo2.jpeg" },
-    { id: 3, name: "Netflix", logo: "/assets/prelogin-img/logo2/logo3.jpeg" },
-    { id: 4, name: "Pinterest", logo: "/assets/prelogin-img/logo2/logo4.png" },
-    { id: 5, name: "Microsoft", logo: "/assets/prelogin-img/logo2/logo5.png" },
-    { id: 6, name: "Google Cloud", logo: "/assets/prelogin-img/logo2/logo6.png" },
-    { id: 7, name: "Amazon Web Services", logo: "/assets/prelogin-img/logo2/logo7.jpeg" },
-    { id: 8, name: "IBM Watson", logo: "/assets/prelogin-img/logo2/logo8.jpeg" },
+    { id: 1, name: "Coinbase", logo: "/assets/prelogin-img/logo2/logon1.png" },
+    { id: 2, name: "NASA", logo: "/assets/prelogin-img/logo2/logo2.png" },
+    { id: 3, name: "Netflix", logo: "/assets/prelogin-img/logo2/logon3.png" },
+    { id: 4, name: "Pinterest", logo: "/assets/prelogin-img/logo2/logon4.png" },
+    { id: 5, name: "Microsoft", logo: "/assets/prelogin-img/logo2/logon5.png" },
+    { id: 6, name: "Google Cloud", logo: "/assets/prelogin-img/logo2/logon6.png" },
+    { id: 7, name: "Amazon Web Services", logo: "/assets/prelogin-img/logo2/logon7.png" },
+    { id: 8, name: "IBM Watson", logo: "/assets/prelogin-img/logo2/logo1.png" },
+     { id: 9, name: "Coinbase", logo: "/assets/prelogin-img/logo2/logon1.png" },
+    { id: 10, name: "NASA", logo: "/assets/prelogin-img/logo2/logo2.png" },
+    { id: 11, name: "Netflix", logo: "/assets/prelogin-img/logo2/logon3.png" },
+    { id: 14, name: "Pinterest", logo: "/assets/prelogin-img/logo2/logon4.png" },
+    { id: 15, name: "Microsoft", logo: "/assets/prelogin-img/logo2/logon5.png" },
+    { id: 16, name: "Google Cloud", logo: "/assets/prelogin-img/logo2/logon6.png" },
+    { id: 17, name: "Amazon Web Services", logo: "/assets/prelogin-img/logo2/logon7.png" },
+    { id: 18, name: "IBM Watson", logo: "/assets/prelogin-img/logo2/logo1.png" },
+     { id: 21, name: "Coinbase", logo: "/assets/prelogin-img/logo2/logon1.png" },
+    { id: 22, name: "NASA", logo: "/assets/prelogin-img/logo2/logo2.png" },
+    { id: 23, name: "Netflix", logo: "/assets/prelogin-img/logo2/logon3.png" },
+    { id: 24, name: "Pinterest", logo: "/assets/prelogin-img/logo2/logon4.png" },
+    { id: 5, name: "Microsoft", logo: "/assets/prelogin-img/logo2/logon5.png" },
+    { id: 26, name: "Google Cloud", logo: "/assets/prelogin-img/logo2/logon6.png" },
+    { id: 27, name: "Amazon Web Services", logo: "/assets/prelogin-img/logo2/logon7.png" },
+    { id: 28, name: "IBM Watson", logo: "/assets/prelogin-img/logo2/logo1.png" },
   ];
 
   return (
@@ -61,7 +77,7 @@ export default function Partnership({ darkMode = false, id }: PartnershipProps) 
         {/* Carousel */}
         <div className="relative overflow-hidden mt-12">
           <motion.div
-            className="flex gap-16 whitespace-nowrap"
+            className="flex gap-10 whitespace-nowrap"
             initial={{ x: 0 }}
             animate={{ x: "-100%" }}
             transition={{
@@ -78,15 +94,15 @@ export default function Partnership({ darkMode = false, id }: PartnershipProps) 
                     ? "text-gray-400 hover:text-white"
                     : "text-gray-600 hover:text-black"
                 }`}
-              >
-                 <Image
-                                src={partner.logo}
-                                alt={`logo-${idx}`}
-                                width={100}
-                                height={100}
-                                className="object-contain "
-                                priority={idx < 8}
-                              />
+              ><Image
+  src={partner.logo}
+  alt={`logo-${idx}`}
+  width={160}
+  height={100}
+  className="object-contain transition duration-300 hover:drop-shadow-[0_0_10px_rgba(0,255,255,0.7)]"
+  priority={idx < 8}
+/>
+
               </div>
             ))}
           </motion.div>

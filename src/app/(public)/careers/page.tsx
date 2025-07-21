@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Bell } from "lucide-react";
 import LifeAtDocspath from "@/components/publicPageComponents/CareersPage/LifeAtDocspath";
-import { JobDescription } from "@prisma/client";
-import axios from "axios";
-import Link from "next/link";
+import JobOpenings from "@/components/publicPageComponents/CareersPage/jobOpening";
+
+
 
 interface FilterOption {
   value: string;
@@ -36,7 +36,18 @@ const locations: FilterOption[] = [
 ];
 
 const CareersPage: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   const [filters, setFilters] = useState({
     department: "all",
     type: "all",
@@ -49,50 +60,50 @@ const CareersPage: React.FC = () => {
   ) => setFilters((prev) => ({ ...prev, [filterType]: value }));
 
   // Fetching Jobs
-  const [jobs, setJobs] = useState<JobDescription[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [jobs, setJobs] = useState<JobDescription[]>([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
+    console.log(mounted);
 
-    const fetchJobs = async () => {
-      try {
-        const res = await axios.get("/api/jobs", {
-          headers: { "Cache-Control": "no-store" },
-        });
+    // const fetchJobs = async () => {
+    //   try {
+    //     const res = await axios.get("/api/jobs", {
+    //       headers: { "Cache-Control": "no-store" },
+    //     });
 
-        if (mounted) {
-          // Axios returns response data in res.data
-          setJobs(res.data);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("Error fetching jobs:", err);
-        if (mounted) {
-          setError("Failed to load jobs. Please try again later.");
-          setLoading(false);
-        }
-      }
-    };
+    //     if (mounted) {
+    //       // Axios returns response data in res.data
+    //       // setJobs(res.data);
+    //       // setLoading(false);
+    //     }
+    //   } catch (err) {
+    //     console.error("Error fetching jobs:", err);
+    //     if (mounted) {
+    //       // setError("Failed to load jobs. Please try again later.");
+    //       // setLoading(false);
+    //     }
+    //   }
+    // };
 
-    fetchJobs();
-
+    // fetchJobs();
     return () => {
       mounted = false;
     };
   }, []);
 
-  const filteredJobs = jobs.filter((job) => {
-    return (
-      (filters.department === "all" ||
-        job.department.toLowerCase().includes(filters.department)) &&
-      (filters.type === "all" ||
-        job.type.toLowerCase().includes(filters.type)) &&
-      (filters.location === "all" ||
-        job.location.toLowerCase().includes(filters.location))
-    );
-  });
+  // const filteredJobs = jobs.filter((job) => {
+  //   return (
+  //     (filters.department === "all" ||
+  //       job.department.toLowerCase().includes(filters.department)) &&
+  //     (filters.type === "all" ||
+  //       job.type.toLowerCase().includes(filters.type)) &&
+  //     (filters.location === "all" ||
+  //       job.location.toLowerCase().includes(filters.location))
+  //   );
+  // });
 
   return (
     <div
@@ -333,14 +344,14 @@ const CareersPage: React.FC = () => {
       </div>
 
       {/* Jobs Section */}
-      <div
+      {/* <div
         className={`py-16 transition-colors duration-300 ${
           darkMode ? "bg-gray-700" : "bg-[#0868610F]"
         }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      > */}
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> */}
           {/* Headings */}
-          <div className="mb-12 text-[#00665F]">
+          {/* <div className="mb-12 text-[#00665F]">
             <h2
               className={`text-6xl font-bold mb-2 transition-colors duration-300 ${
                 darkMode ? "text-teal-400" : "text-[#00665F]"
@@ -355,10 +366,10 @@ const CareersPage: React.FC = () => {
             >
               Current openings
             </h3>
-          </div>
+          </div> */}
 
           {/* Loading / Error states */}
-          {loading && (
+          {/* {loading && (
             <p
               className={`text-center text-lg ${
                 darkMode ? "text-teal-300" : "text-[#00665F]"
@@ -367,10 +378,10 @@ const CareersPage: React.FC = () => {
               Loading jobs…
             </p>
           )}
-          {error && <p className="text-center text-red-500 text-lg">{error}</p>}
+          {error && <p className="text-center text-red-500 text-lg">{error}</p>} */}
 
           {/* Job cards */}
-          {!loading && !error && (
+          {/* {!loading && !error && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredJobs.map((job) => (
@@ -414,10 +425,10 @@ const CareersPage: React.FC = () => {
                       </button>
                     </Link>
                   </div>
-                ))}
+                ))} */}
 
                 {/* Load More Button */}
-                <div className="md:col-span-2 lg:col-span-3">
+                {/* <div className="md:col-span-2 lg:col-span-3">
                   <button
                     className={`w-full text-2xl font-bold py-3 rounded-lg border-2 border-[#086861] shadow-lg transition-all duration-300 ${
                       darkMode
@@ -428,10 +439,10 @@ const CareersPage: React.FC = () => {
                     Load More
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               {/* Empty‑state message */}
-              {filteredJobs.length === 0 && (
+              {/* {filteredJobs.length === 0 && (
                 <div className="text-center py-12">
                   <p
                     className={`text-lg transition-colors duration-300 ${
@@ -442,10 +453,12 @@ const CareersPage: React.FC = () => {
                   </p>
                 </div>
               )}
-            </>
-          )}
+            </> */}
+          {/* )}
         </div>
-      </div>
+      </div> */}
+<JobOpenings darkMode={darkMode} />
+      
 
       {/* Life at Docspath */}
       <LifeAtDocspath darkMode={darkMode} />

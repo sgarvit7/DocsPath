@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import {  useState , useEffect} from "react";
 import { Bell } from "lucide-react";
 import HeroSection from "@/components/publicPageComponents/HeroSection";
 import CoreFeaturesSection from "@/components/publicPageComponents/CoreFeaturesSection";
@@ -12,7 +12,18 @@ import WhoIsThisFor from "@/components/publicPageComponents/WhoIsThisFor";
 
 
 export default function Page() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
 
 
   

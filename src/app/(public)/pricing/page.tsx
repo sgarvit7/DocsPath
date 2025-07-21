@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Check } from "lucide-react";
+import { Check, Bell } from "lucide-react";
 import Image from "next/image";
-import { Bell } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface Feature {
   text: string;
@@ -16,28 +17,34 @@ interface Plan {
 }
 
 const PricingPlans: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [countryCode, setCountryCode] = useState<string>("US");
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+  // const [countryCode, setCountryCode] = useState<string>("US");
   const [currency, setCurrency] = useState<string>("");
 
   useEffect(() => {
     const storedCode = localStorage.getItem("countryCode") || "US";
-    const sanitizedCode = storedCode.replace(/"/g, '');
-    setCountryCode(storedCode);
-    console.log("Country Code: ", storedCode);
-    
+    const sanitizedCode = storedCode.replace(/"/g, "");
+    // setCountryCode(storedCode);
+
     const fetchCurrency = async () => {
       try {
-        
         const res = await fetch(
           `https://restcountries.com/v3.1/alpha/${sanitizedCode}`
         );
         const data = await res.json();
 
-        if (!Array.isArray(data) || !data[0] || !data[0].currencies) {
-          console.error("Invalid country data received:", data);
-          return;
-        }
+        if (!Array.isArray(data) || !data[0] || !data[0].currencies) return;
 
         const currencyCode = Object.keys(data[0].currencies)[0];
         const currencySymbol = data[0].currencies[currencyCode]?.symbol || "";
@@ -46,6 +53,7 @@ const PricingPlans: React.FC = () => {
         console.error("Failed to fetch currency:", error);
       }
     };
+
     fetchCurrency();
   }, []);
 
@@ -166,57 +174,58 @@ const PricingPlans: React.FC = () => {
     </div>
   );
 
-  /* --- PlanCard.tsx (only the className lines changed) --- */
+  const PlanCard: React.FC<{ plan: Plan }> = ({ plan }) => {
+    const [expanded, setExpanded] = useState(false);
 
-  const PlanCard: React.FC<{ plan: Plan }> = ({ plan }) => (
-    <div
-      className={`relative flex flex-col  /* 👈 NEW */
-                w-[450px] rounded-lg p-10 shadow-lg
-                transition-all duration-300 hover:shadow-xl
-                ${
-                  darkMode
-                    ? "bg-gray-800 border border-gray-700"
-                    : "bg-white border border-gray-200"
-                }`}
-    >
-      {/* Plan Header */}
-      <div className="absolute mb-6 -left-2 w-1/2">
-        <div className="absolute -top-6 font-semibold text-white text-base">
-          {/* Left tail */}
-          <div className="absolute rotate-270 -bottom-2 left-0 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]" />
-          {/* Slanted Ribbon */}
-          <div
-            className="relative text-white px-6 py-2 w-fit"
-            style={{
-              backgroundColor: "#086861",
-              clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
-            }}
-          >
-            {plan.name} {currency} {plan.price}
+    return (
+      <div
+        className={`relative flex flex-col w-[450px] rounded-lg p-10 shadow-lg
+          transition-all duration-300 hover:shadow-xl
+          ${
+            darkMode
+              ? "bg-gray-800 border border-gray-700"
+              : "bg-white border border-gray-200"
+          }`}
+      >
+        {/* Plan Header */}
+        <div className="absolute mb-6 -left-2 w-1/2">
+          <div className="absolute -top-6 font-semibold text-white text-base">
+            <div className="absolute rotate-270 -bottom-2 left-0 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]" />
+            <div
+              className="relative text-white px-6 py-2 w-fit"
+              style={{
+                backgroundColor: "#086861",
+                clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
+              }}
+            >
+              {plan.name} {currency} {plan.price}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Features List ─ now flex‑grows */}
-      <div className="flex-grow space-y-2 mb-8 mt-8">
-        {" "}
-        {/* 👈 NEW flex-grow */}
-        {plan.features.map((feature, i) => (
-          <FeatureItem key={i} feature={feature} planName={plan.name} />
-        ))}
-      </div>
+        {/* Feature List */}
+        <motion.div
+          initial={false}
+          animate={{ height: expanded ? "auto" : 320 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="overflow-hidden flex-grow space-y-2 mb-4 mt-8"
+        >
+          {plan.features.map((feature, i) => (
+            <FeatureItem key={i} feature={feature} planName={plan.name} />
+          ))}
+        </motion.div>
 
-      {/* Button stays at the bottom of every card */}
-      <button
-        className="w-1/2 mx-auto text-white cursor-pointer font-semibold px-10 py-3
-                 rounded-full border border-white
-                 shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
-        style={{ backgroundColor: "#086861" }}
-      >
-        See more
-      </button>
-    </div>
-  );
+        {/* CTA Button */}
+        <button
+          className="w-1/2 mx-auto text-white cursor-pointer font-semibold px-10 py-3 rounded-full border border-white shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+          onClick={() => setExpanded((prev) => !prev)}
+          style={{ backgroundColor: "#086861" }}
+        >
+          {expanded ? "See less" : "See more"}
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -224,22 +233,21 @@ const PricingPlans: React.FC = () => {
         darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
-      {/* Background Pattern */}
+      {/* Background Images */}
       <Image
         src="/assets/bg-pattern.png"
         alt="bg"
         width={350}
         height={350}
         className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180"
-      ></Image>
-
+      />
       <Image
         src="/assets/lower-bg-pattern.png"
         alt="bg"
         width={350}
         height={350}
         className="absolute bottom-0 right-0 z-0 opacity-50"
-      ></Image>
+      />
 
       {/* Dark Mode Toggle */}
       <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
@@ -284,13 +292,48 @@ const PricingPlans: React.FC = () => {
           </p>
         </div>
 
-        {/* Plans Grid */}
-        <div className="flex justify-center grid md:grid-col-1 lg:grid-cols-2  items-stretch w-4/5 h-full gap-20 max-w-6xl mx-auto">
+        {/* Plans Grid (CHANGE IS HERE 👇) */}
+        <div className="flex justify-center grid md:grid-col-1 lg:grid-cols-2 items-start w-4/5 h-full gap-20 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <PlanCard key={index} plan={plan} />
           ))}
         </div>
       </div>
+
+      <motion.div
+        className="py-8 md:py-12 max-w-4xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div
+          className={`p-8 md:p-12 w-full rounded-2xl shadow-lg text-center ${
+            darkMode ? "bg-gray-900 border border-gray-700" : "bg-white"
+          }`}
+        >
+          <h2
+            className={`text-2xl md:text-3xl font-bold mb-4 ${
+              darkMode ? "text-white" : "text-gray-900"
+            }`}
+          >
+            Still Have Questions?
+          </h2>
+          <p
+            className={`mb-6 text-base md:text-lg leading-relaxed ${
+              darkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            Our team is ready to assist you. Contact us today for a personalized
+            consultation or to learn more about our plans.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-block px-6 py-3 bg-[#086861] hover:bg-emerald-700 text-white text-sm md:text-base font-semibold rounded-lg transition-colors duration-300"
+          >
+            Contact Our Sales Team
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 };

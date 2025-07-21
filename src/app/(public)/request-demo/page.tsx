@@ -34,8 +34,8 @@ export default function RequestDemoPage() {
     { label: string; type: string; placeholder: string }
   > = {
     fullName: { label: "Full Name", type: "text", placeholder: "John Doe" },
-    email: { label: "Email", type: "email", placeholder: "you@example.com" },
-    phone: { label: "Mobile Number", type: "tel", placeholder: "+1 (555) 123-4567" },
+    email: { label: "E-mail", type: "email", placeholder: "you@example.com" },
+    phone: { label: "Mobile No", type: "tel", placeholder: "+1 (555) 123-4567" },
     org: { label: "Hospital / Clinic Name", type: "text", placeholder: "Your Clinic Name" },
     role: { label: "Designation", type: "text", placeholder: "Doctor, Admin..." },
     date: { label: "Preferred Demo Date", type: "date", placeholder: "" },
@@ -109,7 +109,7 @@ export default function RequestDemoPage() {
                   const field = fieldMeta[fieldName];
                   return (
                     <div key={fieldName} className={inter.className}>
-                      <label className={clsx("block text-sm font-thin text-[#7B809A] mb-2")}>{field.label}</label>
+                      <label className={clsx("block text-sm  mb-2")}>{field.label}<span className="text-red-600 text-2xl">*</span> </label>
                       <input
                         type={field.type}
                         name={fieldName}

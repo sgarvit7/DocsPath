@@ -2,11 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
-  MdDashboardCustomize,
-  MdOutlineMedicalServices,
-  MdOutlineChat,
-  MdOutlineSchedule,
-  MdOutlineMoneyOffCsred,
+ 
   MdOutlineBusiness,
   MdLocalHospital,
   MdOutlineLocalPharmacy,
@@ -15,6 +11,7 @@ import { ReactNode } from "react";
 import Image from "next/image";
 import { Roboto } from "next/font/google";
 import clsx from "clsx";
+
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700","900"],
@@ -44,35 +41,35 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
       title: "Unified Clinical Dashboard with EHR Sync",
       description:
         "Gain instant access to patient records, appointments, prescriptions, and analytics—all in one intelligent, secure interface. Stay informed, stay ahead.",
-      icon: <MdDashboardCustomize size={40} />,
+      icon: "/assets/prelogin-img/WD/logo1.png",
     },
     {
       id: 2,
       title: "Automated Billing & Claims Reconciliation",
       description:
         "Generate invoices, process insurance claims, and track payments in real‑time—no paperwork, no delays, no errors.",
-      icon: <MdOutlineMoneyOffCsred size={40} />,
+      icon:"/assets/prelogin-img/WD/logo2.png",
     },
     {
       id: 3,
       title: "24/7 Smart Digital Communication",
       description:
         "Let lifelike virtual assistants manage confirmations, queries, reminders, and follow‑ups—so you never miss a patient touch‑point.",
-      icon: <MdOutlineChat size={40} />,
+      icon: "/assets/prelogin-img/WD/logo3.png",
     },
     {
       id: 4,
       title: "Integrated OPD & Telemedicine Platform",
       description:
         "Conduct secure in‑clinic and video consultations, issue e‑prescriptions, and manage records—all from one compliant, cloud‑based system.",
-      icon: <MdOutlineMedicalServices size={40} />,
+      icon: "/assets/prelogin-img/WD/logo5.png",
     },
     {
       id: 5,
       title: "Touchless Appointment Scheduling & OPD Flow",
       description:
         "Automate the entire patient journey—from booking and queue management to no‑show prevention—without lifting a finger.",
-      icon: <MdOutlineSchedule size={40} />,
+      icon: "/assets/prelogin-img/WD/logo4.png",
     },
   ];
 
@@ -123,7 +120,7 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
           src={
             darkMode
               ? "/assets/prelogin-img/product-bg-dark-2.png"
-              : "/assets/prelogin-img/product-bg-light-1.png"
+              : "/assets/prelogin-img/product-light.png"
           }
           alt="Background"
           fill
@@ -168,13 +165,20 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
                 } ${extraClasses}`}
               >
                 <div
-                  className={`flex h-20 w-20 items-center justify-center rounded-lg ${
-                    darkMode
-                      ? "bg-teal-700/20 text-teal-300"
-                      : "bg-teal-600/10 text-teal-600"
-                  }`}
+                  className={`flex h-30 w-30 items-center justify-center rounded-lg `
+                    // ${
+                    // darkMode
+                    //   ? "bg-teal-700/20 text-teal-300"
+                    //   : "bg-teal-600/10 text-teal-600"
+                  // }
+                  }
                 >
-                  {cap.icon}
+                  <Image
+                  src={cap.icon as string}
+                  alt="hell0"
+                  width={70}
+                  height={10}
+                  />
                 </div>
                 <div>
                   <h3
@@ -232,68 +236,38 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
     viewport={{ once: true }}
     className="flex flex-col gap-8 space-y-6"
   >
-    {/* Card 1 */}
     <motion.div
-      variants={item}
-      whileHover={{ scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
-        darkMode ? "bg-gray-800 border-gray-700" : "bg-[white] border-teal-300"
-      }`}
-    >
-      <div
-        className={`mb-3 flex items-center text-xl font-bold ${
-          darkMode ? "text-white" : "text-[#004540]"
-        }`}
-      >
-        {/* Replace with your actual icon */}
-          {/* {segments[0].icon} */}
-        <span className="">{segments[0].title}</span>
-      </div>
-      <p
-        className={`text-md leading-relaxed ${
-          darkMode ? "text-gray-300" : "text-black"
-        }`}
-      >
-        {segments[0].description} 
-      </p>
-    </motion.div>
+  variants={container}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+  className="flex flex-col gap-8 space-y-6"
+>
 
-    {/* Card 2 */}
+
+
+  
+<motion.div
+  variants={container}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+  className="flex flex-col gap-8 space-y-6"
+>
+  {[0, 1, 2].map((i) => (
     <motion.div
+      key={i}
       variants={item}
-      whileHover={{ scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
+      whileHover="hovered"
+      transition={{ type: "spring", stiffness: 300, damping: 20}}
+      className={`group rounded-xl border p-6 hover:shadow-xl transition-all ${
         darkMode
           ? "bg-gray-800 border-gray-700"
-          : "bg-[#E7F2F1] border-teal-300"
-      } border-2 border-blue-500`}
-    >
-      <div
-        className={`mb-3 flex items-center text-xl font-bold ${
-          darkMode ? "text-white" : "text-[#004540]"
-        }`}
-      >
-        {/* {segments[1].icon} */}
-        <span className="">{segments[1].title}</span>
-      </div>
-      <p
-        className={`text-md leading-relaxed ${
-          darkMode ? "text-gray-300" : "text-black"
-        }`}
-      >
-        {segments[1].description} 
-      </p>
-    </motion.div>
-
-    {/* Card 3 */}
-    <motion.div
-      variants={item}
-      whileHover={{ scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`rounded-xl border p-6 hover:shadow-xl transition-all ${
-        darkMode ? "bg-gray-800 border-gray-700" : "bg-[#95C2BF] border-teal-300"
+          : i === 0
+          ? "bg-[white] border-teal-300"
+          : i === 1
+          ? "bg-[#E7F2F1] border-teal-300"
+          : "bg-[#95C2BF] border-teal-300"
       }`}
     >
       <div
@@ -301,27 +275,55 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
           darkMode ? "text-white" : "text-[#004540]"
         }`}
       >
-        {/* {segments[2].icon} */}
-        <span className="">{segments[2].title} </span>
+        <span>{segments[i].title}</span>
       </div>
-      <p
-        className={`text-md leading-relaxed ${
-          darkMode ? "text-gray-300" : "text-black"
-        }`}
-      >
-        {segments[2].description} 
-      </p>
+
+      <div className="relative overflow-hidden group-hover:overflow-visible">
+        <motion.div
+          variants={{
+            hidden: { x: "0%" },
+            visible: {
+              x: ["0%", "-100%"],
+              transition: {
+                repeat: Infinity,
+                repeatType: "loop",
+                duration: 10,
+                ease: "linear",
+              },
+            },
+            hovered: {
+              x: "0%",
+              transition: { duration: 0 },
+            },
+          }}
+          initial="hidden"
+          animate="visible"
+          whileHover="hovered"
+          className={`text-md leading-relaxed transition-all duration-300 group-hover:whitespace-normal group-hover:text-wrap ${
+            darkMode ? "text-gray-300" : "text-black"
+          }`}
+        >
+          {segments[i].description} &nbsp; • &nbsp; {segments[i].description}
+        </motion.div>
+      </div>
     </motion.div>
+  ))}
+</motion.div>
+
+
+
+</motion.div>
+
   </motion.div>
 {/* </div> */}
 
           <div className="flex justify-center items-center">
             <Image
-              src="/assets/prelogin-img/WhoBuiltFor.png"
+              src="/assets/prelogin-img/WhoBuiltFor2.png"
               alt="Who we're Built for"
-              width={500}
+              width={650}
               height={500}
-              className="max-w-full h-auto object-cover"
+              className="max-w-full h-auto  object-cover"
             />
           </div>
         </div>

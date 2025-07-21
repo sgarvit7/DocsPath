@@ -46,12 +46,23 @@ const sections = [
   },
   {
     title: "FAQ",
-    items: ["What is Medycall?", "Is Medycall free to use?"],
+    items: ["What is Docspath?", "Is DocsPath free to use?"],
   },
 ];
 
 const KnowledgeBasePage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -233,8 +244,8 @@ const KnowledgeBasePage = () => {
         >
           <h3 className={clsx("font-semibold text-[#005C56] text-lg", robotoSlab.className)}>Need further assistance?</h3>
           <p className="text-[#7B809A]">If you have any issues, please contact our support team at</p>
-          <a href="mailto:service@medycall.com" className="text-black underline ml-1">
-            service@medycall.com
+          <a href="mailto:service@Docspath.com" className="text-black underline ml-1">
+            service@DocsPath.com
           </a>
         </motion.div>
       </div>

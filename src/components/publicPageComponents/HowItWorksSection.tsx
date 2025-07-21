@@ -41,14 +41,31 @@ const stepData = [
 ];
 
 const logos = [
-  "/assets/prelogin-img/logo/logo1.png",
-  "/assets/prelogin-img/logo/logo2.png",
-  "/assets/prelogin-img/logo/logo3.png",
-  "/assets/prelogin-img/logo/logo4.png",
-  "/assets/prelogin-img/logo/logo5.jpg",
-  "/assets/prelogin-img/logo/logo6.png",
-  "/assets/prelogin-img/logo/logo3.png",
-  "/assets/prelogin-img/logo/logo5.jpg"
+  "/assets/prelogin-img/logo/logon1.png",
+  "/assets/prelogin-img/logo/logon2.png",
+  "/assets/prelogin-img/logo/logon3.png",
+  "/assets/prelogin-img/logo/logon4.png",
+  "/assets/prelogin-img/logo/logon5.png",
+  "/assets/prelogin-img/logo/logon6.png",
+  "/assets/prelogin-img/logo/logon7.png",
+  "/assets/prelogin-img/logo/logon5.png",
+  "/assets/prelogin-img/logo/logon1.png",
+  "/assets/prelogin-img/logo/logon2.png",
+  "/assets/prelogin-img/logo/logon3.png",
+  "/assets/prelogin-img/logo/logon4.png",
+  "/assets/prelogin-img/logo/logon5.png",
+  "/assets/prelogin-img/logo/logon6.png",
+  "/assets/prelogin-img/logo/logon7.png",
+  "/assets/prelogin-img/logo/logon5.png",
+  "/assets/prelogin-img/logo/logon1.png",
+  "/assets/prelogin-img/logo/logon2.png",
+  "/assets/prelogin-img/logo/logon3.png",
+  "/assets/prelogin-img/logo/logon4.png",
+  "/assets/prelogin-img/logo/logon5.png",
+  "/assets/prelogin-img/logo/logon6.png",
+  "/assets/prelogin-img/logo/logon7.png",
+  "/assets/prelogin-img/logo/logon5.png"
+  
 ];
 
 const duplicatedLogos = [...logos, ...logos];
@@ -120,40 +137,41 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
             >
               Get Started in 3 Simple Steps
             </motion.h3>
+<AnimatePresence mode="wait">
+  <motion.div
+    key={activeStep}
+    initial={{ opacity: 0, rotateY: 90 }}
+    animate={{ opacity: 1, rotateY: 0 }}
+    exit={{ opacity: 0, rotateY: -90 }}
+    transition={{ duration: 0.5 }}
+    className={clsx(
+      " sm:p-8 m-6 sm:m-10 rounded-xl shadow-2xl w-full lg:max-w-md sm:max-w-lg",
+      darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900",
+      inter.className
+    )}
+  >
+    <motion.h3
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.1 }}
+      className={clsx(
+        "text-xl lg:text-start sm:text-2xl sm:mt-10 lg:m-2   font-bold mb-2",
+        darkMode ? "text-green-600" : "text-[#086861]"
+      )}
+    >
+      {stepData[activeStep].title}
+    </motion.h3>
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2 }}
+      className="sm:text-lg lg:text-xl font-light lg:text-start lg:mt-5 md:mb-10 lg:mb-6 sm:text-base"
+    >
+      {stepData[activeStep].description}
+    </motion.p>
+  </motion.div>
+</AnimatePresence>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeStep}
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -40 }}
-                transition={{ duration: 0.4 }}
-                className={clsx(
-                  " sm:p-8 m-6 sm:m-10 rounded-xl shadow-2xl w-full max-w-xs sm:max-w-md",
-                  darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900",inter.className
-                )}
-              >
-                <motion.h3
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className={clsx(
-                    "text-2xl sm:text-2xl text-start font-bold mb-2",
-                    darkMode ? "text-green-600" : "text-[#086861]"
-                  )}
-                >
-                  {stepData[activeStep].title}
-                </motion.h3>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-xl font-light text-start mt-5 sm:text-base"
-                >
-                  {stepData[activeStep].description}
-                </motion.p>
-              </motion.div>
-            </AnimatePresence>
 
             {/* CTA */}
             <motion.button
@@ -220,7 +238,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
           transition={{
             repeat: Infinity,
             repeatType: "loop",
-            duration: 12,
+            duration: 50,
             ease: "linear",
           }}
         >
@@ -228,8 +246,8 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
             <motion.div
               key={idx}
               className={clsx(
-                "w-28 sm:w-32 md:w-36 aspect-square rounded-2xl overflow-hidden bg-white p-4 shadow flex items-center justify-center",
-                darkMode && "bg-gray-100"
+                "w-45 sm:w-32 md:w-45 aspect-square rounded-2xl overflow-hidden  p-4  flex items-center justify-center",
+                darkMode && ""
               )}
               animate={{
                 y: [0, -4, 0],
@@ -244,9 +262,9 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
               <Image
                 src={logo}
                 alt={`logo-${idx}`}
-                width={160}
+                width={200}
                 height={160}
-                className="object-contain w-full h-full"
+                className="object-contain"
                 priority={idx < 8}
               />
             </motion.div>

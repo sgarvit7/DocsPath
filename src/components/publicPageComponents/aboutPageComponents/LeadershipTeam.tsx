@@ -25,7 +25,7 @@ export default function LeadershipTeam({ darkMode = false, id }: LeadershipProps
       role: "Chief Executive Officer",
       description:
         "Lorem ipsum dolor amet with local magnet dolar amet lorem adipiscing lorem. adipiscing cum lorem ipsum delor amet cum magnet adipiscing lorem",
-      image: "/assets/prelogin-img/about/leader1.jpeg",
+      image: "/assets/prelogin-img/about/leader1.jpg",
     },
     {
       id: 2,
@@ -41,7 +41,7 @@ export default function LeadershipTeam({ darkMode = false, id }: LeadershipProps
       role: "Chief Marketing Officer",
       description:
         "Lorem ipsum dolor amet with local magnet dolar amet lorem adipiscing lorem. adipiscing cum lorem ipsum delor amet cum",
-      image: "/assets/prelogin-img/about/leader3.jpg",
+      image: "/assets/prelogin-img/about/leader3.png",
     },
     {
       id: 4,

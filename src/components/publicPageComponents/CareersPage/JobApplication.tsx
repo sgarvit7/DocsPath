@@ -43,7 +43,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Full Name *
+            Full Name <span className="text-red-800 text-2xl">*</span>
           </label>
           <input
             type="text"
@@ -58,7 +58,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Email *
+            E-mail <span className="text-red-800 text-2xl">*</span>
           </label>
           <input
             type="email"
@@ -73,7 +73,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Phone *
+            Mobile No. <span className="text-red-800 text-2xl">*</span>
           </label>
           <input
             type="tel"
@@ -88,7 +88,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Resume *
+            Resume <span className="text-red-800 text-2xl">*</span>
           </label>
           <input
             type="file"
@@ -101,7 +101,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Cover letter *
+            Cover letter <span className="text-red-800 text-2xl">*</span>
           </label>
           <input
             type="file"
@@ -135,7 +135,7 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
           type="submit"
           className="w-full bg-[#005A51] hover:bg-teal-700 cursor-pointer text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
         >
-          Submit Application
+          Submit 
         </button>
       </form>
     </div>

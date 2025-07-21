@@ -4,28 +4,41 @@ import React, { useState } from "react";
 import { Mail, Phone, Clock, MapPin, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import PreloginPhoneInput from "@/components/publicPageComponents/PreloginPhoneInput"
+import { useEffect } from "react";
+
 import EmailInput from "@/components/publicPageComponents/EmailInput";
+import axios from "axios";
 
 interface FormData {
   name: string;
-  email: string;
-  phone: string;
   subject: string;
   message: string;
 }
 
 const ContactUs: React.FC = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    email: "",
-    phone: "",
     subject: "",
     message: "",
   });
 
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState(""); // already present
+  // const [phoneOk, setPhoneOk] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [status,  setStatus]  = useState<"idle" | "success" | "error">("idle");
 
   // Animation variants
   const containerVariants = {
@@ -89,11 +102,32 @@ const ContactUs: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted:", formData);
-    // You can add your form submission logic here
+    setLoading(true);
+    setStatus("idle");
+    console.log( loading, status)
+    try {
+      /** 📌 POST everything to /api/contact */
+      const response = await axios.post("/api/contact", {
+        ...formData,
+        email,
+        phone,
+      });
+
+      console.log(response);  
+
+      /* success feedback */
+      setStatus("success");
+      setFormData({ name: "", subject: "", message: "" });
+      setEmail("");
+      setPhone("");
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -129,7 +163,7 @@ const ContactUs: React.FC = () => {
         alt="bg"
         width={350}
         height={350}
-        className="absolute -top-10 -right-10 z-0 rotate-180 transform scale-x-[-1] opacity-50"
+        className="absolute -top-10 -right-0 z-0 rotate-180 transform scale-x-[-1] opacity-50"
       ></Image>
 
       <motion.main
@@ -199,7 +233,7 @@ const ContactUs: React.FC = () => {
             >
               <h2
                 className={`text-3xl font-semibold mb-4 ${
-                  darkMode ? "text-teal-400" : "text-teal-600"
+                  darkMode ? "text-teal-400" : "text-[#008D83]"
                 }`}
               >
                 Write to us
@@ -231,7 +265,7 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    Your Name
+                    Full Name <span className="text-red-600 text-2xl">*</span>
                   </label>
                   <input
                     type="text"
@@ -260,7 +294,7 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    Email Address
+                    E-mail<span className="text-red-600 text-2xl">*</span>
                   </label>
                   <EmailInput value={email} onChange={setEmail} />
                 </motion.div>
@@ -276,10 +310,13 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    Phone Number
+                    Mobile No.<span className="text-red-600 text-2xl">*</span>
                   </label>
-                  <PreloginPhoneInput />
-                
+                  {/* <PhoneInput
+                    value={phone}
+                    onChange={setPhone}
+                    onValidate={setPhoneOk} // optional validity callback
+                  /> */}
                 </motion.div>
 
                 <motion.div
@@ -342,11 +379,7 @@ const ContactUs: React.FC = () => {
 
                 <motion.button
                   type="submit"
-                  className={`w-full py-4 px-8 border-none rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 mt-4 ${
-                    darkMode
-                      ? "bg-gradient-to-r from-teal-600 to-teal-700 text-white hover:from-teal-700 hover:to-teal-800 shadow-lg shadow-teal-500/25"
-                      : "bg-gradient-to-r from-teal-600 to-teal-700 text-white hover:from-teal-700 hover:to-teal-800 shadow-lg shadow-teal-500/25"
-                  }`}
+                  className="w-full py-4 px-8 border-none rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 mt-4 bg-[#008D83] text-white hover:from-[#008D83] hover:to-[#008D83] shadow-lg shadow-teal-500/25"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.9, duration: 0.5 }}
@@ -364,16 +397,16 @@ const ContactUs: React.FC = () => {
               variants={imageVariants}
             >
               <motion.div
-                className={`w-full h-96 rounded-2xl overflow-hidden flex items-center justify-center`}
+                className={`w-full h-full rounded-2xl overflow-hidden flex items-center justify-center`}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src="/assets/prelogin-img/contact-us.jpeg"
+                  src="/assets/prelogin-img/contact-us.png"
                   alt="Contact Us"
-                  width={700}
-                  height={600}
-                  className="object-contain rounded-4xl"
+                  width={600}
+                  height={990}
+                  className=" rounded-[20px] border-2 border-[#086861]"
                 ></Image>
               </motion.div>
             </motion.div>
@@ -431,14 +464,14 @@ const ContactUs: React.FC = () => {
                 Email Support
               </h4>
               <a
-                href="mailto:support@medycall.com"
+                href="mailto:support@DocsPath.com"
                 className={`text-base no-underline transition-colors ${
                   darkMode
                     ? "text-gray-300 hover:text-teal-400"
                     : "text-gray-600 hover:text-teal-600"
                 }`}
               >
-                support@medycall.com
+                support@Docspath.com
               </a>
               <p
                 className={`text-base leading-relaxed mt-2 ${
@@ -568,7 +601,7 @@ const ContactUs: React.FC = () => {
                   darkMode ? "text-gray-300" : "text-gray-600"
                 }`}
               >
-                <p>Medycall Pvt. Ltd.</p>
+                <p>DocsPath Pvt. Ltd.</p>
                 <p>5th Floor, Tech Park One</p>
                 <p>Bengaluru, Karnataka,</p>
                 <p>India - 560001</p>
@@ -582,7 +615,7 @@ const ContactUs: React.FC = () => {
             variants={containerVariants}
           >
             <motion.div
-              className={`flex-[2] min-w-[300px] max-w-2xl h-80 rounded-xl overflow-hidden shadow-lg ${
+              className={`flex-[2] min-w-full h-80 rounded-xl overflow-hidden shadow-lg ${
                 darkMode ? "bg-gray-700" : "bg-gray-300"
               }`}
               initial={{ opacity: 0, scale: 0.9 }}

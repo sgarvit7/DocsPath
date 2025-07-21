@@ -10,12 +10,19 @@ import Image from "next/image";
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "900"] });
 
 export default function PrivacyPolicy() {
-  const [darkMode, setDarkMode] = useState(false);
+const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
 
+  // Update localStorage and optionally add a dark class to <body> or <html>
   useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
     document.body.classList.toggle("dark", darkMode);
   }, [darkMode]);
-
+  
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -100,7 +107,7 @@ export default function PrivacyPolicy() {
             <li>✅ Withdraw Consent &amp; Request Deletion</li>
             <li>✅ Lodge a Complaint with the Data Protection Board of India</li>
           </ul>
-          <p className={inter.className}>Contact us at <a className="text-blue-400 underline" href="mailto:supportMedycall@email.com">supportMedycall@email.com</a></p>
+          <p className={inter.className}>Contact us at <a className="text-blue-400 underline" href="mailto:supportDocspath@email.com">supportMedycall@email.com</a></p>
         </section>
 
         <section className="lg:mx-80 mt-5">
@@ -169,7 +176,7 @@ export default function PrivacyPolicy() {
 
         <footer className={clsx("pt-6 mt-10 lg:-ml-21 text-lg font-semibold dark:text-teal-500 text-[#086861]", inter.className)}>
           <p>
-            Copyright © 2025 Medycall
+            Copyright © 2025 DocsPath
             <br />
             Powered by Healthcek
           </p>

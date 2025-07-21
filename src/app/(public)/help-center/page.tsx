@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Bell } from "lucide-react";
@@ -28,7 +28,7 @@ const faqs = [
     title: "Appointments & Queue",
     items: ["Can I manage walk-ins and bookings together?"],
     answer:
-      "Yes, MedyCall’s queue syncs both walk-ins and digital bookings, giving you real-time control with smart prioritization tools.",
+      "Yes, Docspath’s queue syncs both walk-ins and digital bookings, giving you real-time control with smart prioritization tools.",
   },
   {
     title: "EHR & Patient Management",
@@ -80,7 +80,18 @@ const Bubble = ({
 );
 
 export default function HelpCenter() {
-  const [darkMode, setDarkMode] = useState(false);
+const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   const [openIndex, setOpenIndex] = useState<number | null>(1);
   const [searchText, setSearchText] = useState("");
 
@@ -136,15 +147,15 @@ export default function HelpCenter() {
           <Bubble size={45} top="400px" right="150px" />
           <div className="absolute w-[300px] h-[150px] top-[520px] -right-[70px] bg-[#c9dddc] dark:bg-teal-600 opacity-20 shadow-[0_4px_20px_rgba(0,0,0,0.9)] rounded-b-full rotate-90" />
 
-          <div className="max-w-screen-xl mx-auto px-8 sm:px-6 lg:px-35 pt-12 pb-18">
+          <div className="max-w-screen-xl mx-auto px-8 sm:px-6 lg:px-10 pt-12 pb-18">
             <section>
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-40">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-52">
                 <Image
                   src="/assets/prelogin-img/helpCenter1.jpg"
                   alt="Support"
-                  width={420}
-                  height={420}
-                  className="rounded-[68px] shadow-md w-full max-w-xs md:max-w-sm "
+                  width={500}
+                  height={500}
+                  className="rounded-[68px] shadow-lg w-full max-w-sm md:max-w-sm "
                 />
                 <div className="w-full mt-20 md:mt-20">
                   <h2
@@ -161,7 +172,7 @@ export default function HelpCenter() {
                       inter.className
                     )}
                   >
-                    Your guide to mastering the MedyCall platform
+                    Your guide to mastering the DocsPath  platform
                   </p>
                   <input
                     type="text"
@@ -169,7 +180,7 @@ export default function HelpCenter() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    className="w-full mt-4 p-2 border border-gray-900 rounded-md text-sm dark:bg-gray-800 dark:border-gray-700 focus:outline-none"
+                    className="w-2/3 mt-4 p-2 border border-gray-900 rounded-md text-sm dark:bg-gray-800 dark:border-gray-700 focus:outline-none"
                   />
                 </div>
               </div>

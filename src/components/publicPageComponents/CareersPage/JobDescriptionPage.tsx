@@ -3,14 +3,7 @@
 import Head from "next/head";
 import { motion } from "framer-motion";
 import JobApplication from "@/components/publicPageComponents/CareersPage/JobApplication";
-import { JobDescription } from "@/types/jobs";
 import Image from "next/image";
-
-interface JobDescriptionPageProps {
-  jobPosting: JobDescription | null;
-  loading: boolean;
-  error: string;
-}
 
 const fadeSlideUp = {
   hidden: { opacity: 0, y: 40 },
@@ -21,18 +14,14 @@ const fadeSlideUp = {
   },
 };
 
-export default function JobDescriptionPage({
-  jobPosting,
-  loading,
-  error,
-}: JobDescriptionPageProps) {
-  const jobTitle = jobPosting?.title || "Job Application";
+export default function JobDescriptionPage() {
+  const jobTitle = "Motion Graphic Designing Intern";
 
   return (
     <div className="min-h-screen dark:bg-gray-900 transition-colors duration-300">
       <Head>
         <title>{jobTitle}</title>
-        <meta name="description" content={jobPosting?.description || ""} />
+        <meta name="description" content="Motion Graphic Designing Intern job details" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -59,9 +48,7 @@ export default function JobDescriptionPage({
               transition={{ duration: 0.7 }}
               className="max-w-lg"
             >
-              <h1 className="text-4xl font-bold text-black mb-2 z-10">
-                {jobTitle}
-              </h1>
+              <h1 className="text-4xl font-bold text-black mb-2 z-10">{jobTitle}</h1>
             </motion.div>
           </div>
         </div>
@@ -70,7 +57,7 @@ export default function JobDescriptionPage({
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[400px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Panel - Job Details */}
+          {/* Left Panel - Static Job Details */}
           <motion.div
             variants={fadeSlideUp}
             initial="hidden"
@@ -78,67 +65,50 @@ export default function JobDescriptionPage({
             viewport={{ once: true, amount: 0.2 }}
             className="lg:col-span-1"
           >
-            {loading && (
-              <div className="text-gray-600 dark:text-gray-300 text-lg font-medium">
-                Loading job details...
-              </div>
-            )}
+            <div className="bg-white dark:bg-gray-800 rounded-lg space-y-6 p-6">
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Key Responsibilities:</h2>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside">
+                  <li>Design and produce engaging motion graphics for social media, ads, and video campaigns</li>
+                  <li>Work with creative teams to conceptualize and execute animations aligned with brand voice</li>
+                  <li>Edit video footage and add visual effects, animation, and sound design</li>
+                </ul>
+              </section>
 
-            {!loading && error && (
-              <div className="text-red-500 font-semibold text-lg">{error}</div>
-            )}
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">What We’re Looking For:</h2>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside">
+                  <li>Strong understanding of motion principles, typography, and composition</li>
+                  <li>Proficiency in Adobe After Effects, Illustrator, and Photoshop</li>
+                  <li>Portfolio showcasing strong design and animation work</li>
+                </ul>
+              </section>
 
-            {!loading && !error && jobPosting && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg space-y-1">
-                {[
-                  ["Key Responsibilities:", jobPosting.responsibilities],
-                  ["What We're Looking For:", jobPosting.requirements],
-                  ["Perks & Benefits:", jobPosting.benefits],
-                  ["Remote Key Example:", jobPosting.howToApply],
-                  ["Why Digitoonz?", jobPosting.whyJoin],
-                  ["Emoluments:", jobPosting.emoluments],
-                ].map(([sectionTitle, items], index) => (
-                  <motion.section
-                    key={index}
-                    variants={fadeSlideUp}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
-                  >
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                      {sectionTitle}
-                    </h2>
-                    <ul className="space-y-2">
-                      {(items as string[]).map((item, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="text-teal-500 mr-2">•</span>
-                          <span className="text-gray-700 dark:text-gray-300">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.section>
-                ))}
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Perks & Benefits:</h2>
+                <ul className="space-y-2 text-gray-700 dark:text-gray-300 list-disc list-inside">
+                  <li>Flexible working hours</li>
+                  <li>Remote working options</li>
+                  <li>Opportunities for growth</li>
+                </ul>
+              </section>
 
-                {/* Footer Info */}
-                <div className="border-gray-200 dark:border-gray-700 pt-4">
-                  <p className="dark:text-gray-400 mb-2">
-                    Ready to create stunning motion graphics that captivate
-                    audiences? Apply now and unleash your creativity!
-                  </p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    <strong>Job Category:</strong> {jobPosting.category}
-                  </p>
-                  <p className="text-gray-700 dark:text-gray-300">
-                    <strong>Job Type:</strong> {jobPosting.jobType}
-                  </p>
-                </div>
-              </div>
-            )}
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Job Information:</h2>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Job Category:</strong> Marketing and Communications
+                </p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Job Type:</strong> Internship
+                </p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Location:</strong> Remote
+                </p>
+              </section>
+            </div>
           </motion.div>
 
-          {/* Right Panel - Job Application Form (Always Visible) */}
+          {/* Right Panel - Job Application Form */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}

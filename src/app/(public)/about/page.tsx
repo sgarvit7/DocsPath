@@ -1,7 +1,7 @@
 // app/about/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { motion } from "framer-motion";
 import AboutHero from "@/components/publicPageComponents/aboutPageComponents/AboutHero";
 import MissionVision from "@/components/publicPageComponents/aboutPageComponents/MissionVision";
@@ -13,7 +13,18 @@ import Image from "next/image";
 import { Bell } from "lucide-react";
 
 export default function AboutPage() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
+
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
   return (
     <motion.div
       initial={{ opacity: 0 }}

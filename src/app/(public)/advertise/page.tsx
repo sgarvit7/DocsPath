@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Image from "next/image";
 import { Bell } from "lucide-react";
 import clsx from "clsx";
 import { Inter, Roboto } from "next/font/google";
+import AdvertiseFormModal from "@/components/publicPageComponents/advertise/AdvertiseFormModal"
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "700", "900"] });
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700", "900"] });
@@ -60,8 +61,19 @@ const Bubble = ({
 );
 
 const AdvertisePage: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("darkMode") === "true";
+    }
+    return false;
+  });
 
+  // Update localStorage and optionally add a dark class to <body> or <html>
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+ const [isModalOpen, setModalOpen] = useState(false);
   return (
     <div className={clsx(darkMode && "dark", roboto.className)}>
       <div className="pt-1 dark:bg-gray-900 relative overflow-hidden">
@@ -222,13 +234,15 @@ const AdvertisePage: React.FC = () => {
 
         {/* CTA Button */}
         <div className="mt-23 mb-10  text-end pr-4 sm:pr-10 lg:pr-[320px] pb-4">
-          <button className="px-6 py-3 bg-[#086861] cursor-pointer hover:bg-teal-600 text-white rounded-full font-semibold transition">
-            <a href="/sales-card">
-            Get started Now
-            </a>
-          </button>
+          <button
+    className="px-6 py-3 bg-[#086861] cursor-pointer hover:bg-teal-600 text-white rounded-full font-semibold transition"
+    onClick={() => setModalOpen(true)}
+  >
+    Get started Now
+  </button>
         </div>
       </div>
+      <AdvertiseFormModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 };

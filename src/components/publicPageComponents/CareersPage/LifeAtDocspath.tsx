@@ -49,7 +49,7 @@ const LifeAtDocspath: React.FC<{ darkMode?: boolean }> = ({ darkMode = false }) 
     <div className={`${darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} min-h-screen`}>
       {/* Main Content Section */}
       <div className="max-w-6xl mx-auto px-6 py-10">
-        <h1 className="text-5xl font-bold mb-16">Life at Medycall</h1>
+        <h1 className="text-5xl font-bold mb-16">Life at DocsPath</h1>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-20">
@@ -78,10 +78,10 @@ const LifeAtDocspath: React.FC<{ darkMode?: boolean }> = ({ darkMode = false }) 
             Don&apos;t see a role that fits? We still want to hear from you.
           </p>
           <a
-            href="mailto:careers@medycall.com"
+            href="mailto:careers@DocsPath.com"
             className="text-lg underline hover:text-teal-400 transition-colors duration-200"
           >
-            careers@medycall.com
+            careers@DocsPath.com
           </a>
         </div>
       </div>

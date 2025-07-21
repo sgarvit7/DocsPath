@@ -25,7 +25,15 @@ const floatAnim = {
     },
   },
   hover: {
-    y: 0,
+    y: -10,
+    scale: 1.05,
+    boxShadow: "0 25px 60px rgba(0,0,0,0.4)",
+    borderColor: "#0f766e", // Tailwind teal-700
+    zIndex: 10,
+    transition: {
+      duration: 0.35,
+      ease: "easeInOut",
+    },
   },
 };
 
@@ -46,7 +54,11 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
       {/* Doctor Image */}
       <div className="relative z-0 flex justify-center">
         <Image
-          src={darkMode?"/assets/prelogin-img/doctor-1.png":"/assets/prelogin-img/doctor-1.png"}
+          src={
+            darkMode
+              ? "/assets/prelogin-img/doctor-1.png"
+              : "/assets/prelogin-img/doctor-1.png"
+          }
           alt="Doctor"
           width={400}
           height={400}
@@ -58,17 +70,29 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
       <div className="hidden md:block relative max-w-7xl h-[500px] mx-auto mt-[-350px] z-0">
         {/* Top Left */}
         <motion.div
+          style={{ transformStyle: "preserve-3d" }}
           className={`${cardBase} absolute top-[10px] left-[60px] bg-white dark:bg-gray-800 text-black dark:text-white`}
           variants={floatAnim}
           animate="animate"
           whileHover="hover"
         >
-          <BarChart2 className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
-          <div className="">
-            <h3 className="font-semibold  text-xl dark:text-white">
+          <div>
+          <div className="flex gap-2">
+          <Image
+          src = "/assets/prelogin-img/WD/analytics.png"
+          
+          alt="Doctor"
+          width={100}
+          height={400}
+          className="relative z-10 object-contain"
+        />
+         
+          
+            <h3 className="font-semibold text-xl pt-3 dark:text-white">
               Real‑Time Analytics & Smart Dashboards
             </h3>
-            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
+            </div>
+            <p className="mt-1  dark:text-gray-300">
               Track performance, identify trends, and make data‑backed
               decisions—all from a clean, intuitive interface.
             </p>
@@ -77,17 +101,28 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
 
         {/* Top Right */}
         <motion.div
+          style={{ transformStyle: "preserve-3d" }}
           className={`${cardBase} absolute top-[10px] right-[60px] bg-white dark:bg-gray-800 text-black dark:text-white`}
           variants={floatAnim}
           animate="animate"
           whileHover="hover"
         >
-          <Plug className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
-          <div className="text-left">
-            <h3 className="font-semibold text-xl dark:text-white">
+          <div>
+          <div className="flex gap-4">
+          <Image
+          src = "/assets/prelogin-img/WD/cloud.png"
+          
+          alt="Doctor"
+          width={100}
+          height={400}
+          className="relative z-10 object-contain"
+        />
+          
+            <h3 className="font-semibold pt-4 text-xl dark:text-white">
               Lightning‑Fast Setup & Seamless Integration
             </h3>
-            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
+            </div>
+            <p className="mt-1  dark:text-gray-300">
               Onboard in days, not months. Connect with your existing tools and
               infrastructure without disruption.
             </p>
@@ -96,17 +131,28 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
 
         {/* Bottom Left */}
         <motion.div
+          style={{ transformStyle: "preserve-3d" }}
           className={`${cardBase} absolute bottom-[120px] left-[30px] bg-white dark:bg-gray-800 text-black dark:text-white`}
           variants={floatAnim}
           animate="animate"
           whileHover="hover"
         >
-          <Handshake className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
-          <div className="text-left">
-            <h3 className="font-semibold text-xl dark:text-white">
+          <div>
+          <div className="flex gap-2">
+          <Image
+          src = "/assets/prelogin-img/WD/img1.png"
+          
+          alt="Doctor"
+          width={55}
+          height={100}
+          className="relative z-10 object-contain"
+        />
+         
+            <h3 className="font-semibold pt-4 text-xl dark:text-white">
               Built to Scale with You
             </h3>
-            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
+            </div>
+            <p className=" dark:text-gray-300">
               From startups to superspecialties, our platform evolves with your
               growth—no need to change systems.
             </p>
@@ -115,17 +161,29 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
 
         {/* Center Bottom */}
         <motion.div
+          style={{ transformStyle: "preserve-3d" }}
           className={`${cardBase} absolute bottom-[-40px] left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 text-black dark:text-white`}
           variants={floatAnim}
           animate="animate"
           whileHover="hover"
         >
-          <ShieldCheck className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
-          <div className="text-left">
-           <h3 className="font-semibold text-xl dark:text-white">
+           <div>
+          <div className="flex gap-2">
+          <Image
+          src = "/assets/prelogin-img/WD/Security.png"
+          
+          alt="Doctor"
+          width={60}
+          height={100}
+          className="relative z-10 object-contain"
+        />
+         
+         
+            <h3 className="font-semibold text-xl dark:text-white">
               Uncompromising Security & Privacy
             </h3>
-            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
+            </div>
+            <p className="mt-1  dark:text-gray-300">
               HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption,
               and total control over data sharing.
             </p>
@@ -134,17 +192,28 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
 
         {/* Bottom Right */}
         <motion.div
+          style={{ transformStyle: "preserve-3d" }}
           className={`${cardBase} absolute bottom-[120px] right-[30px] bg-white dark:bg-gray-800 text-black dark:text-white`}
           variants={floatAnim}
           animate="animate"
           whileHover="hover"
         >
-          <ThumbsUp className="text-teal-600 w-10 h-10 shrink-0 mt-1" />
-          <div className="text-left">
-           <h3 className="font-semibold text-xl dark:text-white">
+           <div>
+          <div className="flex gap-2">
+          <Image
+          src = "/assets/prelogin-img/WD/Thumbsup.png"
+          
+          alt="Doctor"
+          width={45}
+          height={100}
+          className="relative z-10 object-contain"
+        />
+         
+            <h3 className="font-semibold text-xl dark:text-white">
               Customizable. Reliable. Always On.
             </h3>
-            <p className="mt-1 text-md text-slate-700 dark:text-gray-300">
+            </div>
+            <p className="mt-1 dark:text-gray-300">
               99.9% uptime. Flexible modules tailored to your exact needs.
               Premium support, 24/7.
             </p>
@@ -185,7 +254,9 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
             key={i}
             whileHover={{ scale: 1.02 }}
             className={`rounded-xl p-5 flex gap-3 border shadow-md ${
-              darkMode ? "bg-gray-800 text-white border-teal-500" : "bg-white border-teal-300"
+              darkMode
+                ? "bg-gray-800 text-white border-teal-500"
+                : "bg-white border-teal-300"
             }`}
           >
             {item.icon}
