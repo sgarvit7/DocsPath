@@ -24,6 +24,6 @@ export const publicRoutes = [
   '/request-demo',
   '/documentation',
   '/help-center',
-  '/knowledgeBase',
-  '/whitepapers'
+  '/KB',
+  '/WP'
 ] as const;
