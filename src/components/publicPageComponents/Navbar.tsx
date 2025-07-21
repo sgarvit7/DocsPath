@@ -56,9 +56,9 @@ export default function Navbar({ darkMode }: NavbarProps) {
         "Help Center",
       ],
       dropdownItemsLink: [
-        "/whitepapers",
+        "/WP",
         "/blog",
-        "/knowledgeBase",
+        "/KB",
         "/documentation",
         "/help-center",
       ],
