@@ -5,6 +5,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Inter } from "next/font/google";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
+import { CountryProvider } from "@/contexts/CountryContext"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body>
         <StoreProvider>
           <CssBaseline />
+          <CountryProvider>
           <AuthProvider>{children}</AuthProvider>
+          </CountryProvider>
           <CookieConsentBanner />
         </StoreProvider>
       </body>

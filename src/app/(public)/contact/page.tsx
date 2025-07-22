@@ -402,7 +402,7 @@ const ContactUs: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src="/assets/prelogin-img/contact-us.png"
+                  src="/assets/prelogin-img/contact-us2.png"
                   alt="Contact Us"
                   width={600}
                   height={990}

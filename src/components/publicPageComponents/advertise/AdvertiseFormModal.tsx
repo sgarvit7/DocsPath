@@ -26,7 +26,7 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({ isOpen, onClose
         {/* Left Section */}
         <div className="bg-teal-800 md:w-1/2 w-full flex justify-center items-center text-white text-center ">
           <Image
-            src="/assets/prelogin-img/sales.png"
+            src="/assets/prelogin-img/salescard.png"
             alt="Healthcare"
             width={650}
             height={150}
@@ -35,11 +35,11 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({ isOpen, onClose
         </div>
 
         {/* Right Section */}
-        <div className="w-full md:w-1/2 p-6 lg:mt-20 sm:mt-0">
+        <div className="w-full md:w-1/2 p-6 lg:mt-25 sm:mt-0">
           <h2 className="text-2xl font-bold mb-6 mt-4 md:mt-0">Start Your Advertisement</h2>
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 text-2xl hover:text-gray-700"
+            className="absolute lg:ml-110 lg:-mt-20 sm:ml-0 sm:mt-0 text-gray-500 text-2xl hover:text-gray-700"
           >
             &times;
           </button>

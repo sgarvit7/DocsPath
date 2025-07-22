@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useRef,useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Bell } from "lucide-react";
-import {  Inter, Roboto_Slab } from "next/font/google";
+import { Inter, Roboto_Slab } from "next/font/google";
 import clsx from "clsx";
-
-
 
 const inter = Inter({
   subsets: ["latin"],
@@ -80,32 +78,62 @@ const Bubble = ({
 );
 
 export default function HelpCenter() {
-const [darkMode, setDarkMode] = useState<boolean>(() => {
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("darkMode") === "true";
     }
     return false;
   });
 
-  // Update localStorage and optionally add a dark class to <body> or <html>
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode.toString());
     document.body.classList.toggle("dark", darkMode);
   }, [darkMode]);
+
   const [openIndex, setOpenIndex] = useState<number | null>(1);
   const [searchText, setSearchText] = useState("");
-
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // 🔁 Rotating Header Text
+  const rotatingTexts = [
+    "DocsPath Help Center",
+    "Your Virtual Health Assistant",
+    "All-in-One Healthcare Platform",
+  ];
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTextIndex((prev) => (prev + 1) % rotatingTexts.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const highlightMatch = (text: string, keyword: string) => {
+    if (!keyword) return text;
+    const regex = new RegExp(`(${keyword})`, "gi");
+    return text.split(regex).map((part, i) =>
+      part.toLowerCase() === keyword.toLowerCase() ? (
+        <mark key={i} className="bg-yellow-300 dark:bg-yellow-600 rounded px-1">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
 
   const handleSearch = () => {
     const keyword = searchText.trim().toLowerCase();
     if (!keyword) return;
 
-    const index = faqs.findIndex(
-      (section) =>
-        section.title.toLowerCase().includes(keyword) ||
-        section.items.some((item) => item.toLowerCase().includes(keyword))
-    );
+    const index = faqs.findIndex((section) => {
+      const inTitle = section.title.toLowerCase().includes(keyword);
+      const inItems = section.items.some((item) =>
+        item.toLowerCase().includes(keyword)
+      );
+      return inTitle || inItems;
+    });
 
     if (index !== -1 && sectionRefs.current[index]) {
       setOpenIndex(index);
@@ -155,25 +183,40 @@ const [darkMode, setDarkMode] = useState<boolean>(() => {
                   alt="Support"
                   width={500}
                   height={500}
-                  className="rounded-[68px] shadow-lg w-full max-w-sm md:max-w-sm "
+                  className="rounded-[68px] shadow-lg w-full max-w-sm md:max-w-sm"
                 />
                 <div className="w-full mt-20 md:mt-20">
-                  <h2
-                    className={clsx(
-                      "text-4xl font-bold text-[#344767] dark:text-white",
-                      inter.className
-                    )}
-                  >
-                    DocsPath Help Center
-                  </h2>
-                  <p
+                  {/* 🌀 Rotating Header Text */}
+                  <div style={{ height: "56px" }}>
+                    <AnimatePresence mode="wait">
+                      <motion.h2
+                        key={currentTextIndex}
+                        className={clsx(
+                          "text-4xl font-bold text-[#344767] dark:text-white",
+                          inter.className
+                        )}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {rotatingTexts[currentTextIndex]}
+                      </motion.h2>
+                    </AnimatePresence>
+                  </div>
+
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
                     className={clsx(
                       "text-md text-[#7B809A] mt-2 dark:text-gray-400",
                       inter.className
                     )}
                   >
-                    Your guide to mastering the DocsPath  platform
-                  </p>
+                    Your guide to mastering the DocsPath platform
+                  </motion.p>
+
                   <input
                     type="text"
                     placeholder="Search topics like appointment, AI, Billing..."
@@ -248,12 +291,12 @@ const [darkMode, setDarkMode] = useState<boolean>(() => {
                     >
                       {section.items.map((item, i) => (
                         <p key={i} className="mt-2">
-                          • {item}
+                          • {highlightMatch(item, searchText)}
                         </p>
                       ))}
                       {section.answer && (
                         <p className="mt-2 italic text-gray-600 dark:text-gray-400">
-                          {section.answer}
+                          {highlightMatch(section.answer, searchText)}
                         </p>
                       )}
                     </motion.div>

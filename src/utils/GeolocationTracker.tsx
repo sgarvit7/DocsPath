@@ -1,69 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useCountry } from "@/contexts/CountryContext";
 
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
+export async function getCountryCodeFromIP(): Promise<string> {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    if (!res.ok) throw new Error("Failed to fetch IP geolocation data");
 
-export async function getCountryCodeFromCoords(lat: number, lng: number): Promise<string> {
-  const res = await fetch(
-  `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${process.env.NEXT_PUBLIC_OPEN_CAGE_KEY}`
-);
-
-  const data = await res.json();
-
-  const countryCode = data?.results?.[0]?.components?.["ISO_3166-1_alpha-2"];
-  return countryCode || "UNKNOWN";
+    const data = await res.json();
+    return data?.country || "UNKNOWN";
+  } catch (error) {
+    console.error("Error fetching country from IP:", error);
+    return "UNKNOWN";
+  }
 }
 
-
-export default function GeoTracker() {
-  const [coords, setCoords] = useState<Coordinates | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [countryCode, setCountryCode] = useState<string | null>("India");
+export default function GeoLocationTracker() {
+  const { setCountryCode } = useCountry();
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCoords({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-      },
-      (err) => {
-        console.log(error)
-        setError(err.message);
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    const fetchCountry = async () => {
-      if (coords?.latitude && coords?.longitude) {
-        const country = await getCountryCodeFromCoords(
-          coords.latitude,
-          coords.longitude
-        );
-        setCountryCode(country);
-        console.log(countryCode);
-        localStorage.setItem("countryCode", JSON.stringify(country));
-      }
+    const fetchCountryFromIP = async () => {
+      const country = await getCountryCodeFromIP();
+      setCountryCode(country);
+      localStorage.setItem("countryCode", JSON.stringify(country));
+      console.log("Country code from IP (VPN-based):", country);
     };
 
-    fetchCountry();
-  }, [coords]);
+    fetchCountryFromIP();
+  }, []);
 
-  return (
-    <div>
-      <div>Country Code: {countryCode}</div>
-    </div>
-  );
-
+  return null;
 }

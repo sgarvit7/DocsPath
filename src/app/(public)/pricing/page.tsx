@@ -1,23 +1,54 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Check, Bell } from "lucide-react";
 import Image from "next/image";
+import { useCountry } from "@/contexts/CountryContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import clsx from "clsx";
 
+/* ---------- types ---------- */
 interface Feature {
   text: string;
   included: boolean;
 }
-
-interface Plan {
-  name: string;
+interface PlanTemplate {
+  name: "Basic" | "Premium";
   features: Feature[];
-  price: number;
+  basePrice: number; // static INR price
 }
 
+/* ---------- dynamic price map ---------- */
+const priceTable: Record<string, { basic: number; premium: number }> = {
+  IN: { basic: 10000, premium: 20000 },
+  US: { basic: 120, premium: 240 },
+  GB: { basic: 99, premium: 199 },
+  AE: { basic: 439, premium: 879 },
+  AU: { basic: 180, premium: 360 },
+  CA: { basic: 160, premium: 320 },
+  DE: { basic: 109, premium: 219 },
+  FR: { basic: 109, premium: 219 },
+  SG: { basic: 160, premium: 320 },
+  JP: { basic: 17800, premium: 35600 },
+  KR: { basic: 158000, premium: 316000 },
+  ZA: { basic: 1999, premium: 3999 },
+  BR: { basic: 599, premium: 1199 },
+  MX: { basic: 2199, premium: 4399 },
+  NG: { basic: 80000, premium: 160000 },
+  ID: { basic: 950000, premium: 1890000 },
+  TH: { basic: 3900, premium: 7800 },
+  MY: { basic: 499, premium: 999 },
+  PH: { basic: 3400, premium: 6800 },
+  VN: { basic: 250000, premium: 500000 },
+  PK: { basic: 34000, premium: 68000 },
+  BD: { basic: 10500, premium: 21000 },
+  RU: { basic: 9900, premium: 19800 },
+  EG: { basic: 3700, premium: 7400 },
+};
+
+/* ---------- component ---------- */
 const PricingPlans: React.FC = () => {
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
+ const [darkMode, setDarkMode] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("darkMode") === "true";
     }
@@ -29,37 +60,41 @@ const PricingPlans: React.FC = () => {
     localStorage.setItem("darkMode", darkMode.toString());
     document.body.classList.toggle("dark", darkMode);
   }, [darkMode]);
-  // const [countryCode, setCountryCode] = useState<string>("US");
+
+  const [useDynamicPricing, setDynamic] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("dynamicPricing") === "true";
+    }
+    return false;
+  });
+  const { countryCode } = useCountry();
   const [currency, setCurrency] = useState<string>("");
 
   useEffect(() => {
-    const storedCode = localStorage.getItem("countryCode") || "US";
-    const sanitizedCode = storedCode.replace(/"/g, "");
-    // setCountryCode(storedCode);
+    localStorage.setItem("dynamicPricing", String(useDynamicPricing));
+  }, [useDynamicPricing]);
 
+  useEffect(() => {
     const fetchCurrency = async () => {
       try {
         const res = await fetch(
-          `https://restcountries.com/v3.1/alpha/${sanitizedCode}`
+          `https://restcountries.com/v3.1/alpha/${countryCode}`
         );
         const data = await res.json();
-
-        if (!Array.isArray(data) || !data[0] || !data[0].currencies) return;
-
-        const currencyCode = Object.keys(data[0].currencies)[0];
-        const currencySymbol = data[0].currencies[currencyCode]?.symbol || "";
-        setCurrency(currencySymbol);
-      } catch (error) {
-        console.error("Failed to fetch currency:", error);
+        const code = Object.keys(data?.[0]?.currencies ?? {})[0];
+        setCurrency(data?.[0]?.currencies?.[code]?.symbol ?? "");
+      } catch (err) {
+        console.error("Currency fetch failed:", err);
+        setCurrency("");
       }
     };
-
     fetchCurrency();
-  }, []);
+  }, [countryCode]);
 
-  const plans: Plan[] = [
+  const planTemplates: PlanTemplate[] = [
     {
       name: "Basic",
+      basePrice: 10000,
       features: [
         { text: "Essential report & analytics access", included: true },
         {
@@ -78,23 +113,22 @@ const PricingPlans: React.FC = () => {
           included: true,
         },
         { text: "Communication via Chat & audio calls", included: true },
-        { text: "Standard Invoicing features", included: true },
+        { text: "Standard invoicing features", included: true },
         { text: "Smart patient engagement", included: false },
-        { text: "Standered invoicing features", included: true },
-        { text: "Selected third party integrations", included: true },
-        { text: "Plug and play EHR", included: false },
+        { text: "Selected third‑party integrations", included: true },
+        { text: "Plug‑and‑play EHR", included: false },
       ],
-      price: 10000,
     },
     {
       name: "Premium",
+      basePrice: 20000,
       features: [
         {
-          text: "Advanced insights with full real time data visibility",
+          text: "Advanced insights with full real‑time data visibility",
           included: true,
         },
         {
-          text: "Smart scheduling, automated reminders & dynamic slot optimization",
+          text: "Smart scheduling, automated reminders & dynamic slot optimisation",
           included: true,
         },
         {
@@ -102,11 +136,11 @@ const PricingPlans: React.FC = () => {
           included: true,
         },
         {
-          text: "AI enhanced record with predictive analytics, structural insights & long term data retention",
+          text: "AI‑enhanced record with predictive analytics & structural insights",
           included: true,
         },
         {
-          text: "AI powered transcription with structured medical notes",
+          text: "AI‑powered transcription with structured medical notes",
           included: true,
         },
         {
@@ -114,19 +148,16 @@ const PricingPlans: React.FC = () => {
           included: true,
         },
         {
-          text: "Advanced AI driven chat & voice agents for 24/7 patient interaction",
+          text: "Advanced AI‑driven chat & voice agents (24/7)",
+          included: true,
+        },
+        { text: "HD video, audio & chat with real‑time sync", included: true },
+        {
+          text: "AI‑driven proactive engagement & personalised tracking",
           included: true,
         },
         {
-          text: "Communication via HD video, Audio & chat with real time full syncing & automated follow-ups",
-          included: true,
-        },
-        {
-          text: "AI driven proactive engagement & personalised health tracking",
-          included: true,
-        },
-        {
-          text: "Automated claim processing & seamless payment tracking",
+          text: "Automated claim processing & payment tracking",
           included: true,
         },
         {
@@ -138,10 +169,22 @@ const PricingPlans: React.FC = () => {
           included: true,
         },
       ],
-      price: 20000,
     },
   ];
 
+  const plans = useMemo(() => {
+    const lookup = priceTable[countryCode];
+    return planTemplates.map(({ name, features, basePrice }) => {
+      const dynamicPrice =
+        lookup?.[name.toLowerCase() as "basic" | "premium"] ?? basePrice;
+      return {
+        name,
+        features,
+        price: useDynamicPricing ? dynamicPrice : basePrice,
+      };
+    });
+  }, [useDynamicPricing, countryCode]);
+  /* ---------- UI helpers ----------------------------------------- */
   const FeatureItem: React.FC<{ feature: Feature; planName: string }> = ({
     feature,
     planName,
@@ -161,7 +204,7 @@ const PricingPlans: React.FC = () => {
             />
           </div>
         ) : (
-          <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center" />
+          <div className="w-5 h-5 bg-red-500 rounded-full" />
         )}
       </div>
       <span
@@ -174,107 +217,140 @@ const PricingPlans: React.FC = () => {
     </div>
   );
 
-  const PlanCard: React.FC<{ plan: Plan }> = ({ plan }) => {
+  const PlanCard: React.FC<{ plan: (typeof plans)[number] }> = ({ plan }) => {
     const [expanded, setExpanded] = useState(false);
-
-    return (
-      <div
-        className={`relative flex flex-col w-[450px] rounded-lg p-10 shadow-lg
-          transition-all duration-300 hover:shadow-xl
-          ${
-            darkMode
-              ? "bg-gray-800 border border-gray-700"
-              : "bg-white border border-gray-200"
-          }`}
-      >
-        {/* Plan Header */}
-        <div className="absolute mb-6 -left-2 w-1/2">
-          <div className="absolute -top-6 font-semibold text-white text-base">
-            <div className="absolute rotate-270 -bottom-2 left-0 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]" />
-            <div
-              className="relative text-white px-6 py-2 w-fit"
-              style={{
-                backgroundColor: "#086861",
-                clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
-              }}
-            >
-              {plan.name} {currency} {plan.price}
-            </div>
+    return(
+    <div
+      className={`relative flex flex-col w-[450px] rounded-lg p-10 shadow-lg
+                  transition-all duration-300 hover:shadow-xl
+                  ${
+                    darkMode
+                      ? "bg-gray-800 border border-gray-700"
+                      : "bg-white border border-gray-200"
+                  }`}
+    >
+      {/* Ribbon */}
+      <div className="absolute mb-6 -left-2 w-1/2">
+        <div className="absolute -top-6 font-semibold text-white text-base">
+          <div
+            className="absolute rotate-270 -bottom-2 left-0 w-0 h-0
+                          border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]"
+          />
+          <div
+            className="relative px-6 py-2 w-fit text-white"
+            style={{
+              backgroundColor: "#086861",
+              clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
+            }}
+          >
+            {plan.name} {currency} {plan.price}
           </div>
         </div>
+      </div>
 
-        {/* Feature List */}
-        <motion.div
-          initial={false}
-          animate={{ height: expanded ? "auto" : 320 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="overflow-hidden flex-grow space-y-2 mb-4 mt-8"
-        >
-          {plan.features.map((feature, i) => (
-            <FeatureItem key={i} feature={feature} planName={plan.name} />
-          ))}
-        </motion.div>
+      {/* Features */}
+      <div className={clsx(
+        expanded ?"overflow-hidden h-auto flex-grow space-y-2 mb-4 mt-8":"overflow-hidden h-[360px] flex-grow space-y-2 mb-4 mt-8"
+       )}>
+        {plan.features.map((f, i) => (
+          <FeatureItem key={i} feature={f} planName={plan.name} />
+        ))}
+      </div>
 
-        {/* CTA Button */}
-        <button
-          className="w-1/2 mx-auto text-white cursor-pointer font-semibold px-10 py-3 rounded-full border border-white shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+      {/* CTA */}
+      <button
+        className="w-1/2 mx-auto text-white cursor-pointer font-semibold px-10 py-3 rounded-full border border-white shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
           onClick={() => setExpanded((prev) => !prev)}
           style={{ backgroundColor: "#086861" }}
-        >
-          {expanded ? "See less" : "See more"}
-        </button>
-      </div>
-    );
+      >
+        See more
+      </button>
+    </div>
+    )
   };
 
+  /* ---------- render --------------------------------------------- */
   return (
     <div
       className={`min-h-screen relative transition-colors duration-300 ${
         darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
-      {/* Background Images */}
+      {/* background art */}
       <Image
         src="/assets/bg-pattern.png"
-        alt="bg"
+        alt=""
         width={350}
         height={350}
         className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180"
       />
       <Image
         src="/assets/lower-bg-pattern.png"
-        alt="bg"
+        alt=""
         width={350}
         height={350}
         className="absolute bottom-0 right-0 z-0 opacity-50"
       />
 
-      {/* Dark Mode Toggle */}
-      <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
-        <Bell className="w-6 h-6" />
-        <span
-          className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}
-        >
-          Dark mode
-        </span>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className={`relative w-10 h-5 rounded-full cursor-pointer border border-black transition-colors duration-200 ${
-            darkMode ? "bg-teal-600" : "bg-white"
-          }`}
-        >
-          <div
-            className={`absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full transition-transform duration-200 ${
-              darkMode ? "translate-x-6" : "translate-x-1"
+      {/* switches */}
+      <div className="absolute top-4 right-4 space-y-3 z-20">
+        {/* dark‑mode */}
+        <div className="flex bg-[#08686117] p-2 rounded-full cursor-pointer items-center space-x-3">
+          <Bell className="w-6 h-6" />
+          <span
+            className={`text-sm ${
+              darkMode ? "text-gray-300" : "text-gray-600"
             }`}
-          />
-        </button>
+          >
+            Dark mode
+          </span>
+          <button
+            onClick={() => setDarkMode((d) => !d)}
+            className={`relative w-10 h-5 rounded-full border border-black cursor-pointer
+                        transition-colors duration-200 ${
+                          darkMode ? "bg-teal-600" : "bg-white"
+                        }`}
+          >
+            <div
+              className={`absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full
+                          transition-transform duration-200 ${
+                            darkMode ? "translate-x-6" : "translate-x-1"
+                          }`}
+            />
+          </button>
+        </div>
+
+        {/* pricing‑mode */}
+        <div className="flex bg-[#08686117] p-2 rounded-full items-center space-x-3 cursor-pointer">
+          <span
+            className={`text-sm ${
+              darkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            Dynamic pricing
+          </span>
+          <button
+            onClick={() => setDynamic((p) => !p)}
+            className={`relative w-10 h-5 rounded-full border border-black cursor-pointer
+                        transition-colors duration-200 ${
+                          useDynamicPricing ? "bg-teal-600" : "bg-white"
+                        }`}
+          >
+            <div
+              className={`absolute -top-0.5 -left-2 w-6 h-6 bg-[#4AB0A8] border border-black rounded-full
+                          transition-transform duration-200 ${
+                            useDynamicPricing
+                              ? "translate-x-6"
+                              : "translate-x-1"
+                          }`}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Main Content */}
+      {/* content */}
       <div className="relative z-10 container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
+        <header className="text-center mb-12">
           <h1
             className={`text-4xl font-bold mb-4 ${
               darkMode ? "text-white" : "text-gray-900"
@@ -287,19 +363,19 @@ const PricingPlans: React.FC = () => {
               darkMode ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            Choose your plan who fits your needs. All plans include essential
+            Choose your plan that fits your needs. All plans include essential
             features to get you started!
           </p>
-        </div>
+        </header>
 
-        {/* Plans Grid (CHANGE IS HERE 👇) */}
-        <div className="flex justify-center grid md:grid-col-1 lg:grid-cols-2 items-start w-4/5 h-full gap-20 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <PlanCard key={index} plan={plan} />
+        <div className="flex justify-center gap-20 max-w-6xl mx-auto">
+          {plans.map((plan, idx) => (
+            <PlanCard key={idx} plan={plan} />
           ))}
         </div>
       </div>
 
+      {/* Bottom CTA */}
       <motion.div
         className="py-8 md:py-12 max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 30 }}

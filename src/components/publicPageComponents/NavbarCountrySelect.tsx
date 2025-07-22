@@ -4,38 +4,38 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import countriesArray from "../../../public/assets/countries.json";
 import { Country } from "@/types/country";
-// import { useCountry } from "@/contexts/CountryContext";
+import { useCountry } from "@/contexts/CountryContext";
 
 const NavbarCountrySelect: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
-//   const { countryCode, setCountryCode } = useCountry();
+  const { countryCode, setCountryCode } = useCountry();
 
   useEffect(() => {
-    // const storedCode = localStorage.getItem("countryCode");
-    // const initialCode = storedCode ? storedCode.replace(/"/g, "") : "IN";
-    // setCountryCode(initialCode);
+    const storedCode = localStorage.getItem("countryCode");
+    const initialCode = storedCode ? storedCode.replace(/"/g, "") : "IN";
+    setCountryCode(initialCode);
     setCountries(countriesArray);
   }, []);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCode = e.target.value;
-    // setCountryCode(newCode);
+    setCountryCode(newCode);
     localStorage.setItem("countryCode", newCode);
   };
 
-//   if (!countryCode) return null; // Or show a loading spinner
+  if (!countryCode) return null; // Or show a loading spinner
 
   return (
     <div className="flex  items-center space-x-2">
       <Image
-        src="/assets/prelogin-img/home/india.png"
+        src={`https://flagsapi.com/${countryCode}/flat/32.png`}
         alt="flag"
         width={40}
         height={30}
     
       />
       <select
-        value={"India"}
+        value={countryCode}
         onChange={handleSelectChange}
         className="bg-white border w-20 border-gray-300 rounded px-2 py-1 text-sm"
       >

@@ -119,8 +119,8 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
         <Image
           src={
             darkMode
-              ? "/assets/prelogin-img/product-bg-dark-2.png"
-              : "/assets/prelogin-img/product-light.png"
+              ? "/assets/prelogin-img/product-bg-light.png"
+              : "/assets/prelogin-img/product-bg-light.png"
           }
           alt="Background"
           fill
