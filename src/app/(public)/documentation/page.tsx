@@ -98,11 +98,11 @@ export default function APIDocs() {
 
   return (
     <div className="dark:bg-gray-900">
-      <div className="w-full h-1 bg-teal-600 dark:bg-teal-500" />
+      <div className="w-full h-1 bg-[white] pt-6 dark:bg-gray-900" />
 
       <div className="dark:bg-gray-900">
         <div className="bg-teal-600 dark:bg-teal-500">
-          <div className="absolute mt-3 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
+          <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
             <Bell className="w-6 h-6" />
             <span className={clsx("text-sm", darkMode ? "text-gray-300" : "text-gray-600")}>Dark mode</span>
             <button

@@ -8,6 +8,8 @@ import NavbarCountrySelect from "./NavbarCountrySelect";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import SearchModal from "./SearchModal";
+import SearchTrigger from "./SearchTrigger";
 
 interface NavbarProps {
   darkMode: boolean;
@@ -173,9 +175,11 @@ export default function Navbar({ darkMode }: NavbarProps) {
               );
             })}
           </div>
+          <div className="ml-35">          <SearchTrigger/> </div>
+
 
           {/* Right Side - Auth Buttons */}
-          <div className="hidden md:flex ml-30 items-center space-x-4">
+          <div className="hidden md:flex ml-0 items-center space-x-4">
             <motion.button
               onClick={() => router.push("/sign-in")}
               className="text-white dark:text-teal-300 hover:text-teal-200 dark:hover:text-teal-100 transition-colors duration-200"

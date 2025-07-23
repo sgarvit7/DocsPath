@@ -5,7 +5,7 @@ import { Mail, Phone, Clock, MapPin, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect } from "react";
-
+// import  PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import EmailInput from "@/components/publicPageComponents/EmailInput";
 import axios from "axios";
 
@@ -313,7 +313,7 @@ const ContactUs: React.FC = () => {
                     Mobile No.<span className="text-red-600 text-2xl">*</span>
                   </label>
                   {/* <PhoneInput
-                    value={phone}
+                    // value={phone}
                     onChange={setPhone}
                     onValidate={setPhoneOk} // optional validity callback
                   /> */}

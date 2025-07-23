@@ -146,10 +146,11 @@ export default function HelpCenter() {
 
   return (
     <div className={darkMode ? "dark" : ""}>
-      <div className="dark:bg-gray-900 pt-8">
+      <div className="dark:bg-gray-900 pt-16">
         <div className="bg-[#e5f4f3] dark:bg-gray-600 text-gray-800 dark:text-white">
           {/* Dark Mode Toggle */}
-          <div className="absolute top-16 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
+         
+          <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
             <Bell className="w-6 h-6" />
             <span
               className={`text-sm ${
