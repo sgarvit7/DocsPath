@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Check, Bell } from "lucide-react";
+import {  Bell } from "lucide-react";
 import Image from "next/image";
 import { useCountry } from "@/contexts/CountryContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import clsx from "clsx";
+
 
 /* ---------- types ---------- */
 interface Feature {

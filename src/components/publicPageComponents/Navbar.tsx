@@ -8,7 +8,6 @@ import NavbarCountrySelect from "./NavbarCountrySelect";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import SearchModal from "./SearchModal";
 import SearchTrigger from "./SearchTrigger";
 
 interface NavbarProps {
