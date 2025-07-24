@@ -14,6 +14,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const isValidEmail = (email: string): boolean => {
@@ -24,6 +25,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     onChange(input);
+    setIsVerified(null); // Reset verification state on change
 
     const [local, domain] = input.split("@");
 
@@ -63,6 +65,35 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
     }
   };
 
+  const verifyEmailExists = async (email: string): Promise<boolean> => {
+    try {
+      const res = await fetch(
+        `https://apilayer.net/api/check?access_key=664cb6730045f4f9daed600e8e0a9725&email=${email}&smtp=1&format=1`
+      );
+      const data = await res.json();
+      return data.smtp_check === true;
+    } catch (error) {
+      console.error("Email verification failed:", error);
+      return false;
+    }
+  };
+
+  const handleVerifyClick = async () => {
+    if (!isValidEmail(value)) {
+      alert("Please enter a valid email address first.");
+      return;
+    }
+
+    const exists = await verifyEmailExists(value);
+    if (!exists) {
+      // alert("Email doesn't exist. Please re-enter.");
+      onChange("");
+      setIsVerified(false);
+    } else {
+      setIsVerified(true);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -75,18 +106,28 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
 
   return (
     <div className="relative w-full" ref={wrapperRef}>
-      <input
-        type="email"
-        value={value}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className={`w-full px-4 pl-10 py-3 border rounded-lg text-base transition-all focus:outline-none focus:ring-2 ${
-          isValidEmail(value)
-            ? "border-green-500 focus:ring-green-200"
-            : "border-gray-300 focus:ring-blue-200"
-        }`}
-      />
+      <div className="flex items-center gap-2">
+        <input
+          type="email"
+          value={value}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className={`w-full px-4 pl-10 py-3 border rounded-lg text-base transition-all focus:outline-none focus:ring-2 ${
+            isValidEmail(value)
+              ? "border-green-500 focus:ring-green-200"
+              : "border-gray-300 focus:ring-blue-200"
+          }`}
+        />
+        <button
+          type="button"
+          onClick={handleVerifyClick}
+          className="px-3 py-2 text-sm bg-[#1F6E66] text-white rounded hover:bg-[#15544f] transition"
+        >
+          Verify
+        </button>
+      </div>
+
       {showSuggestions && suggestions.length > 0 && (
         <ul className="absolute z-10 bg-white border border-gray-200 mt-1 rounded shadow-md w-full max-h-40 overflow-y-auto">
           {suggestions.map((suggestion, idx) => (
@@ -102,8 +143,16 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
           ))}
         </ul>
       )}
+
       {value && !isValidEmail(value) && (
         <p className="text-red-500 text-sm mt-1">Invalid email format</p>
+      )}
+
+      {isVerified === true && (
+        <p className="text-green-600 text-sm mt-1">Email verified successfully ✅</p>
+      )}
+      {isVerified === false && (
+        <p className="text-red-500 text-sm mt-1">Email not valid ❌</p>
       )}
     </div>
   );

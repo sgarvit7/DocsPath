@@ -15,6 +15,7 @@ import { setEmail } from '@/store/userSlice'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
+import EmailInput from './publicPageComponents/EmailInput'
 // import EmailInput from './publicPageComponents/EmailInput'
 
 // import {useAuthState} from "react-firebase-hooks/auth"
@@ -37,6 +38,10 @@ export default function SignInForm() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
+
+  const handleFieldChange = (field: keyof typeof form) => 
+  (value: string) => setForm(prev => ({ ...prev, [field]: value }));
+
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -157,14 +162,9 @@ export default function SignInForm() {
                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                   </svg>
                 </div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+                <EmailInput
                   value={form.email}
-                  onChange={handleChange}
-                  required
+                  onChange={handleFieldChange("email")}
                 />
               </div>
             </div>

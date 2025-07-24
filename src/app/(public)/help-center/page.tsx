@@ -178,14 +178,16 @@ export default function HelpCenter() {
 
           <div className="max-w-screen-xl mx-auto px-8 sm:px-6 lg:px-10 pt-12 pb-18">
             <section>
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-52">
+              <div className="flex  flex-col md:flex-row items-center md:items-start gap-10 md:gap-52">
+          
                 <Image
-                  src="/assets/prelogin-img/helpCenter1.jpg"
+                  src="/assets/prelogin-img/help-Center1.png"
                   alt="Support"
                   width={500}
                   height={500}
                   className="rounded-[68px] shadow-lg w-full max-w-sm md:max-w-sm"
                 />
+                
                 <div className="w-full mt-20 md:mt-20">
                   {/* 🌀 Rotating Header Text */}
                   <div style={{ height: "56px" }}>
