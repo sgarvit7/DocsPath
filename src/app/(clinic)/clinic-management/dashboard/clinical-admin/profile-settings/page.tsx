@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { Award, Power, Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
-import { FaMapMarkerAlt } from "react-icons/fa";
+// import { motion } from "framer-motion";
+// import Image from "next/image";
+// import { Award, Power, Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
+// import { FaMapMarkerAlt } from "react-icons/fa";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import axios from "axios";
 import { Doctor } from "@/types/doctor"; 
-import Link from "next/link";
+// import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileItem {
