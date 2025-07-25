@@ -179,7 +179,7 @@ export default function HelpCenter() {
       {/* Image Section */}
       <div className="w-full md:w-1/2 lg:h-[400px] sm:h-auto">
         <Image
-          src="/assets/prelogin-img/help-Center1.png"
+          src="/assets/prelogin-img/help-center1.png"
           alt="Support"
           width={400}
           height={400}
