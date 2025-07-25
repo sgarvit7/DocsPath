@@ -94,7 +94,6 @@ export default function HelpCenter() {
   const [searchText, setSearchText] = useState("");
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // 🔁 Rotating Header Text
   const rotatingTexts = [
     "DocsPath Help Center",
     "Your Virtual Health Assistant",
@@ -148,8 +147,6 @@ export default function HelpCenter() {
     <div className={darkMode ? "dark" : ""}>
       <div className="dark:bg-gray-900 pt-16">
         <div className="bg-[#e5f4f3] dark:bg-gray-600 text-gray-800 dark:text-white">
-          {/* Dark Mode Toggle */}
-         
           <div className="absolute top-4 right-4 flex bg-[#08686117] p-2 rounded-full items-center space-x-3 z-10">
             <Bell className="w-6 h-6" />
             <span
@@ -176,66 +173,69 @@ export default function HelpCenter() {
           <Bubble size={45} top="400px" right="150px" />
           <div className="absolute w-[300px] h-[150px] top-[520px] -right-[70px] bg-[#c9dddc] dark:bg-teal-600 opacity-20 shadow-[0_4px_20px_rgba(0,0,0,0.9)] rounded-b-full rotate-90" />
 
-          <div className="max-w-screen-xl mx-auto px-8 sm:px-6 lg:px-10 pt-12 pb-18">
-            <section>
-              <div className="flex  flex-col md:flex-row items-center md:items-start gap-10 md:gap-52">
-          
-                <Image
-                  src="/assets/prelogin-img/help-Center1.png"
-                  alt="Support"
-                  width={500}
-                  height={500}
-                  className="rounded-[68px] shadow-lg w-full max-w-sm md:max-w-sm"
-                />
-                
-                <div className="w-full mt-20 md:mt-20">
-                  {/* 🌀 Rotating Header Text */}
-                  <div style={{ height: "56px" }}>
-                    <AnimatePresence mode="wait">
-                      <motion.h2
-                        key={currentTextIndex}
-                        className={clsx(
-                          "text-4xl font-bold text-[#344767] dark:text-white",
-                          inter.className
-                        )}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        {rotatingTexts[currentTextIndex]}
-                      </motion.h2>
-                    </AnimatePresence>
-                  </div>
+          <div className="w-full dark:bg-gray-900 bg-[#e5f4f3] text-gray-800 dark:text-white">
+  <div className="relative w-full lg:h-[400px] sm:h-auto">
+    <section className="flex flex-col md:flex-row items-stretch w-full ">
+      {/* Image Section */}
+      <div className="w-full md:w-1/2 lg:h-[400px] sm:h-auto">
+        <Image
+          src="/assets/prelogin-img/help-Center1.png"
+          alt="Support"
+          width={400}
+          height={400}
+          className="w-full h-full object-cover rounded-none"
+        />
+      </div>
 
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className={clsx(
-                      "text-md text-[#7B809A] mt-2 dark:text-gray-400",
-                      inter.className
-                    )}
-                  >
-                    Your guide to mastering the DocsPath platform
-                  </motion.p>
-
-                  <input
-                    type="text"
-                    placeholder="Search topics like appointment, AI, Billing..."
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    className="w-2/3 mt-4 p-2 border border-gray-900 rounded-md text-sm dark:bg-gray-800 dark:border-gray-700 focus:outline-none"
-                  />
-                </div>
-              </div>
-            </section>
-          </div>
+      {/* Rotating Text Section */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-start p-6 md:px-18">
+        <div style={{ minHeight: "56px" }}>
+          <AnimatePresence mode="wait">
+            <motion.h2
+              key={currentTextIndex}
+              className={clsx(
+                "text-2xl sm:text-3xl md:text-4xl font-bold text-[#344767] dark:text-white",
+                inter.className
+              )}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6 }}
+            >
+              {rotatingTexts[currentTextIndex]}
+            </motion.h2>
+          </AnimatePresence>
         </div>
 
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className={clsx(
+            "text-sm sm:text-md text-[#7B809A] mt-2 dark:text-gray-400",
+            inter.className
+          )}
+        >
+          Your guide to mastering the DocsPath platform
+        </motion.p>
+
+        <input
+          type="text"
+          placeholder="Search topics like appointment, AI, Billing..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          className="w-full sm:w-2/3 mt-4 p-2 border border-gray-900 rounded-md text-sm dark:bg-gray-800 dark:border-gray-700 focus:outline-none"
+        />
+      </div>
+    </section>
+  </div>
+</div>
+
+        </div>
+
+        {/* FAQ Section */}
         <div className="flex flex-col md:flex-row max-w-screen-xl dark:bg-gray-900">
-          {/* Sidebar */}
           <aside
             className={clsx(
               "w-full md:w-1/4 bg-[#b4d9d6] text-[#344767] text-md font-bold px-6 py-6 dark:bg-gray-700 dark:text-white",
@@ -255,7 +255,6 @@ export default function HelpCenter() {
             </ul>
           </aside>
 
-          {/* FAQ Section */}
           <div className="w-full md:w-3/4 px-6 py-8 dark:bg-gray-900">
             <div className="space-y-6">
               {faqs.map((section, index) => (

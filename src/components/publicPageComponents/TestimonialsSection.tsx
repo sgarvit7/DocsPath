@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { Easing, motion, Variants } from "framer-motion";
 import clsx from "clsx";
 import { Star } from "lucide-react";
 import Image from "next/image";
@@ -51,7 +51,7 @@ interface DoctorTestimonialsProps {
   darkMode?: boolean;
 }
 
-const cardFade = {
+const cardFade :Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i: number) => ({
     opacity: 1,
@@ -78,7 +78,7 @@ const DoctorTestimonials: React.FC<DoctorTestimonialsProps> = ({
     transition: {
       repeat: Infinity,
       duration: 20 + delay * 3,
-      ease: "linear",
+      ease: "linear" as Easing,
     },
   });
 

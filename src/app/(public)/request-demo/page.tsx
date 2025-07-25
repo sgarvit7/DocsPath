@@ -8,8 +8,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Inter, Roboto } from "next/font/google";
 import EmailInput from "@/components/publicPageComponents/EmailInput";
 import PhoneInput from "@/components/publicPageComponents/PhoneInput";
+import CalendlyWidget from "@/components/publicPageComponents/CalendlyWidget";
+// import PlaceAutocomplete from "@/components/publicPageComponents/PlaceAutocomplete";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export default function RequestDemoPage() {
@@ -21,26 +26,22 @@ export default function RequestDemoPage() {
   const [agreed, setAgreed] = useState(false);
   const [formErrors, setFormErrors] = useState({ email: false });
   const [phoneOk, setPhoneOk] = useState(false);
-
-const handlePhoneChange = (phone: string) => {
-  setFormData((prev) => ({ ...prev, phone }));
-};
-
-
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     org: "",
     role: "",
-    date: "",
     notes: "",
   });
 
   const { user } = useAuth();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -53,54 +54,107 @@ const handlePhoneChange = (phone: string) => {
       }));
     }
   };
-  
 
   const handleAutofill = () => {
     if (!user) return;
-
     setFormData({
       fullName: user.displayName || "",
       email: user.email || "",
       phone: user.phoneNumber || "",
       org: "",
       role: "",
-      date: new Date().toISOString().split("T")[0],
       notes: "",
     });
   };
 
   const handleEmailChange = (email: string) => {
-  setFormData((prev) => ({ ...prev, email }));
+    setFormData((prev) => ({ ...prev, email }));
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setFormErrors((prev) => ({
+      ...prev,
+      email: !emailPattern.test(email),
+    }));
+  };
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  setFormErrors((prev) => ({
-    ...prev,
-    email: !emailPattern.test(email),
-  }));
-};
-
+  const handlePhoneChange = (phone: string) => {
+    setFormData((prev) => ({ ...prev, phone }));
+  };
 
   const isFormValid =
     agreed &&
     !formErrors.email &&
     formData.fullName &&
     formData.email &&
-    phoneOk &&
-    formData.date;
+    phoneOk;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isFormValid || submitting) return;
+
+    try {
+      setSubmitting(true);
+      const response = await fetch("/api/requestDemo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Something went wrong.");
+      }
+
+      alert("Request submitted successfully!");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        org: "",
+        role: "",
+        notes: "",
+      });
+      setAgreed(false);
+    } catch (error) {
+      alert(error|| "Failed to submit request.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className={clsx("min-h-screen flex flex-col", inter.className)}>
-      <div className={clsx("bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col min-h-screen", inter.className)}>
-        <main className={clsx("flex-grow container mx-auto px-4 py-8 lg:py-12", inter.className)}>
+      <div
+        className={clsx(
+          "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white transition-colors duration-300 flex flex-col min-h-screen",
+          inter.className
+        )}
+      >
+        <main
+          className={clsx(
+            "flex-grow container mx-auto px-4 py-8 lg:py-12",
+            inter.className
+          )}
+        >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={clsx("bg-white dark:bg-gray-800 rounded-xl shadow-lg flex flex-col lg:flex-row min-h-[600px]", inter.className)}
+            className={clsx(
+              "bg-white dark:bg-gray-800 rounded-xl shadow-lg flex flex-col lg:flex-row min-h-[600px]",
+              inter.className
+            )}
           >
-            <div className={clsx("lg:w-1/2 bg-[#1F6E66] text-white rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none flex flex-col items-center justify-center text-center", inter.className)}>
+            <div
+              className={clsx(
+                "lg:w-1/2 bg-[#1F6E66] text-white rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none flex flex-col items-center justify-center text-center",
+                inter.className
+              )}
+            >
               <Image
-                src="/assets/prelogin-img/request-demo.png"
+                src="/assets/prelogin-img/requestDemo.png"
                 alt="image"
                 width={0}
                 height={0}
@@ -109,14 +163,23 @@ const handlePhoneChange = (phone: string) => {
             </div>
 
             <div className={clsx("lg:w-1/2 p-6 lg:p-10", inter.className)}>
-              <h3 className={clsx("text-3xl font-bold mb-2 text-center lg:text-left", inter.className)}>Request a Demo</h3>
+              <h3
+                className={clsx(
+                  "text-3xl font-bold mb-2 text-center lg:text-left",
+                  inter.className
+                )}
+              >
+                Request a Demo
+              </h3>
 
-              <form className={clsx("space-y-5", inter.className)} onSubmit={(e) => e.preventDefault()}>
-                
+              <form
+                className={clsx("space-y-5", inter.className)}
+                onSubmit={handleSubmit}
+              >
                 {/* Full Name */}
                 <div>
                   <label className="block text-sm mb-2">
-                    Full Name <span className="text-red-600 text-2xl">*</span>
+                    Full Name <span className="text-red-600 text-lg">*</span>
                   </label>
                   <input
                     type="text"
@@ -132,12 +195,12 @@ const handlePhoneChange = (phone: string) => {
                 {/* Email */}
                 <div>
                   <label className="block text-sm mb-2">
-                    E-mail <span className="text-red-600 text-2xl">*</span>
+                    E-mail <span className="text-red-600 text-lg">*</span>
                   </label>
                   <EmailInput
-                  value={formData.email}
-                  onChange={handleEmailChange}
-                />
+                    value={formData.email}
+                    onChange={handleEmailChange}
+                  />
                   {formErrors.email && (
                     <p className="text-red-500 text-sm mt-1">
                       Please enter a valid email (e.g. you@example.com).
@@ -148,14 +211,13 @@ const handlePhoneChange = (phone: string) => {
                 {/* Phone */}
                 <div>
                   <label className="block text-sm mb-2">
-                    Mobile No <span className="text-red-600 text-2xl">*</span>
+                    Mobile No <span className="text-red-600 text-lg">*</span>
                   </label>
-                   <PhoneInput
-              value={formData.phone}
-              onChange={handlePhoneChange}
-              onValidate={setPhoneOk}
-            />
-
+                  <PhoneInput
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    onValidate={setPhoneOk}
+                  />
                 </div>
 
                 {/* Organization */}
@@ -175,41 +237,35 @@ const handlePhoneChange = (phone: string) => {
 
                 {/* Role */}
                 <div>
-  <label className="block text-sm mb-2">
-    Designation
-  </label>
-  <select
-    name="role"
-    value={formData.role}
-    onChange={handleChange}
-    className={inputClass}
-  >
-    <option value="">Select Designation</option>
-    <option value="Doctor">Doctor</option>
-    <option value="Admin">Admin</option>
-    <option value="Self">Self</option>
-  </select>
-</div>
-
-
-                {/* Date */}
-                <div>
                   <label className="block text-sm mb-2">
-                    Preferred Demo Date <span className="text-red-600 text-2xl">*</span>
+                    Designation<span className="text-red-600 text-lg">*</span>
                   </label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
+                  <select
+                    name="role"
+                    value={formData.role}
                     onChange={handleChange}
                     className={inputClass}
-                    required
-                  />
+                  >
+                    <option value="">Select Designation</option>
+                    <option value="Doctor">Doctor</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Self">Self</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Preferred Date & Time for Demo
+                    <span className="text-red-600 text-lg">*</span>
+                  </label>
+                  <CalendlyWidget />
                 </div>
 
                 {/* Notes */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Additional Notes</label>
+                  <label className="block text-sm font-semibold mb-2">
+                    Additional Notes
+                  </label>
                   <textarea
                     name="notes"
                     rows={3}
@@ -233,26 +289,40 @@ const handlePhoneChange = (phone: string) => {
                       <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5" />
                     </div>
                     <span className={clsx("text-[#7B809A]", inter.className)}>
-                      I agree to the <a href="#" className="text-[#344767] font-semibold underline hover:underline">Terms and Conditions</a>
+                      I agree to the{" "}
+                      <a
+                        href="#"
+                        className="text-[#344767] font-semibold underline hover:underline"
+                      >
+                        Terms and Conditions
+                      </a>
                     </span>
                   </label>
 
                   <button
                     type="submit"
-                    disabled={!isFormValid}
-                    className={clsx("w-full px-6 py-3 rounded-md font-semibold text-white transition", {
-                      "bg-[#005A51] hover:bg-[#014e44]": isFormValid,
-                      "bg-gray-400 cursor-not-allowed": !isFormValid,
-                    })}
+                    disabled={!isFormValid || submitting}
+                    className={clsx(
+                      "w-full px-6 py-3 rounded-md font-semibold text-white transition",
+                      {
+                        "bg-[#005A51] hover:bg-[#014e44]":
+                          isFormValid && !submitting,
+                        "bg-gray-400 cursor-not-allowed":
+                          !isFormValid || submitting,
+                      }
+                    )}
                   >
-                    Submit
+                    {submitting ? "Submitting..." : "Submit"}
                   </button>
 
                   <div className="text-center">
                     <button
                       type="button"
                       onClick={handleAutofill}
-                      className={clsx("text-md text-[#344767] underline cursor-pointer hover:text-blue-900", roboto.className)}
+                      className={clsx(
+                        "text-md text-[#344767] underline cursor-pointer hover:text-blue-900",
+                        roboto.className
+                      )}
                     >
                       Autofill from profile
                     </button>

@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import {
   BarChart2,
   Plug,
@@ -15,7 +15,7 @@ interface WhyDocsPathProps {
   darkMode?: boolean;
 }
 
-const floatAnim = {
+const floatAnim : Variants = {
   animate: {
     y: [0, -20, 0],
     transition: {

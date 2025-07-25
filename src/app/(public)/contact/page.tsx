@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { Mail, Phone, Clock, MapPin, Bell } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { useEffect } from "react";
-// import  PhoneInput from "@/components/publicPageComponents/PhoneInput";
+import  PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import EmailInput from "@/components/publicPageComponents/EmailInput";
 import axios from "axios";
 
@@ -38,10 +38,11 @@ const ContactUs: React.FC = () => {
   const [phone, setPhone] = useState(""); // already present
   // const [phoneOk, setPhoneOk] = useState(false);
   const [loading, setLoading] = useState(false);
+   const [phoneOk, setPhoneOk] = useState(false);
   const [status,  setStatus]  = useState<"idle" | "success" | "error">("idle");
 
   // Animation variants
-  const containerVariants = {
+  const containerVariants : Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -52,7 +53,7 @@ const ContactUs: React.FC = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants : Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -61,7 +62,7 @@ const ContactUs: React.FC = () => {
     },
   };
 
-  const cardVariants = {
+  const cardVariants : Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
@@ -74,7 +75,7 @@ const ContactUs: React.FC = () => {
     },
   };
 
-  const formVariants = {
+  const formVariants : Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
@@ -83,7 +84,7 @@ const ContactUs: React.FC = () => {
     },
   };
 
-  const imageVariants = {
+  const imageVariants : Variants = {
     hidden: { opacity: 0, x: 50 },
     visible: {
       opacity: 1,
@@ -116,6 +117,7 @@ const ContactUs: React.FC = () => {
       });
 
       console.log(response);  
+      console.log(phoneOk);
 
       /* success feedback */
       setStatus("success");
@@ -265,7 +267,7 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    Full Name <span className="text-red-600 text-2xl">*</span>
+                    Full Name <span className="text-red-600 text-md">*</span>
                   </label>
                   <input
                     type="text"
@@ -294,7 +296,7 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    E-mail<span className="text-red-600 text-2xl">*</span>
+                    E-mail<span className="text-red-600 text-md">*</span>
                   </label>
                   <EmailInput value={email} onChange={setEmail} />
                 </motion.div>
@@ -310,13 +312,13 @@ const ContactUs: React.FC = () => {
                       darkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    Mobile No.<span className="text-red-600 text-2xl">*</span>
+                    Mobile No.<span className="text-red-600 text-md">*</span>
                   </label>
-                  {/* <PhoneInput
-                    // value={phone}
+                  <PhoneInput
+                    value={phone}
                     onChange={setPhone}
                     onValidate={setPhoneOk} // optional validity callback
-                  /> */}
+                  />
                 </motion.div>
 
                 <motion.div
@@ -402,7 +404,7 @@ const ContactUs: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src="/assets/prelogin-img/contact-us2.png"
+                  src="/assets/prelogin-img/contactus.png"
                   alt="Contact Us"
                   width={600}
                   height={990}

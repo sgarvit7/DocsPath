@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { auth } from '../../firebase/config'
 import { RecaptchaVerifier, PhoneAuthProvider, linkWithCredential, ApplicationVerifier } from 'firebase/auth'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 
 export default function VerifyPhone() {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
@@ -127,7 +128,7 @@ export default function VerifyPhone() {
         await linkWithCredential(user, cred)
         setSuccess('Phone number verified successfully!')
         setTimeout(() => {
-          router.push(returnUrl ?? '/clinic-onboarding')
+          router.push(returnUrl ?? '/')
         }, 1500)
       } else {
         setError('No user found. Please sign up again.')
@@ -159,22 +160,14 @@ export default function VerifyPhone() {
         {/* Left Section */}
         <div className="bg-teal-700 text-white p-8 md:w-1/3 flex flex-col items-center justify-center text-center">
           <div className="mb-6">
-            <div className="relative w-20 h-20 mx-auto mb-4">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                <rect x="5" y="4" width="14" height="17" rx="2" stroke="white" strokeWidth="2" />
-                <path d="M12 4V2" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                <path d="M9 9H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                <path d="M9 13H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                <path d="M9 17H13" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-lg font-bold">OTP</span>
-              </div>
-              <div className="absolute bottom-0 right-0 bg-teal-300 p-1 rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-700" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-              </div>
+            <div className="relative w-30 h-60 mx-auto mb-4">
+              <Image
+                src="/assets/onboarding-img/phone-otp.png"
+                alt="Logo"
+                layout="fill"
+                objectFit="contain"
+                className='rounded-[20px]'
+              />  
             </div>
           </div>
           <p className="text-sm opacity-80">Enter 6-digit OTP<br />that you received on<br />{formatPhoneNumber(phone)}</p>

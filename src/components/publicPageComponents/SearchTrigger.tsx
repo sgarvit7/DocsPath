@@ -11,7 +11,7 @@ const SearchTrigger: React.FC = () => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-[white] cursor-pointer hover:text-black"
+        className="text-[white] cursor-pointer item-center py-10 justify-between rotate-350 hover:text-black"
       >
         <Search size={24} />
       </button>

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Award, Power } from "lucide-react";
 import { Edit, Briefcase, GraduationCap, Lock, Bell, Play } from "lucide-react";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import PhoneInput from "@/components/publicPageComponents/PhoneInput";
+// import PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import axios from "axios";
 import { Doctor } from "@/types/doctor"; // Adjust the import path as necessary
 import Link from "next/link";
@@ -152,8 +152,8 @@ const ProfileSettings: React.FC = () => {
       { label: "Last Name", value: "Jendob" },
       { label: "Field of practice", value: "Dermatology" },
       { label: "Email address", value: "Mira1229@gmail.com" },
-      { label: "Phone", value: <PhoneInput></PhoneInput> },
-      { label: "Emergency Contact", value: <PhoneInput></PhoneInput> },
+      // { label: "Phone", value: <PhoneInput/> },
+      // { label: "Emergency Contact", value: <PhoneInput/> },
     ],
     professionalInformation: [
       { label: "Medical registration number", value: "4000000000" },

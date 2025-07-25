@@ -174,7 +174,7 @@ export default function Navbar({ darkMode }: NavbarProps) {
               );
             })}
           </div>
-          <div className="ml-35">          <SearchTrigger/> </div>
+          <div className="ml-20 ">          <SearchTrigger/> </div>
 
 
           {/* Right Side - Auth Buttons */}
@@ -227,47 +227,71 @@ export default function Navbar({ darkMode }: NavbarProps) {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-white/20 mt-4 pt-4 pb-4"
-          >
-            <div className="flex flex-col space-y-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-white hover:text-teal-200 transition-colors duration-200"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="border-t border-white/20 pt-4 flex flex-col space-y-2">
-                <button
-                  onClick={() => router.push("/sign-in")}
-                  className="text-white hover:text-teal-200 transition-colors duration-200 text-left"
-                >
-                  Sign In
-                </button>
+  <motion.div
+    initial={{ opacity: 0, height: 0 }}
+    animate={{ opacity: 1, height: "auto" }}
+    exit={{ opacity: 0, height: 0 }}
+    className="md:hidden border-t border-white/20 mt-4 pt-4 pb-4"
+  >
+    <div className="flex flex-col space-y-4">
+      {menuItems.map((item, index) => {
+        const hasDropdown = item.hasDropdown;
+        const isActiveDropdown = activeDropdown === item.name;
 
-                <button
-                  // onClick={
-                  //   user
-                  //     ? () => setIsJoinModalOpen(true)
-                  //     : () => router.push("/sign-up")
-                  // }
-                  className="bg-white text-teal-700 px-4 py-2 rounded-lg font-semibold hover:bg-teal-50 transition-colors duration-200 w-fit"
-                >
-                  Join us
-                </button>
+        return (
+          <div key={index} className="flex flex-col space-y-2">
+            <button
+              onClick={() =>
+                hasDropdown
+                  ? setActiveDropdown(isActiveDropdown ? null : item.name)
+                  : router.push(item.href)
+              }
+              className="text-white hover:text-teal-200 transition-colors duration-200 text-left flex justify-between items-center w-full"
+            >
+              <span>{item.name}</span>
+              {hasDropdown && <ChevronDown className={`w-4 h-4 transform transition-transform ${isActiveDropdown ? "rotate-180" : ""}`} />}
+            </button>
+
+            {/* Dropdown items for mobile */}
+            {hasDropdown && isActiveDropdown && (
+              <div className="ml-4 flex flex-col space-y-1">
+                {item.dropdownItems?.map((dropdownItem, idx) => (
+                  <Link
+                    key={dropdownItem}
+                    href={item.dropdownItemsLink[idx]}
+                    className="text-white/80 hover:text-white text-sm transition-colors duration-200"
+                  >
+                    {dropdownItem}
+                  </Link>
+                ))}
               </div>
-            </div>
-            <span className="mt-5">
-            <NavbarCountrySelect />
-            </span>
-          </motion.div>
-        )}
+            )}
+          </div>
+        );
+      })}
+
+      <div className="border-t border-white/20 pt-4 flex flex-col space-y-2">
+        <button
+          onClick={() => router.push("/sign-in")}
+          className="text-white hover:text-teal-200 transition-colors duration-200 text-left"
+        >
+          Sign In
+        </button>
+
+        <button
+          className="bg-white text-teal-700 px-4 py-2 rounded-lg font-semibold hover:bg-teal-50 transition-colors duration-200 w-fit"
+        >
+          Join us
+        </button>
+      </div>
+    </div>
+
+    <span className="mt-5">
+      <NavbarCountrySelect />
+    </span>
+  </motion.div>
+)}
+
       </div>
     </nav>
   );

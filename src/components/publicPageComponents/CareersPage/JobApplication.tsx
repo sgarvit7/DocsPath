@@ -1,20 +1,24 @@
+"use client";
+
 import { useState } from "react";
+import EmailInput from "@/components/publicPageComponents/EmailInput";
+import PhoneInput from "@/components/publicPageComponents/PhoneInput";
 
 interface JobApplicationProps {
   jobTitle: string;
 }
 
 export default function JobApplication({ jobTitle }: JobApplicationProps) {
-  console.log(jobTitle);
   const [formData, setFormData] = useState({
     firstName: "",
-    lastName: "",
     email: "",
     phone: "",
     resume: null as File | null,
-    coverLetter: "",
-    portfolio: "",
+    coverLetter: null as File | null,
   });
+
+  const [phoneOk, setPhoneOk] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -24,14 +28,19 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData((prev) => ({ ...prev, resume: file }));
+    const { name, files } = e.target;
+    const file = files?.[0] || null;
+    setFormData((prev) => ({ ...prev, [name]: file }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      console.log(jobTitle)
+      alert("Please accept the terms and conditions.");
+      return;
+    }
     console.log("Application submitted:", formData);
-    // Handle form submission here
   };
 
   return (
@@ -41,9 +50,10 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Full Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Full Name <span className="text-red-800 text-2xl">*</span>
+            Full Name <span className="text-red-800 text-xl">*</span>
           </label>
           <input
             type="text"
@@ -56,52 +66,37 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
           />
         </div>
 
+        {/* Email Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            E-mail <span className="text-red-800 text-2xl">*</span>
+            E-mail <span className="text-red-800 text-xl">*</span>
           </label>
-          <input
-            type="email"
-            name="email"
-            required
+          <EmailInput
             value={formData.email}
-            onChange={handleInputChange}
-            placeholder="Enter your Email"
-            className="w-full px-3 py-2 placeholder:text-xs border-b dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+            onChange={(email) =>
+              setFormData((prev) => ({ ...prev, email }))
+            }
           />
         </div>
 
+        {/* Phone Input */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Mobile No. <span className="text-red-800 text-2xl">*</span>
+            Mobile No. <span className="text-red-800 text-xl">*</span>
           </label>
-          <input
-            type="tel"
-            name="phone"
-            required
+          <PhoneInput
             value={formData.phone}
-            onChange={handleInputChange}
-            placeholder="Enter your phone number"
-            className="w-full px-3 py-2 border-b placeholder:text-xs dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+            onChange={(phone) =>
+              setFormData((prev) => ({ ...prev, phone }))
+            }
+            onValidate={setPhoneOk}
           />
         </div>
 
+        {/* Resume Upload */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Resume <span className="text-red-800 text-2xl">*</span>
-          </label>
-          <input
-            type="file"
-            name="resume"
-            accept=".pdf,.doc,.docx"
-            required
-            onChange={handleFileChange}
-            className="w-full px-3 py-2 border-b dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Cover letter <span className="text-red-800 text-2xl">*</span>
+            Resume (.pdf,.doc,.docx) <span className="text-red-800 text-xl">*</span>
           </label>
           <input
             type="file"
@@ -113,29 +108,52 @@ export default function JobApplication({ jobTitle }: JobApplicationProps) {
           />
         </div>
 
-        <div className="flex items-center">
+        {/* Cover Letter Upload */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Cover letter (.pdf,.doc,.docx)
+          </label>
           <input
-            type="checkbox"
-            id="terms"
+            type="file"
+            name="coverLetter"
+            accept=".pdf,.doc,.docx"
             required
-            className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+            onChange={handleFileChange}
+            className="w-full px-3 py-2 border-b dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100"
           />
-          <label
-            htmlFor="terms"
-            className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+        </div>
+
+        {/* Terms Toggle Switch */}
+        <div className="flex  items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setAcceptedTerms(!acceptedTerms)}
+            className={`w-11 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${
+              acceptedTerms ? "bg-teal-600" : ""
+            }`}
           >
+            <div
+              className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${
+                acceptedTerms ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+          <label className="text-sm mr-66 text-gray-700 dark:text-gray-300">
             I agree to the{" "}
             <a href="#" className="text-teal-600 hover:text-teal-500">
               Terms and Conditions
             </a>
           </label>
+          
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-[#005A51] hover:bg-teal-700 cursor-pointer text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          disabled={!phoneOk || !acceptedTerms}
+          className="w-full bg-[#005A51] hover:bg-teal-700 cursor-pointer text-white font-medium py-3 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-60"
         >
-          Submit 
+          Submit
         </button>
       </form>
     </div>

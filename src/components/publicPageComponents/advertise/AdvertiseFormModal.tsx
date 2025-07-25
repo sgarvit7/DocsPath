@@ -1,21 +1,98 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import EmailInput from "../EmailInput";
+import PhoneInput from "../PhoneInput";
 
 interface AdvertiseFormModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({ isOpen, onClose }) => {
+const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+
+  const [formErrors, setFormErrors] = useState({ email: false });
+  const [phoneOk, setPhoneOk] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleEmailChange = (email: string) => {
+    setFormData((prev) => ({ ...prev, email }));
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setFormErrors((prev) => ({
+      ...prev,
+      email: !emailPattern.test(email),
+    }));
+  };
+
+  const handlePhoneChange = (phone: string) => {
+    setFormData((prev) => ({ ...prev, phone }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate
+    if (
+      !formData.fullName.trim() ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.company.trim()
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    if (formErrors.email || !phoneOk) {
+      alert("Please enter valid contact info.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch("/api/sales", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Something went wrong");
+
+      alert("Your inquiry was submitted successfully.");
+      onClose();
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send your inquiry.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center px-2 sm:px-4 overflow-y-auto py-8">
       <div className="relative bg-white w-full max-w-5xl rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
-        
-        {/* Close Button - always on top */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 text-2xl hover:text-gray-700 z-50"
@@ -23,8 +100,7 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({ isOpen, onClose
           &times;
         </button>
 
-        {/* Left Section */}
-        <div className="bg-teal-800 md:w-1/2 w-full flex justify-center items-center text-white text-center ">
+        <div className="bg-teal-800 md:w-1/2 w-full flex justify-center items-center text-white text-center">
           <Image
             src="/assets/prelogin-img/salescard.png"
             alt="Healthcare"
@@ -34,53 +110,72 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({ isOpen, onClose
           />
         </div>
 
-        {/* Right Section */}
-        <div className="w-full md:w-1/2 p-6 lg:mt-25 sm:mt-0">
+        <div className="w-full md:w-1/2 p-6">
           <h2 className="text-2xl font-bold mb-6 mt-4 md:mt-0">Start Your Advertisement</h2>
-          <button
-            onClick={onClose}
-            className="absolute lg:ml-110 lg:-mt-20 sm:ml-0 sm:mt-0 text-gray-500 text-2xl hover:text-gray-700"
-          >
-            &times;
-          </button>
 
-          <form className="space-y-4">
-            {[
-              { label: "Full Name", type: "text", placeholder: "John Doe" },
-              { label: "E-mail", type: "email", placeholder: "john.doe@example.com" },
-              { label: "Mobile No", type: "tel", placeholder: "+1 (555) 123-4567" },
-              { label: "Company Name", type: "text", placeholder: "ABC Pharma Inc." },
-            ].map((field, idx) => (
-              <div key={idx}>
-                <label className="block font-medium">
-                  {field.label} <span className="text-red-600">*</span>
-                </label>
-                <input
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  required
-                  className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
-                />
-              </div>
-            ))}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label className="block font-medium">Full Name *</label>
+              <input
+                type="text"
+                required
+                value={formData.fullName}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, fullName: e.target.value }))
+                }
+                className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              />
+            </div>
 
             <div>
-              <label className="block font-medium">
-                Your Message
-              </label>
+              <label className="block font-medium">E-mail *</label>
+              <EmailInput value={formData.email} onChange={handleEmailChange} />
+              {formErrors.email && (
+                <p className="text-red-500 text-sm mt-1">Please enter a valid email.</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block font-medium">Mobile No *</label>
+              <PhoneInput
+                value={formData.phone}
+                onChange={handlePhoneChange}
+                onValidate={setPhoneOk}
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium">Company Name *</label>
+              <input
+                type="text"
+                required
+                value={formData.company}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, company: e.target.value }))
+                }
+                className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium">Your Message</label>
               <textarea
                 className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
                 rows={3}
                 placeholder="Tell us about your advertising needs..."
-                required
+                value={formData.message}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, message: e.target.value }))
+                }
               />
             </div>
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-teal-800 text-white py-2 rounded hover:bg-teal-700 transition"
             >
-              Submit Inquiry
+              {loading ? "Submitting..." : "Submit Inquiry"}
             </button>
           </form>
         </div>

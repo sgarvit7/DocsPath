@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import JobApplication from "@/components/publicPageComponents/CareersPage/JobApplication";
 import Image from "next/image";
 import { useState } from "react";
+
+
 const fadeSlideUp = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -15,27 +17,32 @@ const fadeSlideUp = {
 };
 
 export default function JobDescriptionPage() {
-      const [email, setEmail] = useState<string>("");
-      const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const phoneOk = true;
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const jobTitle = "Motion Graphic Designing Intern";
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!email) return;
-  
-      setIsSubmitting(true);
-  
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Email submitted:", email);
-        alert("Thank you for signing up! We'll be in touch soon.");
-        setEmail("");
-      } catch (error) {
-        console.error("Error submitting email:", error);
-        alert("There was an error. Please try again.");
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !phoneOk) return;
+
+    setIsSubmitting(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Submitted:", { email, phone });
+      alert("Thank you for signing up! We'll be in touch soon.");
+      setEmail("");
+      setPhone("");
+    } catch (error) {
+      console.error("Error submitting:", error);
+      alert("There was an error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen dark:bg-gray-900 transition-colors duration-300">
@@ -61,21 +68,22 @@ export default function JobDescriptionPage() {
             height={350}
             className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180"
           />
-          <div className="relative h-full flex items-start px-30 py-15">
-            <motion.div
-              initial={{ x: -60, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.7 }}
-              className="max-w-lg"
-            >
-              <h1 className="text-4xl font-bold text-black mb-2 z-10">{jobTitle}</h1>
-            </motion.div>
-          </div>
+          
         </div>
       </motion.header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[400px]">
+        <div className="relative h-full flex items-center ">
+            <motion.div
+              initial={{ x: -60, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.7 }}
+              className="max-w-2xl"
+            >
+              <h1 className="text-4xl font-bold text-black mb-2 z-10">{jobTitle}</h1>
+            </motion.div>
+          </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Panel - Static Job Details */}
           <motion.div
@@ -141,9 +149,11 @@ export default function JobDescriptionPage() {
             </div>
           </motion.div>
         </div>
-        </main>
+      </main>
 
-         <div
+      {/* Footer CTA */}
+      {/* Newsletter Signup Section */}
+      <div
         className="relative overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('/assets/prelogin-img/medical.jpg')`,
@@ -152,6 +162,8 @@ export default function JobDescriptionPage() {
         {/* Overlays */}
         <div className="absolute inset-0 bg-teal-600 opacity-20"></div>
         <div className="absolute inset-0 bg-teal-600 opacity-60"></div>
+
+        {/* Signup Box */}
         <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
           <div className="max-w-2xl text-white">
             <h2 className="text-4xl font-bold mb-4">Never Miss an Opportunity</h2>
@@ -178,9 +190,7 @@ export default function JobDescriptionPage() {
             </form>
           </div>
         </div>
-        </div>
-        
-      
-    </div>
+      </div>
+      </div>
   );
 }

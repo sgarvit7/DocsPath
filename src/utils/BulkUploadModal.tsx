@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { X, Upload, FileText, Download, Users, User } from "lucide-react";
 import * as XLSX from "xlsx";
 import axios from "axios";
@@ -82,7 +82,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Animation variants
-  const modalVariants = {
+  const modalVariants : Variants = {
     hidden: {
       opacity: 0,
       scale: 0.95,
@@ -108,7 +108,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({
     },
   };
 
-  const contentVariants = {
+  const contentVariants : Variants = {
     hidden: { opacity: 0, x: 20 },
     visible: {
       opacity: 1,
