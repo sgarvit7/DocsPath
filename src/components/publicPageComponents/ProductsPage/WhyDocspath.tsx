@@ -3,13 +3,6 @@
 import { FC } from "react";
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
-import {
-  BarChart2,
-  Plug,
-  Handshake,
-  ShieldCheck,
-  ThumbsUp,
-} from "lucide-react";
 
 interface WhyDocsPathProps {
   darkMode?: boolean;
@@ -216,55 +209,60 @@ export const WhyDocsPath: FC<WhyDocsPathProps> = ({ darkMode = false }) => {
       </div>
 
       {/* Mobile View */}
-      <div className="block md:hidden px-4 space-y-6 mt-12">
-        {[
-          {
-            icon: <BarChart2 className="text-teal-600 w-6 h-6 mt-1" />,
-            title: "Real‑Time Analytics & Smart Dashboards",
-            desc: "Track performance, identify trends, and make data‑backed decisions—all from a clean, intuitive interface.",
-          },
-          {
-            icon: <Plug className="text-teal-600 w-6 h-6 mt-1" />,
-            title: "Lightning‑Fast Setup & Seamless Integration",
-            desc: "Onboard in days, not months. Connect with your existing tools and infrastructure without disruption.",
-          },
-          {
-            icon: <Handshake className="text-teal-600 w-6 h-6 mt-1" />,
-            title: "Built to Scale with You",
-            desc: "From startups to superspecialties, our platform evolves with your growth—no need to change systems.",
-          },
-          {
-            icon: <ShieldCheck className="text-teal-600 w-6 h-6 mt-1" />,
-            title: "Uncompromising Security & Privacy",
-            desc: "HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption, and total control over data sharing.",
-          },
-          {
-            icon: <ThumbsUp className="text-teal-600 w-6 h-6 mt-1" />,
-            title: "Customizable. Reliable. Always On.",
-            desc: "99.9% uptime. Flexible modules tailored to your exact needs. Premium support, 24/7.",
-          },
-        ].map((item, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.02 }}
-            className={`rounded-xl p-5 flex gap-3 border shadow-md ${
-              darkMode
-                ? "bg-gray-800 text-white border-teal-500"
-                : "bg-white border-teal-300"
-            }`}
-          >
-            {item.icon}
-            <div>
-              <h3 className="font-semibold text-teal-900 dark:text-white">
-                {item.title}
-              </h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {item.desc}
-              </p>
-            </div>
-          </motion.div>
-        ))}
+    <div className="block md:hidden px-4 space-y-6 mt-12">
+  {[
+    {
+      image: "/assets/prelogin-img/WD/Analytics.png",
+      title: "Real‑Time Analytics & Smart Dashboards",
+      desc: "Track performance, identify trends, and make data‑backed decisions—all from a clean, intuitive interface.",
+    },
+    {
+      image: "/assets/prelogin-img/WD/Cloud.png",
+      title: "Lightning‑Fast Setup & Seamless Integration",
+      desc: "Onboard in days, not months. Connect with your existing tools and infrastructure without disruption.",
+    },
+    {
+      image: "/assets/prelogin-img/WD/img1.png",
+      title: "Built to Scale with You",
+      desc: "From startups to superspecialties, our platform evolves with your growth—no need to change systems.",
+    },
+    {
+      image: "/assets/prelogin-img/WD/Security.png",
+      title: "Uncompromising Security & Privacy",
+      desc: "HIPAA & GDPR compliant. Role‑based access, bank‑grade encryption, and total control over data sharing.",
+    },
+    {
+      image: "/assets/prelogin-img/WD/Thumbsup.png",
+      title: "Customizable. Reliable. Always On.",
+      desc: "99.9% uptime. Flexible modules tailored to your exact needs. Premium support, 24/7.",
+    },
+  ].map((item, i) => (
+    <motion.div
+      key={i}
+      whileHover={{ scale: 1.02 }}
+      className={`rounded-xl p-5  gap-4 items-start border shadow-md ${
+        darkMode
+          ? "bg-gray-800 text-white border-teal-500"
+          : "bg-white border-teal-300"
+      }`}
+    >
+      <img
+        src={item.image}
+        alt={item.title}
+        className="w-10 h-10 mx-auto w-20 h-20 object-contain mt-1"
+      />
+      <div>
+        <h3 className="font-semibold text-teal-900 dark:text-white">
+          {item.title}
+        </h3>
+        <p className="text-sm text-gray-700 dark:text-gray-300">
+          {item.desc}
+        </p>
       </div>
+    </motion.div>
+  ))}
+</div>
+
     </section>
   );
 };

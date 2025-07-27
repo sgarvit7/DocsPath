@@ -170,8 +170,8 @@ function MobileFAQSection({ darkMode }: Props) {
   return (
     <section
       className={clsx(
-        "w-full flex flex-col-reverse items-center justify-between gap-8 px-4 sm:px-8 py-16",
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+        "w-full flex flex-col-reverse items-center justify-between gap-8 px-4 sm:px-8 pb-6",
+        darkMode ? "bg-gray-900 text-white" : "bg-[white] text-black"
       )}
     >
       {/* Text Section */}
@@ -190,12 +190,12 @@ function MobileFAQSection({ darkMode }: Props) {
                   "rounded-xl border cursor-pointer transition-all duration-300",
                   darkMode
                     ? "bg-transparent border-green-600 text-white"
-                    : "bg-white border-green-600 text-black"
+                    : "bg-white border-[#005C56] text-[#005C56]"
                 )}
                 onClick={() => toggle(item.id)}
               >
                 <div className="flex items-center justify-between px-6 py-4">
-                  <p className="font-semibold text-[#005C56] ">{item.text}</p>
+                  <p className="font-semibold text-sm text-[#005C56] ">{item.text}</p>
                   <span className="text-xl font-bold">
                     {isActive ? "−" : "+"}
                   </span>
@@ -230,11 +230,11 @@ function MobileFAQSection({ darkMode }: Props) {
             <Image
               src={darkMode
                 ? "/assets/prelogin-img/home/question-mark-dark-1.png"
-                : "/assets/prelogin-img/home/question-mark.png"}
+                : "/assets/prelogin-img/home/question-mark-1.png"}
               alt="?"
-              width={100}
+              width={250}
               height={100}
-              className="w-full h-full object-contain"
+              className=" object-contain"
             />
           </motion.div>
 

@@ -45,7 +45,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
   return (
     <section
       className={clsx(
-        "relative overflow-hidden border-b-20 border-b-[#086861]",
+        "relative overflow-hidden pt-16 lg:pt-1 border-b-20 border-b-[#086861]",
         afacad.className
       )}
     >
@@ -160,7 +160,7 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               initial="hidden"
               animate="visible"
               custom={4}
-              className="flex flex-wrap lg:-ml-20 lg:mt-23 gap-4"
+              className="flex  lg:-ml-20   lg:mt-23 gap-4"
             >
               <button className={clsx("rounded-full bg-[#086861] px-6 py-3 cursor-pointer lg:text-xl lg:w-1/3  sm:text-base font-bold text-white shadow hover:bg-teal-700 focus:outline-none  focus:ring-teal-300",inter.className)}>
                 Start Free Trial

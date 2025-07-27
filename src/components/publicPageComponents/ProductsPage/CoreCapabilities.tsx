@@ -124,7 +124,7 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
           }
           alt="Background"
           fill
-          className="bg-contain"
+          className="bg-contain hidden lg:block"
           priority
         />
       </div>
@@ -143,65 +143,63 @@ export default function CoreCapabilities({ darkMode = false, ...props }: Props) 
         </motion.h2>
 
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-10"
+  variants={container}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+  className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10"
+>
+  {capabilities.map((cap) => {
+    const extraClasses =
+      cap.id === 3
+        ? "md:col-span-2 md:max-w-xl md:mx-auto sm:max-w-full"
+        : "";
+    return (
+      <motion.article
+        key={cap.id}
+        variants={item}
+        whileHover={{ scale: 1.03 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className={`flex flex-col sm:flex-row gap-4 sm:gap-6 rounded-xl border p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all ${
+          darkMode
+            ? "border-gray-700 bg-gray-800 hover:border-teal-500"
+            : "border-gray-200 bg-white hover:border-teal-600"
+        } ${extraClasses}`}
+      >
+        <div
+          className={`flex h-20 w-20 sm:h-24 sm:w-24 mx-auto lg:mx-0 items-center justify-center rounded-lg`}
         >
-          {capabilities.map((cap) => {
-            const extraClasses =
-              cap.id === 3 ? "md:col-span-2 md:max-w-xl md:mx-auto" : "";
-            return (
-              <motion.article
-                key={cap.id}
-                variants={item}
-                whileHover={{ scale: 1.03 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className={`flex gap-6 rounded-xl border p-6 shadow-sm hover:shadow-xl transition-all ${
-                  darkMode
-                    ? "border-gray-700 bg-gray-800 hover:border-teal-500"
-                    : "border-gray-200 bg-white hover:border-teal-600"
-                } ${extraClasses}`}
-              >
-                <div
-                  className={`flex h-30 w-30 items-center justify-center rounded-lg `
-                    // ${
-                    // darkMode
-                    //   ? "bg-teal-700/20 text-teal-300"
-                    //   : "bg-teal-600/10 text-teal-600"
-                  // }
-                  }
-                >
-                  <Image
-                  src={cap.icon as string}
-                  alt="hell0"
-                  width={70}
-                  height={10}
-                  />
-                </div>
-                <div>
-                  <h3
-                    className={clsx("mb-2 text-lg font-bold" 
-                      ,darkMode ? "text-white" : "text-[#344767]"
-                      ,roboto.className
+          <Image
+            src={cap.icon as string}
+            alt="hell0"
+            width={70}
+            height={10}
+          />
+        </div>
+        <div>
+          <h3
+            className={clsx(
+              "mb-2 text-base sm:text-lg font-bold",
+              darkMode ? "text-white" : "text-[#344767]",
+              roboto.className
             )}
-                  >
-                    {cap.title}
-                  </h3>
-                  <p
-                    className={clsx("text-md font-bold" ,
-                      darkMode ? "text-gray-300" : "text-[#005A51]"
-                      ,roboto.className
-                    )}
-                  >
-                    {cap.description}
-                  </p>
-                </div>
-              </motion.article>
-            );
-          })}
-        </motion.div>
+          >
+            {cap.title}
+          </h3>
+          <p
+            className={clsx(
+              "text-sm sm:text-md font-bold",
+              darkMode ? "text-gray-300" : "text-[#005A51]",
+              roboto.className
+            )}
+          >
+            {cap.description}
+          </p>
+        </div>
+      </motion.article>
+    );
+  })}
+</motion.div>
 
         <div className="my-20 h-0.5 w-full bg-gray-200 dark:bg-gray-700" />
 

@@ -18,15 +18,13 @@ const ClinicInfo = () => {
     clinicType: clinicInfo.clinicType || '',
     registrationNumber: clinicInfo.registrationNumber || '',
     establishmentYear: clinicInfo.establishmentYear || '',
-    address: clinicInfo.address || '',
+    
   });
   
   const [formErrors, setFormErrors] = useState({
     clinicName: '',
     clinicType: '',
     registrationNumber: '',
-    establishmentYear: '',
-    address: '',
   });
 
   const clinicTypes = [
@@ -47,7 +45,7 @@ const ClinicInfo = () => {
       clinicType: '',
       registrationNumber: '',
       establishmentYear: '',
-      address: '',
+      
     };
     
     if (!formData.clinicName.trim()) {
@@ -65,18 +63,11 @@ const ClinicInfo = () => {
       isValid = false;
     }
     
-    if (!formData.establishmentYear.trim()) {
-      errors.establishmentYear = 'Year of establishment is required';
-      isValid = false;
-    } else if (!/^\d{4}$/.test(formData.establishmentYear)) {
-      errors.establishmentYear = 'Please enter a valid year (YYYY)';
-      isValid = false;
-    }
     
-    if (!formData.address.trim()) {
-      errors.address = 'Address is required';
-      isValid = false;
-    }
+    // if (!formData.address.trim()) {
+    //   errors.address = 'Address is required';
+    //   isValid = false;
+    // }
     
     setFormErrors(errors);
     return isValid;
@@ -132,9 +123,9 @@ const ClinicInfo = () => {
           name="clinicName"
           value={formData.clinicName}
           onChange={handleChange}
-          placeholder="Clinic/Hospital Name"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.clinicName ? 'border-red-500' : 'border-gray-300'
+          placeholder="Clinic/Hospital Name*"
+          className={`w-full px-4 py-3 rounded-full text-[#086861] border ${
+            formErrors.clinicName ? 'border-red-500' : 'border-[#086861]'
           } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
         />
         {formErrors.clinicName && (
@@ -143,16 +134,16 @@ const ClinicInfo = () => {
       </div>
       
       <div>
-        <div className={`relative w-full rounded-full border ${
-            formErrors.clinicType ? 'border-red-500' : 'border-gray-300'
+        <div className={`relative w-full rounded-full text-[#086861] border ${
+            formErrors.clinicType ? 'border-red-500' : 'border-[#086861]'
           } focus-within:ring-2 focus-within:ring-[#00665B]`}>
           <select
             name="clinicType"
             value={formData.clinicType}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-full appearance-none bg-transparent focus:outline-none"
+            className="w-full px-4 py-3 cursor-pointer rounded-full text-[#086861] appearance-none bg-transparent focus:outline-none"
           >
-            <option value="" disabled>Type Of Hospital/Clinic</option>
+            <option value="" disabled>Type Of Hospital/Clinic *</option>
             {clinicTypes.map((type) => (
               <option key={type} value={type}>{type}</option>
             ))}
@@ -174,9 +165,9 @@ const ClinicInfo = () => {
           name="registrationNumber"
           value={formData.registrationNumber}
           onChange={handleChange}
-          placeholder="Registration Number / License ID"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.registrationNumber ? 'border-red-500' : 'border-gray-300'
+          placeholder="Registration Number / License ID *"
+          className={`w-full px-4 py-3 rounded-full text-[#086861] border ${
+            formErrors.registrationNumber ? 'border-red-500' : 'border-[#086861]'
           } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
         />
         {formErrors.registrationNumber && (
@@ -184,37 +175,42 @@ const ClinicInfo = () => {
         )}
       </div>
       
-      <div>
-        <input
-          type="text"
-          name="establishmentYear"
-          value={formData.establishmentYear}
-          onChange={handleChange}
-          placeholder="Year Of Establishment"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.establishmentYear ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
+<div>
+  <div className="relative w-full rounded-full text-[#086861] border border-[#086861] focus-within:ring-2 focus-within:ring-[#00665B]">
+    <select
+      name="establishmentYear"
+      value={formData.establishmentYear}
+      onChange={handleChange}
+      className="w-full px-4 py-2 cursor-pointer rounded-full text-[#086861] appearance-none bg-transparent focus:outline-none"
+    >
+      <option value="" disabled>
+        Year Of Establishment
+      </option>
+      {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => 1900 + i).map((year) => (
+        <option key={year} value={year} className='' >
+          {year}
+        </option>
+      ))}
+    </select>
+    <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+      <svg
+        className="h-5 w-5 text-gray-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fillRule="evenodd"
+          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+          clipRule="evenodd"
         />
-        {formErrors.establishmentYear && (
-          <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.establishmentYear}</p>
-        )}
-      </div>
+      </svg>
+    </div>
+  </div>
+</div>
+
       
-      <div>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          placeholder="Address"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.address ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
-        />
-        {formErrors.address && (
-          <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.address}</p>
-        )}
-      </div>
       
       <div className="pt-4 flex space-x-4">
         <motion.button
@@ -222,7 +218,7 @@ const ClinicInfo = () => {
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={handleBack}
-          className="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-full font-medium hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+          className="w-1/3 bg-gray-200 text-gray-700 cursor-pointer py-3 rounded-full font-medium hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
         >
           Back
         </motion.button>
@@ -232,7 +228,7 @@ const ClinicInfo = () => {
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={isLoading}
-          className="w-2/3 bg-[#00665B] text-white py-3 rounded-full font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
+          className="w-2/3 bg-[#00665B] cursor-pointer text-white py-3 rounded-full font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
         >
           {isLoading ? (
             <span className="flex items-center justify-center">

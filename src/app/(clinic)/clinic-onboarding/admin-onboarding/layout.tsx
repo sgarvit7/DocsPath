@@ -25,7 +25,7 @@ function AdminOnboardingWrapper({ children }: { children: React.ReactNode }) {
   // const steps = ['Personal Info', 'Clinic Info', 'Documents'];
   
   const getProgressPercentage = () => {
-    const stepPercentages = [10, 65, 99];
+    const stepPercentages = [15, 40, 65];
     return stepPercentages[currentStep] || 0;
   };
   
@@ -69,6 +69,7 @@ function AdminOnboardingWrapper({ children }: { children: React.ReactNode }) {
             </div>
             
             {children}
+            
           </div>
         </div>
       </motion.div>

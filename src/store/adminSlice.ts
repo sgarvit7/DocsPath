@@ -7,6 +7,7 @@ export interface FileMetadata {
   size: number;
   type: string;
   lastModified: number;
+  base64?: string;
 }
 
 export interface AdminState {
@@ -16,17 +17,17 @@ export interface AdminState {
     email: string;
     phone: string;
     designation: string;
-    
+    dateOfBirth: string;
+    profilePhoto: FileMetadata | null;
   };
   clinicInfo: {
     clinicName: string;
     clinicType: string;
     registrationNumber: string;
     establishmentYear: string;
-    address: string;
+    
   };
   documents: {
-    // Store serializable metadata instead of File objects
     governmentId: FileMetadata | null;
     registrationCertificate: FileMetadata | null;
     accreditation: FileMetadata | null;
@@ -49,13 +50,15 @@ const initialState: AdminState = {
     email: '',
     phone: '',
     designation: '',
+    dateOfBirth: '',
+    profilePhoto: null,
   },
   clinicInfo: {
     clinicName: '',
     clinicType: '',
     registrationNumber: '',
     establishmentYear: '',
-    address: '',
+  
   },
   documents: {
     governmentId: null,
@@ -71,7 +74,7 @@ const initialState: AdminState = {
   success: false,
 };
 
-// This thunk needs an additional parameter to receive the actual files
+// Thunk for submitting data
 export const submitAdminData = createAsyncThunk(
   'admin/submitData',
   async (
@@ -79,52 +82,59 @@ export const submitAdminData = createAsyncThunk(
       governmentId?: File;
       registrationCertificate?: File;
       accreditation?: File;
-    } = {}, 
+      profilePhoto?: File;
+    } = {},
     { getState, rejectWithValue }
   ) => {
     try {
       const state = getState() as { admin: AdminState };
 
       const formData = new FormData();
-      
+
       // Add management type
       formData.append('managementType', state.admin.managementType || '');
-      
+
       // Add personal info
       Object.entries(state.admin.personalInfo).forEach(([key, value]) => {
-        formData.append(`personalInfo.${key}`, value);
+        if (value !== null && typeof value !== 'object') {
+          formData.append(`personalInfo.${key}`, value as string);
+        }
       });
-      
+
+      // Add profile photo if available
+      if (files.profilePhoto) {
+        formData.append('personalInfo.profilePhoto', files.profilePhoto);
+      }
+
       // Add clinic info
       Object.entries(state.admin.clinicInfo).forEach(([key, value]) => {
         formData.append(`clinicInfo.${key}`, value);
       });
-      
-      // Add actual files from the files parameter
+
+      // Add document files
       if (files.governmentId) {
         formData.append('documents.governmentId', files.governmentId);
       }
-      
+
       if (files.registrationCertificate) {
         formData.append('documents.registrationCertificate', files.registrationCertificate);
       }
-      
+
       if (files.accreditation) {
         formData.append('documents.accreditation', files.accreditation);
       }
-      
-      // Add other document data
+
+      // Add other document fields
       formData.append('documents.departments', state.admin.documents.departments);
       formData.append('documents.doctorsCount', state.admin.documents.doctorsCount);
       formData.append('documents.communicationMode', state.admin.documents.communicationMode);
-      
+
       const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
-      console.log(response.data)
+
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -135,6 +145,7 @@ export const submitAdminData = createAsyncThunk(
   }
 );
 
+// Slice
 const adminSlice = createSlice({
   name: 'admin',
   initialState,
@@ -154,7 +165,6 @@ const adminSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
-    // resetForm: (state) => {
     resetForm: () => {
       return initialState;
     },
@@ -176,13 +186,13 @@ const adminSlice = createSlice({
   },
 });
 
-export const { 
-  setManagementType, 
-  updatePersonalInfo, 
-  updateClinicInfo, 
-  updateDocuments, 
-  setCurrentStep, 
-  resetForm 
+export const {
+  setManagementType,
+  updatePersonalInfo,
+  updateClinicInfo,
+  updateDocuments,
+  setCurrentStep,
+  resetForm,
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

@@ -101,21 +101,21 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
   return (
     <div
       className={clsx(
-        "min-h-screen flex items-center justify-center px-6 pt-30 relative font-roboto w-full",
+        "min-h-screen flex items-center justify-center px-6  relative font-roboto w-full",
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       )}
     >
       {isMobile ? (
         <div
           className={clsx(
-            "w-full min-h-screen px-4 py-10 flex flex-col items-center",
+            "w-full min-h-screen px-4 py-4 flex flex-col items-center",
             darkMode && "bg-black"
           )}
         >
           <h2
             className={clsx(
-              "text-3xl font-bold text-center mb-10",
-              darkMode ? "text-white" : "text-teal-700",
+              "text-3xl font-bold text-center w-full mb-10",
+              darkMode ? "text-white bg-gray-800" : "text-white bg-[#086861]",
               inter.className
             )}
           >
@@ -153,7 +153,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
           ))}
         </div>
       ) : (
-        <div className="relative w-[800px] h-[800px] hidden md:block">
+        <div className="relative w-[800px] mt-24 dark:bg-gray-900 h-[800px] hidden md:block">
           <div className="absolute z-60 w-90 h-90 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div
               className={clsx(
@@ -193,7 +193,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
                   onMouseLeave={() => setHoveredCard(null)}
                   className={clsx(
                     "absolute w-72 p-4 text-center rounded-xl flex flex-col items-center justify-center gap-2 transition-all duration-500 ease-in-out",
-                    darkMode ? "text-white" : "text-gray-900"
+                    darkMode ? "text-white " : "text-gray-900 bg-white"
                   )}
                   style={{
                     left: `${centerX + x}px`,
@@ -208,7 +208,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
                     className={clsx(
                       "inner-card flex flex-col items-center  justify-center transition-transform duration-300 will-change-transform",
                       isCardHovered &&
-                        "p-5 shadow-[0_8px_30px_rgba(0,0,0,0.7)] border rotate-[15deg] border-gray-900 rounded-3xl bg-white  ",
+                        "p-5 shadow-[0_8px_30px_rgba(0,0,0,0.7)] border rotate-[15deg] border-gray-900 rounded-3xl   ",
                          )}
                   >
                     <div className="w-20 h-20 rounded-full bg-[#086861] flex items-center justify-center">

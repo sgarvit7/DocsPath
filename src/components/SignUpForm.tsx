@@ -47,7 +47,7 @@ export default function SignUpPage() {
   // const [isSendingVerification, setIsSendingVerification] = useState(false);
   // const isSendingVerification = false; 
   const [verifiedEmails, setVerifiedEmails] = useState<Set<string>>(new Set());
-  const [phoneOk, setPhoneOk] = useState<boolean>(false); // ← Phone validity status
+  const [phoneOk, setPhoneOk] = useState<boolean>(true); // ← Phone validity status
   // const [showModal, setShowModal] = useState(false);
 
   // const [isEmailVerified, setIsEmailVerified] = useState(false);

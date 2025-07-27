@@ -8,6 +8,8 @@ export interface Admin {
   email: string;
   phone: string;
   designation: string;
+  ateOfBirth: string;
+  profilePhoto: File | null;
 
   // Profile Picture
   profilePicture?: string | null; // URL or base64 string

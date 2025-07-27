@@ -111,12 +111,12 @@ const HealthcareLanding: React.FC = () => {
               </div>
 
               <div className="col-span-2 relative w-full h-full">
-                <div className="w-full h-[200px] max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl aspect-[3/2] overflow-hidden mx-auto">
+                <div className="w-full h-[200px] max-w-sm sm:max-w-lg md:max-w-lg lg:max-w-xl aspect-[3/2] overflow-hidden mx-auto">
                   <Image
                     src="/assets/prelogin-img/HealthcareProfessionals.png"
                     alt="Jobs"
                     fill
-                    className="object-cover w-full rounded-[6rem] border border-black"
+                    className="object-cover w-full lg:rounded-[6rem] rounded-[4rem] mx-5 lg:mx-auto border-2 border-[#086861]"
                   />
                 </div>
               </div>
