@@ -145,7 +145,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
     exit={{ opacity: 0, rotateY: -90 }}
     transition={{ duration: 0.5 }}
     className={clsx(
-      " sm:p-8 m-6 sm:m-10 rounded-xl shadow-2xl w-full lg:max-w-md sm:max-w-lg",
+      " sm:p-8 m-6 sm:m-10 rounded-xl shadow-2xl w-full p-4  lg:max-w-md sm:max-w-lg",
       darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900",
       inter.className
     )}

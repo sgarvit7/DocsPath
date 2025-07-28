@@ -23,6 +23,7 @@ export const publicRoutes = [
   '/privacyPolicy',
   '/legal',
   '/request-demo',
+  '/request-demo/*',
   '/documentation',
   '/help-center',
   '/KB',

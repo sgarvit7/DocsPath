@@ -55,8 +55,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
     feature,
   }) => (
     <div className="inline-flex items-center space-x-2 px-6 py-4 rounded-lg text-white bg-[#08685EA1] hover:bg-teal-700 transition-colors duration-200 shadow-md hover:shadow-lg">
-      {/* {feature.icon} */}
-      <span className={clsx("text-3xl font-medium", roboto.className)}>
+      <span className={clsx("text-xl sm:text-2xl font-medium", roboto.className)}>
         {feature.text}
       </span>
     </div>
@@ -65,9 +64,10 @@ const PricingSection: React.FC<PricingSectionProps> = ({
   return (
     <section
       id={id}
-      className={clsx("relative min-h-screen   transition-colors duration-300",
-        darkMode?"bg-gray-900":"bg-[white]")
-      }
+      className={clsx(
+        "relative min-h-screen transition-colors duration-300",
+        darkMode ? "bg-gray-900" : "bg-[white]"
+      )}
     >
       {/* ✅ Background Image */}
       <div className="absolute inset-0 -z-0 h-full w-full hidden lg:block">
@@ -83,46 +83,40 @@ const PricingSection: React.FC<PricingSectionProps> = ({
           priority
         />
       </div>
-       <Image
-                src="/assets/lower-bg-pattern.png"
-                alt="bg"
-                width={350}
-                height={350}
-                className="absolute top-20 -right-0 z-0 rotate-180 scale-x-[-1] opacity-50"
-              />
+      <Image
+        src="/assets/lower-bg-pattern.png"
+        alt="bg"
+        width={350}
+        height={350}
+        className="absolute top-20 -right-0 z-0 rotate-180 scale-x-[-1] opacity-50"
+      />
 
       <div className="relative z-10">
         {/* Header Banner */}
         <div className="bg-[#086861] py-8">
           <div className="container w-full px-4">
-            <h1
-              className={clsx(
-                "text-4xl font-bold text-white text-center",
-                
-              )}
-            >
+            <h1 className="text-3xl sm:text-4xl font-bold text-white text-center">
               Pricing Plans
             </h1>
           </div>
         </div>
 
-        <div className="relative  container  py-16">
+        <div className="relative container py-12 sm:py-16 px-4 sm:px-8">
           {/* Main Content */}
-          <div className="max-w-7xl lg:mx-30 sm:mx-auto">
+          <div className="max-w-7xl mx-auto">
             {/* Header Section */}
             <div className="mb-12">
               <h2
                 className={clsx(
-                  "text-5xl font-bold mb-6",
-                  darkMode ? "text-white" : "text-[#086861]",
-                  
+                  "text-3xl sm:text-4xl lg:text-5xl font-bold mb-6",
+                  darkMode ? "text-white" : "text-[#086861]"
                 )}
               >
                 No hidden costs. No guesswork
               </h2>
               <p
                 className={clsx(
-                  "text-xl font-bold max-w-5xl",
+                  "text-base sm:text-lg lg:text-xl font-bold max-w-5xl",
                   darkMode ? "text-gray-300" : "text-[black]",
                   roboto.className
                 )}
@@ -134,22 +128,17 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             </div>
 
             {/* All Plans Include */}
-            <div
-              className={clsx(
-                "p-8 rounded-2xl mb-12",
-                darkMode ? "" : ""
-              )}
-            >
+            <div className="p-4 sm:p-8 rounded-2xl mb-12">
               <h3
                 className={clsx(
-                  "text-4xl font-bold mb-8",
+                  "text-2xl sm:text-3xl lg:text-4xl font-bold mb-8",
                   darkMode ? "text-white" : "text-[black]",
                   roboto.className
                 )}
               >
                 All plans include:
               </h3>
-              <div className="flex flex-wrap justify-center  gap-8 max-w-6xl space-x-20 mb-6">
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-14 max-w-6xl mb-6">
                 {includedFeatures.map((feature, index) => (
                   <FeaturePill key={index} feature={feature} />
                 ))}
@@ -168,7 +157,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             <div className="text-left">
               <h3
                 className={clsx(
-                  "text-4xl font-bold mb-6",
+                  "text-2xl sm:text-3xl lg:text-4xl font-bold mb-6",
                   darkMode ? "text-white" : "text-black",
                   roboto.className
                 )}
@@ -177,7 +166,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
               </h3>
               <p
                 className={clsx(
-                  "text-xl leading-relaxed font-bold mb-8",
+                  "text-base sm:text-lg lg:text-xl leading-relaxed font-bold mb-8",
                   darkMode ? "text-gray-300" : "text-black",
                   roboto.className
                 )}
@@ -191,7 +180,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
               <div className="flex flex-col sm:flex-row gap-4 justify-between items-center max-w-2xl mx-auto">
                 <button
                   className={clsx(
-                    "lg:w-1/2 cursor-pointer sm:w-auto bg-[#086861] hover:bg-teal-700 text-white font-semibold py-4 px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl",
+                    "w-full sm:w-auto cursor-pointer bg-[#086861] hover:bg-teal-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl",
                     roboto.className
                   )}
                 >
@@ -199,7 +188,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 </button>
                 <button
                   className={clsx(
-                    "lg:w-1/2 cursor-pointer sm:w-auto border-2 border-[#086861] font-semibold py-4 px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105",
+                    "w-full sm:w-auto cursor-pointer border-2 border-[#086861] font-semibold py-3 sm:py-4 px-6 sm:px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105",
                     darkMode
                       ? "text-white hover:bg-gray-800"
                       : "text-[#086861] hover:bg-teal-50",

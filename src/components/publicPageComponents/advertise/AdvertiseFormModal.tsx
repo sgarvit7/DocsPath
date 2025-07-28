@@ -95,7 +95,7 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({
       <div className="relative bg-white w-full max-w-5xl rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 text-2xl hover:text-gray-700 z-50"
+          className="absolute top-4 right-4 lg:top-22 lg:right-7 text-gray-500 text-2xl  hover:text-gray-700 z-50"
         >
           &times;
         </button>
@@ -111,7 +111,7 @@ const AdvertiseFormModal: React.FC<AdvertiseFormModalProps> = ({
         </div>
 
         <div className="w-full md:w-1/2 p-6">
-          <h2 className="text-2xl font-bold mb-6 mt-4 md:mt-0">Start Your Advertisement</h2>
+          <h2 className="text-2xl font-bold mb-6 mt-4 md:mt-25">Start Your Advertisement</h2>
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>

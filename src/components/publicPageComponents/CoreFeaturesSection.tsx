@@ -109,12 +109,12 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
         <div
           className={clsx(
             "w-full min-h-screen px-4 py-4 flex flex-col items-center",
-            darkMode && "bg-black"
+            darkMode && "bg-gray-900"
           )}
         >
           <h2
             className={clsx(
-              "text-3xl font-bold text-center w-full mb-10",
+              "text-3xl font-bold p-2 rounded-lg text-center w-full mb-10",
               darkMode ? "text-white bg-gray-800" : "text-white bg-[#086861]",
               inter.className
             )}

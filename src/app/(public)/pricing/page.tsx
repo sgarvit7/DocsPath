@@ -195,7 +195,7 @@ const PricingPlans: React.FC = () => {
           darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-200"
         }`}
       >
-        <div className="absolute mb-6 -left-2 w-1/2">
+        <div className="absolute mb-6 -left-2 w-full lg:w-1/2">
           <div className="absolute -top-6 font-semibold text-white text-base">
             <div className="absolute rotate-270 -bottom-2 left-0 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-[#064b47]" />
             <div
@@ -237,7 +237,7 @@ const PricingPlans: React.FC = () => {
 
   return (
     <div className={`min-h-screen relative transition-colors duration-300 ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
-      <Image src="/assets/bg-pattern.png" alt="" width={350} height={350} className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180" />
+      <Image src="/assets/bg-pattern.png" alt="" width={450} height={350} className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180" />
       <Image src="/assets/lower-bg-pattern.png" alt="" width={350} height={350} className="absolute bottom-0 right-0 z-0 hidden lg:block opacity-50" />
 
       <div className="absolute top-4 right-4 space-y-3 z-20">
@@ -275,7 +275,7 @@ const PricingPlans: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12 max-w-full">
+      <div className="relative z-10 container mx-auto px-4 pt-28 lg:pt-12 max-w-full">
         <header className="text-center mb-12">
           <h1 className={`text-3xl sm:text-4xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
             Pick a plan that&apos;s right for you

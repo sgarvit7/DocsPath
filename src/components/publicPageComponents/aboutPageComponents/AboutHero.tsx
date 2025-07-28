@@ -33,7 +33,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
       initial="hidden"
       whileInView="show"
       viewport={{ once: true }}
-      className={`w-full overflow-hidden py-15 px-4 lg:px-16 flex flex-col lg:flex-row items-center gap-12 ${
+      className={`w-full overflow-hidden pt-22 pb-0 lg:pb-6  px-4 lg:px-16 flex flex-col lg:flex-row items-center gap-12 ${
         isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
     >
@@ -88,8 +88,8 @@ const AboutSection: React.FC<AboutSectionProps> = ({ darkMode }) => {
             color: "#ffffff",
           }}
         >
-          <h3 className="text-3xl font-bold mb-3">About Us</h3>
-          <p className="text-md leading-relaxed">
+          <h3 className="text-3xl text-center lg:text-start font-bold mb-3">About Us</h3>
+          <p className="text-md  text-center lg:text-start leading-relaxed">
             Our cutting‑edge technology bridges the gap between doctors and
             digital transformation—enabling faster, smarter, and more connected
             care.

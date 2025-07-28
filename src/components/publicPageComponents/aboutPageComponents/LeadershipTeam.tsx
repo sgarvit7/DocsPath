@@ -113,39 +113,44 @@ export default function LeadershipTeam({ darkMode = false, id }: LeadershipProps
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {teamMembers.map((member) => (
-            <motion.div
-              key={member.id}
-              variants={itemVariants}
-              whileHover={{ y: -10 }}
-              className={`group relative rounded-xl shadow-lg overflow-hidden border-2 border-[#086861] transition-all duration-300 ${
-                darkMode
-                  ? "bg-gray-700 hover:shadow-2xl"
-                  : "bg-white hover:shadow-2xl"
-              }`}
-            >
-              {/* Background Image or Placeholder */}
-              <div className="relative w-auto h-72 sm:h-80 md:h-72 lg:h-70">
-                <div
-                  className={`absolute inset-0 flex items-center justify-center ${
-                    darkMode ? "bg-gray-300" : "bg-gray-200"
-                  }`}
-                >
-                  <Image
-                  src= {member.image}
-                  alt = "image"
-                  fill
-                    
-                  />
-                </div>
-              </div>
+  <motion.div
+    key={member.id}
+    variants={itemVariants}
+    whileHover={{ y: -10 }}
+    className={`group relative rounded-xl shadow-lg overflow-hidden border-2 border-[#086861] transition-all duration-300 ${
+      darkMode
+        ? "bg-gray-700 hover:shadow-2xl"
+        : "bg-white hover:shadow-2xl"
+    }`}
+  >
+    {/* Image Section */}
+    <div className="relative w-auto h-72 sm:h-80 md:h-72 lg:h-70">
+      <div
+        className={`absolute inset-0 flex items-center justify-center ${
+          darkMode ? "bg-gray-300" : "bg-gray-200"
+        }`}
+      >
+        <Image src={member.image} alt="image" fill />
+      </div>
+    </div>
 
-              {/* Overlay Content */}
-              <div className="absolute inset-0 bg-black/40 bg-opacity-60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-4">
-                <h3 className="text-white text-lg font-bold mb-1">{member.name}</h3>
-                <p className="text-gray-200 text-sm leading-snug">{member.description}</p>
-              </div>
-            </motion.div>
-          ))}
+    {/* Desktop Overlay */}
+    <div className="hidden md:flex absolute inset-0 bg-black/40 bg-opacity-60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex-col justify-end p-4">
+      <h3 className="text-white text-lg font-bold mb-1">{member.name}</h3>
+      <p className="text-gray-200 text-sm leading-snug">{member.description}</p>
+    </div>
+
+    {/* Mobile Static Text */}
+    <div className="block md:hidden p-4 space-y-2">
+      <h3 className={`text-lg font-bold ${darkMode ? "text-white" : "text-gray-900"}`}>
+        {member.name}
+      </h3>
+      <p className={`text-sm leading-snug ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+        {member.description}
+      </p>
+    </div>
+  </motion.div>
+))}
         </motion.div>
       </div>
     </section>

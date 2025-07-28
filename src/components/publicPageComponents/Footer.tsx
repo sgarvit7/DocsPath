@@ -30,7 +30,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
       { name: "Advertise with us", href: "/advertise" },
     ],
     "Join us": [
-      { name: "Request Demo", href: `${user ? "/request-demo" : "/sign-up"}` },
+      { name: "Request Demo", href: `${user ? "/request-demo" : "/request-demo"}` },
       { name: "Blog", href: "/blog" },
       { name: "Trust & compliance badges", href: "/trustCompilance" },
     ],
