@@ -172,9 +172,9 @@ export default function CountrySelect({
     </select>
 
     <input
-      className="flex-1 rounded-lg px-2 bg-white"
+      className="flex-1 rounded-lg  px-2 bg-white"
       type="tel"
-      placeholder="Enter phone number"
+      placeholder="Mobile No"
       value={value}
       onChange={handleInput}
     />

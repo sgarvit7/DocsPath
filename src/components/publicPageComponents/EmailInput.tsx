@@ -54,7 +54,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
 
     try {
       const res = await fetch(
-        `https://apilayer.net/api/check?access_key=664cb6730045f4f9daed600e8e0a9725&email=${email}&smtp=1&format=1`
+        `https://apilayer.net/api/check?access_key=6229a94c41258965c750575f256dba92&email=${email}&smtp=1&format=1`
       );
       const data = await res.json();
       console.log(data)
@@ -109,7 +109,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ value, onChange, placeholder = 
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={`w-full px-4 pl-10 py-3 border rounded-lg text-base transition-all focus:outline-none focus:ring-2 ${
+        className={`w-full px-1 pl-5 py-3 border rounded-lg text-base transition-all focus:outline-none focus:ring-2 ${
           isValidEmail(value)
             ? "border-green-500 focus:ring-green-200"
             : "border-gray-300 focus:ring-blue-200"

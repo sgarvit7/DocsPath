@@ -135,7 +135,7 @@ export default function CoreFeaturesManual({ darkMode }: CoreFeaturesSectionProp
               </div>
               <h3
                 className={clsx(
-                  "text-xl font-semibold font-[afacad] mb-2",
+                  "text-xl font-semibold text-center font-[afacad] mb-2",
                   darkMode ? "text-white" : "text-teal-600"
                 )}
               >

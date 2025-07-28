@@ -31,17 +31,21 @@ export default function Navbar({ darkMode }: NavbarProps) {
     }
   }, [user]);
 
+  useEffect(() => {
+  setIsMenuOpen(false);
+  setActiveDropdown(null);
+}, [pathname]);
+
   const menuItems = [
     { name: "Home", href: "/" },
     {
       name: "Product",
       href: "/product",
       hasDropdown: true,
-      dropdownItems: ["Features", "Pricing", "Integrations"],
+      dropdownItems: ["Features", "Pricing"],
       dropdownItemsLink: [
         "/product#features",
         "/product#pricing",
-        "/integrations",
       ],
     },
     { name: "Pricing", href: "/pricing" },

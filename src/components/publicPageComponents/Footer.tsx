@@ -25,7 +25,7 @@ export default function Footer({ darkMode = false }: FooterProps) {
   const footerLinks = {
     Product: [
       { name: "Company", href: "/about" },
-      { name: "Resources", href: "/resources" },
+      { name: "Help Center", href: "/help-center" },
       { name: "Legal", href: "/legal" },
       { name: "Advertise with us", href: "/advertise" },
     ],
