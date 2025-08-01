@@ -10,10 +10,15 @@ const ClinicManagement = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const handleSelection = (type: 'admin' | 'doctor') => {
-    dispatch(setManagementType(type));
-    router.push('/clinic-onboarding/admin-onboarding/personal-info');
-  };
+const handleSelection = (type: 'admin' | 'doctor') => {
+  dispatch(setManagementType(type));
+
+  if (type === 'admin') {
+    router.push('/clinic-onboarding/Admin-boarding');
+  } else {
+    router.push('/clinic-onboarding/self-onboarding');
+  }
+};
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -54,49 +59,51 @@ const ClinicManagement = () => {
               How is your clinic managed?
             </motion.h1>
 
-            <motion.div className="space-y-6" variants={containerVariants}>
+            <motion.div className="flex gap-4 space-y-6" variants={containerVariants}>
               <motion.div 
-                className="flex items-center gap-4 mb-6"
+                className=" items-center cursor-pointer gap-4 mb-6"
                 variants={itemVariants}
               >
-                <div className="w-16 h-16 flex items-center justify-center">
+                <div className="w-16 h-16 flex mx-auto items-center justify-center">
                   <div className="bg-[#00665B] p-3 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-gray-500">Reception D...</p>
-                </div>
+                <div className="">
+                  <p className="text-gray-500 text-center ">Admin</p>
+                
                 <button 
                   onClick={() => handleSelection('admin')} 
-                  className="bg-[#00665B] text-white py-2 px-4 rounded-md hover:bg-[#005249] transition-colors"
+                  className="bg-[#00665B] text-white py-2 px-4  rounded-md hover:bg-[#005249] transition-colors"
                 >
                   Managed by Admin
                 </button>
+                </div>
               </motion.div>
 
               <motion.div 
-                className="flex items-center gap-4"
+                className=" items-center mx-auto gap-4"
                 variants={itemVariants}
               >
-                <div className="w-16 h-16 flex items-center justify-center">
+                <div className="w-16 h-16 flex mx-auto items-center justify-center">
                   <div className="bg-[#00665B] p-3 rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-gray-500">Doctor</p>
-                </div>
+                <div className="">
+                  <p className="mx-auto text-center text-gray-500">Self</p>
+                
                 <button 
                   onClick={() => handleSelection('doctor')} 
-                  className="bg-[#00665B] text-white py-2 px-4 rounded-md hover:bg-[#005249] transition-colors"
+                  className="bg-[#00665B] mx-auto cursor-pointer item-center text-white py-2 px-4 rounded-md hover:bg-[#005249] transition-colors"
                 >
-                  Doctor manages everything
+                  Doctor + Admin
                 </button>
+                </div>
               </motion.div>
             </motion.div>
           </div>

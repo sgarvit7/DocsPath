@@ -3,280 +3,176 @@ import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePersonalInfo, nextStep } from "@/store/doctorSlice";
-import { FileData } from "@/types/doctor";
 import { RootState } from "@/store/store";
 import OnboardingLayout from "./OnboardingLayout";
+import DatePicker from "react-datepicker";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import PhoneInput from "@/components/publicPageComponents/PhoneInput";
+import "react-datepicker/dist/react-datepicker.css";
+
+import EmailInput from "@/components/publicPageComponents/EmailInput";
 
 const PersonalInfoPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { personalInfo } = useSelector(
-    (state: RootState) => state.doctorOnboarding
-  );
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+  const { personalInfo } = useSelector((state: RootState) => state.doctorOnboarding);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Helper function to convert File to Base64
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        // Remove the data:mime/type;base64, prefix
-        const base64 = result.split(",")[1];
-        resolve(base64);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  const [phoneOk, setPhoneOk] = useState<boolean>(true);
+  const [errors, setErrors] = useState({
+    fullName: "",
+    emailAddress: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+  });
 
-  const handleInputChange = (
-    field: keyof typeof personalInfo,
-    value: string
-  ) => {
+  const handleInputChange = (field: keyof typeof personalInfo, value: string) => {
     dispatch(updatePersonalInfo({ [field]: value }));
   };
 
-  const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      try {
-        setIsUploading(true);
-
-        // Convert file to base64
-        const base64 = await fileToBase64(file);
-
-        // Create FileData object with metadata and base64 content
-        const fileData: FileData = {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          lastModified: file.lastModified,
-          base64: base64,
-        };
-
-        // Store in Redux with serializable data
-        dispatch(updatePersonalInfo({ profilePhoto: fileData }));
-      } catch (error) {
-        console.error("Error converting file to base64:", error);
-        alert("Error uploading profile photo. Please try again.");
-      } finally {
-        setIsUploading(false);
-      }
+      dispatch(updatePersonalInfo({ profilePhoto: file }));
     }
   };
 
-  const handleNext = () => {
-    // Basic validation
-    if (
-      !personalInfo.fullName ||
-      !personalInfo.emailAddress ||
-      !personalInfo.phoneNumber ||
-      !personalInfo.dateOfBirth
-    ) {
-      alert("Please fill in all required fields");
-      return;
+  const handleNext = async () => {
+    let dobError = "";
+    console.log(phoneOk);
+    if (!personalInfo.dateOfBirth) {
+      dobError = "Date of Birth is required";
+    } else {
+      const dob = new Date(personalInfo.dateOfBirth);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const m = today.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      if (age < 18) {
+        dobError = "Age should be above 18 years";
+      }
     }
 
-    dispatch(nextStep());
-    router.push("/clinic-onboarding/doctor-onboarding/professional-details");
+    const newErrors = {
+      fullName: personalInfo.fullName ? "" : "Full Name is required",
+      emailAddress: personalInfo.emailAddress ? "" : "Email is required",
+      phoneNumber: personalInfo.phoneNumber ? "" : "Mobile Number is required",
+      dateOfBirth: dobError,
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some((msg) => msg !== "");
+    if (hasErrors) return;
+
+    const formData = new FormData();
+    formData.append("fullName", personalInfo.fullName);
+    formData.append("emailAddress", personalInfo.emailAddress);
+    formData.append("phoneNumber", personalInfo.phoneNumber);
+    formData.append("dateOfBirth", personalInfo.dateOfBirth);
+    formData.append("gender", personalInfo.gender);
+
+    if (personalInfo.profilePhoto) {
+      formData.append("profilePhoto", personalInfo.profilePhoto);
+    }
+      console.log(personalInfo);
+      dispatch(updatePersonalInfo({ ...personalInfo }));
+dispatch(nextStep());
+router.push("/clinic-onboarding/doctor-onboarding/professional-details");
+
+  
   };
 
   return (
     <OnboardingLayout currentStep={1}>
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-        className="space-y-6"
-      >
-        <h3 className="text-xl text-center font-medium text-gray-400 mb-6">
-          Personal & Contact Information
-        </h3>
+      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }} className="space-y-6">
+        <h3 className="text-xl text-center font-medium text-gray-400 mb-6">Personal & Contact Information</h3>
 
         <div className="space-y-4">
-          {/* Full Name */}
-          <div>
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={personalInfo.fullName}
-              onChange={(e) => handleInputChange("fullName", e.target.value)}
-              className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
-            />
+          <input
+            type="text"
+            placeholder="Full Name*"
+            value={personalInfo.fullName}
+            onChange={(e) => handleInputChange("fullName", e.target.value)}
+            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+          />
+
+          <PhoneInput value={personalInfo.phoneNumber} onChange={(value) => handleInputChange("phoneNumber", value)} onValidate={setPhoneOk} />
+
+          <div className="flex gap-3">
+            <EmailInput value={personalInfo.emailAddress} onChange={(value) => handleInputChange("emailAddress", value)} />
+            <div className="bg-teal-600 h-[37px] rounded-sm mt-1 text-xs text-white p-3">Verify</div>
           </div>
 
-          {/* Email Address */}
-          <div>
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={personalInfo.emailAddress}
-              onChange={(e) =>
-                handleInputChange("emailAddress", e.target.value)
-              }
-              className="w-full p-3 border text-xs pl-4 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
-            />
-          </div>
-
-          {/* Phone Number */}
-          <div>
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              value={personalInfo.phoneNumber}
-              onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-              className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
-            />
-          </div>
-
-          {/* Date of Birth and Gender */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <input
-                type="date"
-                placeholder="DD / MM / YYYY"
-                value={personalInfo.dateOfBirth}
-                onChange={(e) =>
-                  handleInputChange("dateOfBirth", e.target.value)
-                }
-                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
-              />
-              <label className="block text-xs text-gray-500 mt-1">
-                Date Of Birth
-              </label>
-            </div>
+             <div>
+                           <label className="block text-xs text-gray-500 mt-1">Date Of Birth *</label>
+                          <DatePicker
+                            selected={personalInfo.dateOfBirth ? new Date(personalInfo.dateOfBirth) : null}
+                            onChange={(date) => {
+                              if (date) {
+                                const formattedDate = date.toISOString().split("T")[0];
+                                handleInputChange("dateOfBirth", formattedDate);
+                              }
+                            }}
+                            showMonthDropdown
+                            showYearDropdown
+                            dropdownMode="select"
+                            dateFormat="dd-MM-yyyy"
+                            placeholderText="Select Date of Birth"
+                            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700"
+                          />
+                         
+                          {errors.dateOfBirth && <p className="text-red-500 text-xs">{errors.dateOfBirth}</p>}
+                        </div>
 
             <div>
+
+                <label className="block text-xs text-gray-500 mt-1">Gender</label>
               <select
                 value={personalInfo.gender}
                 onChange={(e) => handleInputChange("gender", e.target.value)}
-                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 appearance-none bg-no-repeat bg-right pr-10"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                  backgroundSize: "16px",
-                  backgroundPosition: "right 12px center",
-                }}
+                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 appearance-none pr-10"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
-              <label className="block text-xs text-gray-500 mt-1">Gender</label>
+            
             </div>
           </div>
 
-          {/* Profile Photo */}
           <div>
+            <label className="block text-xs text-gray-500 mt-1">Profile Photo (Optional)</label>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleFileSelect}
-              className="hidden text-xs pl-4"
-              disabled={isUploading}
+              className="hidden"
             />
             <div
-              onClick={() => !isUploading && fileInputRef.current?.click()}
-              className={`w-full p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 transition-colors flex items-center justify-between ${
-                isUploading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 flex items-center justify-between"
             >
-              <div className="flex items-center space-x-3">
-                {/* Profile Photo Preview */}
-                {personalInfo.profilePhoto && !isUploading && (
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                    <Image
-                      src={`data:${personalInfo.profilePhoto.type};base64,${personalInfo.profilePhoto.base64}`}
-                      alt="Profile preview"
-                      width={40}
-                      height={40}
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <span
-                  className={
-                    personalInfo.profilePhoto
-                      ? "text-gray-700 text-sm"
-                      : "text-[#086861] text-sm"
-                  }
-                >
-                  {isUploading
-                    ? "Uploading..."
-                    : personalInfo.profilePhoto
-                    ? personalInfo.profilePhoto.name
-                    : "Choose File"}
-                </span>
-              </div>
-              {isUploading ? (
-                <svg
-                  className="w-5 h-5 text-teal-500 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                <svg
-                  className="w-5 h-5 text-teal-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              )}
-            </div>
-            <label className="block text-xs text-gray-500 mt-1">
-              Profile Photo (Optional)
-              {personalInfo.profilePhoto && (
-                <span className="ml-2 text-green-600">
-                  ({(personalInfo.profilePhoto.size / 1024 / 1024).toFixed(2)}{" "}
-                  MB)
-                </span>
-              )}
-            </label>
+              <span className="text-[#086861] text-sm">
+                {personalInfo.profilePhoto ? personalInfo.profilePhoto.name : "Choose File"}
+              </span>
+              <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>       
           </div>
         </div>
 
-        {/* Upload Progress Indicator */}
-        {isUploading && (
-          <div className="text-center py-2">
-            <span className="text-sm text-teal-600">Processing image...</span>
-          </div>
-        )}
-
-        {/* Next Button */}
         <div className="pt-6">
           <motion.button
             onClick={handleNext}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-[#086861] text-lg text-white py-3 px-6 rounded-full font-bold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isUploading}
+            className="w-full bg-[#086861] text-lg text-white py-3 px-6 rounded-full font-bold hover:bg-teal-700 transition-colors"
           >
             Next
           </motion.button>

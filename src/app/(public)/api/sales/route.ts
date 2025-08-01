@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { sendSalesCardEmails } from '@/utils/email/salesCardEmail';
 
 const prisma = new PrismaClient();
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -18,7 +19,6 @@ export async function POST(req: Request) {
      fullName, email, phone, company, message
   },
 });
-
 
     await sendSalesCardEmails(newSalesCard);
 

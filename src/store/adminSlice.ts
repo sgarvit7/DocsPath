@@ -7,7 +7,7 @@ export interface FileMetadata {
   size: number;
   type: string;
   lastModified: number;
-  base64?: string;
+  url?: string;
 }
 
 export interface AdminState {
@@ -18,6 +18,7 @@ export interface AdminState {
     phone: string;
     designation: string;
     dateOfBirth: string;
+    gender:   string;
     profilePhoto: FileMetadata | null;
   };
   clinicInfo: {
@@ -41,6 +42,7 @@ export interface AdminState {
   loading: boolean;
   error: string | null;
   success: boolean;
+
 }
 
 const initialState: AdminState = {
@@ -51,6 +53,7 @@ const initialState: AdminState = {
     phone: '',
     designation: '',
     dateOfBirth: '',
+    gender :'Male',
     profilePhoto: null,
   },
   clinicInfo: {
@@ -129,7 +132,7 @@ export const submitAdminData = createAsyncThunk(
       formData.append('documents.doctorsCount', state.admin.documents.doctorsCount);
       formData.append('documents.communicationMode', state.admin.documents.communicationMode);
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api`, formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/Onboarding`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -165,6 +168,16 @@ const adminSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload;
     },
+     nextStep: (state) => {
+    if (state.currentStep < 4) {
+      state.currentStep += 1;
+    }
+  },
+  previousStep: (state) => {
+    if (state.currentStep > 0) {
+      state.currentStep -= 1;
+    }
+  },
     resetForm: () => {
       return initialState;
     },
@@ -186,11 +199,15 @@ const adminSlice = createSlice({
   },
 });
 
+
+
 export const {
   setManagementType,
   updatePersonalInfo,
   updateClinicInfo,
   updateDocuments,
+  nextStep,
+  previousStep,
   setCurrentStep,
   resetForm,
 } = adminSlice.actions;

@@ -21,7 +21,7 @@ model Admin {
   clinicType                          String
   registrationNumber                  String
   establishmentYear                   String
-  address                             String
+  address                             String?
   departments                         String
   doctorsCount                        String
   communicationMode                   String
@@ -63,7 +63,6 @@ model Doctor {
   additionalInformation                 String?
   emergencyContactDetails               String
   personalBio                           String?
-
   @@map("doctors")
 }
 
@@ -130,6 +129,56 @@ model Payment {
   updatedAt     DateTime      @updatedAt
 }
 
+model Self {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Personal Info
+  fullName      String
+  emailAddress  String   @unique
+  phoneNumber   String
+  dateOfBirth   DateTime?
+  gender        String
+  profilePhoto  String?   // URL/path to file
+
+  // Clinic Info
+  clinicName          String
+  clinicType          String
+  registrationNumber  String
+  establishmentYear   String
+  address             String?
+
+  // Professional Details
+  medicalLicenseNumber        String
+  specialization              String
+  yearsOfExperience           Int
+  associatedClinicHospitalName String
+  consultationType             String
+
+  // Documents
+  governmentIdPath                   String?
+  governmentIdOriginalName           String?
+  registrationCertificatePath        String?
+  registrationCertificateOriginalName String?
+  accreditationPath                  String?
+  accreditationOriginalName          String?
+
+  // Verification Documents
+  medicalDegreeCertificate              String?
+  medicalCouncilRegistrationCertificate String?
+  experienceCertificate                 String?
+
+  // Work Schedule Preferences
+  availableConsultationHours  String?
+  preferredModeOfConsultation String?
+  languageSpoken              String?
+  additionalInformation       String?
+  emergencyContactDetails     String?
+  personalBio                 String?
+}
+
+
 model UserAccess {
   id          Int         @id @default(autoincrement())
   name        String
@@ -151,7 +200,6 @@ model RequestDemo {
   notes     String?  // Nullable
   createdAt DateTime @default(now())
 }
-
 
 model JobDescription {
   id                  String    @id @default(uuid())

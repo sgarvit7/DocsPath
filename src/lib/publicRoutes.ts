@@ -19,6 +19,7 @@ export const publicRoutes = [
   '/blog/blog3',
   '/blog/blog4',
   '/terms',
+  '/free-trail',
   '/trustCompilance',
   '/privacyPolicy',
   '/legal',

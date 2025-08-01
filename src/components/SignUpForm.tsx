@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -11,13 +10,15 @@ import {
   FacebookAuthProvider,
   AuthError,
 } from "firebase/auth";
+import EmailVerificationInput from "./Email";
 import { auth } from "../../firebase/config";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 // import { sendMagicLink } from "@/utils/emailMagicLink";
 import Image from "next/image";
-import EmailInput from "./publicPageComponents/EmailInput";
+// import EmailInput from "./publicPageComponents/EmailInput";
 import PhoneInput from "./publicPageComponents/PhoneInput";
+// import { json } from "stream/consumers";
 // import EmailOtpModal from "./EmailOtpVerifciationForm";
 
 interface FormData {
@@ -42,10 +43,15 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isChecking, setIsChecking] = useState(false);
+  const isChecking = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [role, setRole] = useState<"admin" | "clinic-owner">("admin");
+  const [clinicName, setClinicName] = useState("");
+  const [location, setLocation] = useState("");
+
   // const [emailVerificationSent, setEmailVerificationSent] = useState(false);
   // const [isSendingVerification, setIsSendingVerification] = useState(false);
-  // const isSendingVerification = false; 
+  // const isSendingVerification = false;
   const [verifiedEmails, setVerifiedEmails] = useState<Set<string>>(new Set());
   const [phoneOk, setPhoneOk] = useState<boolean>(true); // ← Phone validity status
   // const [showModal, setShowModal] = useState(false);
@@ -128,19 +134,19 @@ export default function SignUpPage() {
     }
   }, [verifiedEmails]);
 
-  const checkPhoneExists = async (phoneNumber: string): Promise<boolean> => {
-    try {
-      setIsChecking(true);
-      const { data } = await axios.post("/api/check-phone", { phoneNumber });
-      return data.exists;
-    } catch (e) {
-      console.error("Error checking phone number:", e);
-      setError("Error verifying phone number. Please try again.");
-      return false;
-    } finally {
-      setIsChecking(false);
-    }
-  };
+  // const checkPhoneExists = async (phoneNumber: string): Promise<boolean> => {
+  //   try {
+  //     setIsChecking(true);
+  //     const { data } = await axios.post("/api/check-phone", { phoneNumber });
+  //     return data.exists;
+  //   } catch (e) {
+  //     console.error("Error checking phone number:", e);
+  //     setError("Error verifying phone number. Please try again.");
+  //     return false;
+  //   } finally {
+  //     setIsChecking(false);
+  //   }
+  // };
 
   // const handleSendVerification = async () => {
   //   if (!form.email) return setError("Please enter your email address first");
@@ -196,8 +202,8 @@ export default function SignUpPage() {
     console.log(form);
 
     // Phone uniqueness (server)
-    const exists = await checkPhoneExists(phone);
-    if (exists) return setError("This phone number is already registered");
+    // const exists = await checkPhoneExists(phone);
+    // if (exists) return setError("This phone number is already registered");
 
     /* Firebase create */
     try {
@@ -214,7 +220,17 @@ export default function SignUpPage() {
       );
       window.sessionStorage.removeItem("signupFormData");
       window.sessionStorage.removeItem("verifiedEmails");
-      router.push("/sign-up/verify-otp");
+      window.localStorage.setItem("fullName", name);
+      window.localStorage.setItem("emailAddress", email);
+      window.localStorage.setItem("phoneNumber", phone);
+
+      // router.push("/sign-up/verify-otp");
+      if (role == "admin") {
+        router.push("/clinic-onboarding/Admin-boarding");
+      }
+      if (role == "clinic-owner") {
+        router.push("/clinic-onboarding/self-onboarding");
+      }
     } catch (err) {
       const authErr = err as AuthError;
       switch (authErr.code) {
@@ -231,6 +247,22 @@ export default function SignUpPage() {
           setError("Something went wrong. Please try again.");
       }
     }
+  };
+
+  const validatePassword = (value: string) => {
+    if (value.length < 8) {
+      return "Password must be at least 8 characters";
+    }
+    if (!/[A-Z]/.test(value)) {
+      return "Password must include at least one capital letter";
+    }
+    if (!/[0-9]/.test(value)) {
+      return "Password must include at least one number";
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      return "Password must include at least one special character";
+    }
+    return "";
   };
 
   const handleGoogleSignIn = async () => {
@@ -271,7 +303,7 @@ export default function SignUpPage() {
   // const isEmailVerified = verifiedEmails.has(form.email);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-teal-50 px-4">
+    <div className=" flex items-center justify-center bg-teal-50 px-4">
       {/* {showModal && (
         <EmailOtpModal
           email={form.email}
@@ -279,37 +311,56 @@ export default function SignUpPage() {
           onVerified={() => {
             setIsEmailVerified(true);
             setShowModal(false);
-          }}
+          }}s
         />
       )} */}
+      <div className="fixed top-4 right-4 z-50">
+        <a
+          href="/clinic-onboarding/doctor-onboarding"
+          className="bg-teal-800 text-white px-4 py-2 rounded-lg shadow-xl text-sm font-medium hover:bg-teal-700 transition"
+        >
+          Register as a Practitioner
+        </a>
+      </div>
+
+      <Image
+        src="/assets/bg-pattern.png"
+        alt=""
+        width={450}
+        height={350}
+        className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180"
+      />
+      <Image
+        src="/assets/lower-bg-pattern.png"
+        alt=""
+        width={450}
+        height={350}
+        className="absolute bottom-0 right-0 z-0 hidden lg:block opacity-50"
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row"
+        className="w-full max-w-4xl h-[77vh] mt-15 mb-27 bg-white rounded-lg z-50 shadow-xl overflow-hidden flex flex-col md:flex-row"
       >
         {/* ░ Left */}
-        <div className="bg-teal-700 text-white p-8 md:w-1/3 flex flex-col items-center justify-center text-center">
-          <div className="mb-6">
-            <div className="w-32 h-32 mx-auto mb-4">
+        <div className="bg-teal-700 text-white h-full md:w-[380px] flex flex-col items-center justify-center text-center">
+          <div className="">
+            <div className="h-full">
               <Image
-                src="/assets/docspath-logo.png"
+                src="/assets/onboarding/sign-up.png"
                 alt="Docspath"
-                width={200}
+                width={500}
                 height={200}
               />
             </div>
           </div>
-          <h2 className="text-3xl font-bold mb-2">Welcome</h2>
-          <p className="text-sm opacity-80">
-            to keep connected with us
-            <br />
-            please login with your personal info
-          </p>
+          
         </div>
 
         {/* ░ Right */}
-        <div className="p-8 flex-1">
+        <div className="p-8 overflow-y-auto max-h-screen flex-1">
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-teal-700">Create Account</h1>
             <p className="text-gray-500 text-sm">
@@ -350,79 +401,19 @@ export default function SignUpPage() {
               onChange={handlePhoneChange}
               onValidate={setPhoneOk}
             />
-
             {/* Email (custom) */}
-            <div className="flex">
-              <EmailInput value={form.email} onChange={handleEmailChange} />
-              {/* <motion.button
-                whileHover={{
-                  scale: !isEmailVerified && !isSendingVerification ? 1.02 : 1,
-                }}
-                whileTap={{
-                  scale: !isEmailVerified && !isSendingVerification ? 0.98 : 1,
-                }}
-                type="button"
-                onClick={() => {
-                  if (!isEmailVerified && !isSendingVerification) {
-                    setShowModal(true);
-                  }
-                }}
-                disabled={
-                  isSendingVerification ||
-                  isEmailVerified ||
-                  !form.email ||
-                  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-                }
-                className={`px-4 py-3 rounded-r-lg text-sm font-medium transition duration-300 flex items-center justify-center gap-2
-    ${
-      isEmailVerified
-        ? "bg-green-600 text-white cursor-default"
-        : isSendingVerification
-        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-        : "bg-teal-700 text-white hover:bg-teal-800"
-    }`}
-              >
-                {isEmailVerified ? (
-                  <>Verified</>
-                ) : isSendingVerification ? (
-                  <>
-                    <svg
-                      className="w-4 h-4 animate-spin text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8v8H4z"
-                      ></path>
-                    </svg>
-                    Sending...
-                  </>
-                ) : ( */}{(
-                  "Verify"
-                )}
-              {/* </motion.button> */}
+            <div>
+            <EmailVerificationInput
+              value={form.email}
+              onVerified={(verifiedEmail) =>
+                setForm((prev) => ({ ...prev, email: verifiedEmail }))
+              }
+              // onChange={(val) => setForm((prev) => ({ ...prev, email: val }))}
+              onChange={handleEmailChange}
+
+            />
             </div>
 
-            {/* Email‑verification helper */}
-            {/* {emailVerificationSent && !isEmailVerified && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-blue-600 text-sm bg-blue-50 p-3 rounded border border-blue-200"
-              >
-                📧 Verification email sent! Check your inbox.
-              </motion.div>
-            )} */}
 
             {/* Password */}
             <div className="relative">
@@ -430,10 +421,16 @@ export default function SignUpPage() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 value={form.password}
-                onChange={(e) => handleField("password", e.target.value)}
+                onChange={(e) => {
+                  handleField("password", e.target.value);
+                  setPasswordError(validatePassword(e.target.value));
+                }}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
               />
+              {passwordError && (
+                <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword((p) => !p)}
@@ -460,6 +457,57 @@ export default function SignUpPage() {
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
+            </div>
+            <label className="block text-sm font-semibold mb-2">
+              Sign Up As
+            </label>
+            <div className="flex mb-6 space-x-2">
+              <button
+                type="button"
+                className={`flex-1 px-4 py-2 rounded-md border text-sm font-medium ${
+                  role === "admin"
+                    ? "bg-teal-700 text-white"
+                    : "bg-white border-gray-300 text-gray-800"
+                }`}
+                onClick={() => setRole("admin")}
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                className={`flex-1 px-4 py-2 rounded-md border text-sm font-medium ${
+                  role === "clinic-owner"
+                    ? "bg-teal-700 text-white"
+                    : "bg-white border-gray-300 text-gray-800"
+                }`}
+                onClick={() => setRole("clinic-owner")}
+              >
+                Clinic Owner (Doctor + Admin)
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">
+                Clinic / Hospital Name
+              </label>
+              <input
+                type="text"
+                value={clinicName}
+                onChange={(e) => setClinicName(e.target.value)}
+                placeholder="Sunrise Medical Center"
+                className="w-full px-4 py-2 border rounded-md text-sm text-gray-700 "
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Location</label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="City, State"
+                className="w-full px-4 py-2 border rounded-md text-sm text-gray-700 "
+              />
             </div>
 
             {/* Any error */}
@@ -489,15 +537,13 @@ export default function SignUpPage() {
             </motion.button>
 
             {/* Sign‑in instead */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => router.push("/sign-in")}
-              className="w-full bg-white text-teal-700 py-3 rounded-lg font-medium border border-teal-700 transition duration-300 mt-3"
-            >
-              Sign In
-            </motion.button>
-
+            <div className="text-center">
+              Already have an account?
+              <a href="/sign-in" className="text-teal-800">
+                {" "}
+                Sign In
+              </a>
+            </div>
             {/* Social splitter */}
             <div className="flex items-center my-4">
               <div className="flex-1 border-t border-gray-300"></div>

@@ -162,9 +162,13 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
               custom={4}
               className="flex  lg:-ml-20   lg:mt-23 gap-4"
             >
+              
               <button className={clsx("rounded-full bg-[#086861] px-6 py-3 cursor-pointer lg:text-xl lg:w-1/3  sm:text-base font-bold text-white shadow hover:bg-teal-700 focus:outline-none  focus:ring-teal-300",inter.className)}>
+                <a href="/free-trail">
                 Start Free Trial
+                </a>
               </button>
+              
               <button
                 className={clsx(
                   "rounded-full border-2  px-6 py-3 lg:text-xl lg:w-1/3 sm:text-base cursor-pointer font-bold",

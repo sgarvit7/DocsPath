@@ -35,6 +35,7 @@ const ProfessionalDetailsPage: React.FC = () => {
       alert("Please fill in all required fields");
       return;
     }
+    console.log(professionalDetails)
 
     dispatch(nextStep());
     router.push("/clinic-onboarding/doctor-onboarding/documents");
@@ -62,7 +63,7 @@ const ProfessionalDetailsPage: React.FC = () => {
           <div>
             <input
               type="text"
-              placeholder="Medical License Number"
+              placeholder="Medical License Number *"
               value={professionalDetails.medicalLicenseNumber}
               onChange={(e) =>
                 handleInputChange("medicalLicenseNumber", e.target.value)
@@ -75,7 +76,7 @@ const ProfessionalDetailsPage: React.FC = () => {
           <div>
             <input
               type="text"
-              placeholder="Specialization"
+              placeholder="Specialization *"
               value={professionalDetails.specialization}
               onChange={(e) =>
                 handleInputChange("specialization", e.target.value)
@@ -86,15 +87,30 @@ const ProfessionalDetailsPage: React.FC = () => {
 
           {/* Years of Experience */}
           <div>
-            <input
-              type="number"
-              placeholder="Years Of Experience"
-              value={professionalDetails.yearsOfExperience}
-              onChange={(e) =>
-                handleInputChange("yearsOfExperience", e.target.value)
-              }
-              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
-            />
+            <div className="relative w-full rounded-full cursor-pointer  focus-within:ring-2 focus-within:ring-[#00665B]">
+              <select
+                name="yearofexperience"
+                value={professionalDetails.yearsOfExperience}
+                onChange={(e) => {
+                  handleInputChange("yearsOfExperience", e.target.value);
+                }}
+                className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-teal-800 placeholder-[#086861]"
+              >
+                <option value="" disabled>
+                  Years Of Experience*
+                </option>
+                {Array.from({ length: 40 }, (_, i) => i + 1).map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-5 flex items-center pr-10 pointer-events-none">
+                {/* <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg> */}
+              </div>
+            </div>
           </div>
 
           {/* Associated Clinic/Hospital Name */}
@@ -115,7 +131,7 @@ const ProfessionalDetailsPage: React.FC = () => {
 
           {/* Consultation Type */}
           <div>
-             <label className="block text-xs text-gray-500 mt-1 ml-4">
+            <label className="block text-xs text-gray-500 mt-1 ml-4">
               Consultation Type
             </label>
             <select
@@ -130,11 +146,10 @@ const ProfessionalDetailsPage: React.FC = () => {
                 backgroundPosition: "right 12px center",
               }}
             >
-              <option value="In-Person">In-Person</option>
-              <option value="Virtual">Virtual</option>
+              <option value="OPD">OPD</option>
+              <option value="Teleconsultation">Teleconsultation</option>
               <option value="Both">Both</option>
             </select>
-           
           </div>
         </div>
 
@@ -144,7 +159,7 @@ const ProfessionalDetailsPage: React.FC = () => {
             onClick={handleBack}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex-1 bg-gray-300 shadow-lg text-gray-700 py-3 px-6 rounded-full font-medium hover:bg-gray-400 transition-colors"
+            className="flex-1 bg-gray-300 shadow-lg text-gray-700 py-3 px-6 cursor-pointer rounded-full font-medium hover:bg-gray-400 transition-colors"
           >
             Back
           </motion.button>
@@ -152,7 +167,7 @@ const ProfessionalDetailsPage: React.FC = () => {
             onClick={handleNext}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex-1 bg-[#086861] shadow-xl text-white py-3 px-6 rounded-full font-medium hover:bg-teal-700 transition-colors"
+            className="flex-1 bg-[#086861] shadow-xl text-white py-3 px-6 cursor-pointer rounded-full font-medium hover:bg-teal-700 transition-colors"
           >
             Next
           </motion.button>

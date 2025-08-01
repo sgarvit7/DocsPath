@@ -28,14 +28,22 @@ function AdminOnboardingWrapper({ children }: { children: React.ReactNode }) {
     const stepPercentages = [15, 40, 65];
     return stepPercentages[currentStep] || 0;
   };
+  const getsection = () => {
+    const stepPercentages = ["Personal & Contact Information", "Clinic Information", "Verification Document"];
+    return stepPercentages[currentStep] || 0;
+  };
+  
   
   return (
     <div className="min-h-screen bg-[#f0f9f9] flex items-center justify-center p-4">
+      <Image src="/assets/bg-pattern.png" alt="" width={450} height={350} className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180" />
+            <Image src="/assets/lower-bg-pattern.png" alt="" width={450} height={350} className="absolute bottom-0 right-0 z-0 hidden lg:block opacity-50" />
+      
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-md overflow-hidden max-w-3xl w-full"
+        className="bg-white rounded-lg z-50 shadow-md overflow-hidden max-w-3xl w-full"
       >
         <div className="flex">
           <div className="bg-[#00665B] w-1/3 p-6 text-white flex flex-col justify-center items-center">
@@ -66,6 +74,7 @@ function AdminOnboardingWrapper({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className="text-[#00665B] text-xs mt-1 text-right">{getProgressPercentage()}%</div>
               </div>
+              <div className="text-[#00665B] text-xl font-semibold mt-2 text-center">{getsection()}</div>
             </div>
             
             {children}

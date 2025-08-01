@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDocuments, submitAdminData } from '@/store/adminSlice';
+// import { updateDocuments, submitAdminData } from '@/store/adminSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import EndingScreen from '@/components/publicPageComponents/EndingScreen';
 
 // Define interfaces for file metadata
 interface FileMetadata {
@@ -18,6 +19,7 @@ interface FileMetadata {
 const DocumentUpload = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const [submitted, setSubmitted] = useState(false); 
   const documents = useSelector((state: RootState) => state.admin.documents);
   const loading = useSelector((state: RootState) => state.admin.loading);
   const error = useSelector((state: RootState) => state.admin.error);
@@ -47,8 +49,6 @@ const DocumentUpload = () => {
   const [formErrors, setFormErrors] = useState({
     governmentId: '',
     registrationCertificate: '',
-    departments: '',
-    doctorsCount: '',
     communicationMode: '',
   });
   
@@ -85,18 +85,7 @@ const DocumentUpload = () => {
       isValid = false;
     }
     
-    if (!formData.departments.trim()) {
-      errors.departments = 'Departments & specialties are required';
-      isValid = false;
-    }
     
-    if (!formData.doctorsCount.trim()) {
-      errors.doctorsCount = 'Number of doctors is required';
-      isValid = false;
-    } else if (isNaN(Number(formData.doctorsCount)) || Number(formData.doctorsCount) <= 0) {
-      errors.doctorsCount = 'Please enter a valid number';
-      isValid = false;
-    }
     
     if (!formData.communicationMode) {
       errors.communicationMode = 'Communication mode is required';
@@ -150,30 +139,36 @@ const DocumentUpload = () => {
     }
   };
 
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        router.push("/clinic-management/dashboard/admin");
-      }, 3000); // 3 seconds delay
+  // useEffect(() => {
+  //   if (success) {
+  //     const timer = setTimeout(() => {
+  //       router.push("/clinic-management/dashboard/admin");
+  //     }, 3000); // 3 seconds delay
 
-      return () => clearTimeout(timer); // cleanup
-    }
-  }, [success]);
+  //     return () => clearTimeout(timer); // cleanup
+  //   }
+  // }, [success]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
+    console.log("handle submit is called");
+    if (!validateForm()) {
+      console.log("form not validated");
+      return;}
+    else{
+      console.log("form validated");
+      setSubmitted(true);
+       }
     
     // Save serializable metadata to Redux
-    dispatch(updateDocuments(formData));
+    // dispatch(updateDocuments(formData));
     
-    // Submit all data with actual files
-    dispatch(submitAdminData({
-      governmentId: files.governmentId || undefined,
-      registrationCertificate: files.registrationCertificate || undefined,
-      accreditation: files.accreditation || undefined,
-    }));
+    // // Submit all data with actual files
+    // dispatch(submitAdminData({
+    //   governmentId: files.governmentId || undefined,
+    //   registrationCertificate: files.registrationCertificate || undefined,
+    //   accreditation: files.accreditation || undefined,
+    // }));
   };
   
   const handleBack = () => {
@@ -185,6 +180,10 @@ const DocumentUpload = () => {
     if (!fileData) return '';
     return fileData.name.length > 20 ? fileData.name.substring(0, 17) + '...' : fileData.name;
   };
+
+  if(submitted){
+    return <EndingScreen name="Admin Onboarding" link="/clinic-management/dashboard/admin" delay={5000} />
+  }
   
   return (
     <motion.form
@@ -196,22 +195,22 @@ const DocumentUpload = () => {
     >
       {/* Government ID Upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Upload Government-Issued ID</label>
+        <label className="block text-sm font-medium cursor-pointer text-gray-700 mb-1">Upload Government-Issued ID* [.jpg/.jpeg/.png]</label>
         <div className="relative">
           <input
             type="file"
             ref={govIdInputRef}
             onChange={(e) => handleFileChange(e, 'governmentId')}
             className="hidden"
-            accept="image/*,.pdf"
+            accept="image"
           />
           <div 
             className={`flex items-center justify-between w-full px-4 py-3 rounded-full border 
-            ${formErrors.governmentId ? 'border-red-500' : 'border-gray-300'} 
+            ${formErrors.governmentId ? 'border-red-500' : 'border-[#086861]'} 
             cursor-pointer focus:outline-none hover:bg-gray-50`}
             onClick={() => govIdInputRef.current?.click()}
           >
-            <span className="text-gray-500 truncate">
+            <span className="text-[#086861] truncate">
               {formData.governmentId ? getFileName(formData.governmentId as FileMetadata) : 'Choose File'}
             </span>
             <span className="bg-[#00665B] text-white p-1 rounded-full">
@@ -228,7 +227,7 @@ const DocumentUpload = () => {
       
       {/* Registration Certificate Upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Upload Clinic/Hospital Registration Certificate</label>
+        <label className="block text-sm cursor-pointer font-medium text-gray-700 mb-1">Upload Clinic/Hospital Registration Certificate* [.pdf/.jpg]</label>
         <div className="relative">
           <input
             type="file"
@@ -238,12 +237,12 @@ const DocumentUpload = () => {
             accept="image/*,.pdf"
           />
           <div 
-            className={`flex items-center justify-between w-full px-4 py-3 rounded-full border 
-            ${formErrors.registrationCertificate ? 'border-red-500' : 'border-gray-300'} 
+            className={`flex items-center justify-between cursor-pointer w-full px-4 py-3 rounded-full border 
+            ${formErrors.registrationCertificate ? 'border-red-500' : 'border-[#086861]'} 
             cursor-pointer focus:outline-none hover:bg-gray-50`}
             onClick={() => regCertInputRef.current?.click()}
           >
-            <span className="text-gray-500 truncate">
+            <span className="text-[#086861] truncate">
               {formData.registrationCertificate ? getFileName(formData.registrationCertificate as FileMetadata) : 'Choose File'}
             </span>
             <span className="bg-[#00665B] text-white p-1 rounded-full">
@@ -260,7 +259,7 @@ const DocumentUpload = () => {
       
       {/* Accreditation Upload (Optional) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Upload Medical Association Accreditation (If Applicable)</label>
+        <label className="block text-sm font-medium cursor-pointer text-gray-700 mb-1">Upload Medical Association Accreditation (If Applicable) [.pdf/.jpg]</label>
         <div className="relative">
           <input
             type="file"
@@ -270,10 +269,10 @@ const DocumentUpload = () => {
             accept="image/*,.pdf"
           />
           <div 
-            className="flex items-center justify-between w-full px-4 py-3 rounded-full border border-gray-300 cursor-pointer focus:outline-none hover:bg-gray-50"
+            className="flex items-center justify-between w-full px-4 py-3 rounded-full border border-[#086861] cursor-pointer focus:outline-none hover:bg-gray-50"
             onClick={() => accreditationInputRef.current?.click()}
           >
-            <span className="text-gray-500 truncate">
+            <span className="text-[#086861] truncate">
               {formData.accreditation ? getFileName(formData.accreditation as FileMetadata) : 'Choose File'}
             </span>
             <span className="bg-[#00665B] text-white p-1 rounded-full">
@@ -285,50 +284,73 @@ const DocumentUpload = () => {
         </div>
       </div>
       
-      {/* Departments & Specialties */}
-      <div>
-        <input
-          type="text"
-          name="departments"
-          value={formData.departments}
-          onChange={handleChange}
-          placeholder="Departments & Specialties Offered"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.departments ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
-        />
-        {formErrors.departments && (
-          <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.departments}</p>
-        )}
-      </div>
-      
-      {/* Number of Doctors */}
-      <div>
-        <input
-          type="text"
-          name="doctorsCount"
-          value={formData.doctorsCount}
-          onChange={handleChange}
-          placeholder="Number Of Doctors In Clinic/ Hospital"
-          className={`w-full px-4 py-3 rounded-full border ${
-            formErrors.doctorsCount ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-[#00665B]`}
-        />
-        {formErrors.doctorsCount && (
-          <p className="text-red-500 text-xs mt-1 ml-4">{formErrors.doctorsCount}</p>
-        )}
-      </div>
+      {/* Specialities Offered Dropdown */}
+<div>
+  <div className="relative w-full cursor-pointer rounded-full border border-[#086861] focus-within:ring-2 focus-within:ring-[#00665B]">
+    <select
+      name="departments"
+      value={formData.departments}
+      onChange={handleChange}
+      className="w-full px-4 py-3 rounded-full text-[#086861] appearance-none bg-transparent focus:outline-none"
+    >
+      <option value="" disabled>Select Speciality Offered</option>
+      {[
+        'Cardiology',
+        'Orthopedics',
+        'Neurology',
+        'Pediatrics',
+        'Radiology',
+        'Dermatology',
+        'Gynecology',
+        'ENT',
+        'Urology',
+        'General Medicine',
+        'Psychiatry'
+      ].map((dept) => (
+        <option key={dept} value={dept}>{dept}</option>
+      ))}
+    </select>
+    <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+    {/* Number of Doctors Dropdown */}
+<div>
+  <div className="relative w-full rounded-full cursor-pointer border border-[#086861] focus-within:ring-2 focus-within:ring-[#00665B]">
+    <select
+      name="doctorsCount"
+      value={formData.doctorsCount}
+      onChange={handleChange}
+      className="w-full px-4 py-3 rounded-full appearance-none text-[#086861] bg-transparent focus:outline-none"
+    >
+      <option value="" disabled>Number Of Doctors</option>
+      {Array.from({ length: 2000 }, (_, i) => i + 1).map((num) => (
+        <option key={num} value={num}>{num}</option>
+      ))}
+    </select>
+    <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+      <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</div>
+
       
       {/* Preferred Communication Mode */}
       <div>
-        <div className={`relative w-full rounded-full border ${
-            formErrors.communicationMode ? 'border-red-500' : 'border-gray-300'
+        <div className={`relative w-full cuesor-pointer rounded-full border ${
+            formErrors.communicationMode ? 'border-red-500' : 'border-[#086861]'
           } focus-within:ring-2 focus-within:ring-[#00665B]`}>
           <select
             name="communicationMode"
             value={formData.communicationMode}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-full appearance-none bg-transparent focus:outline-none"
+            className="w-full px-4 py-3 rounded-full appearance-none bg-transparent text-[#086861] focus:outline-none"
           >
             <option value="" disabled>Preferred Mode Of Communication</option>
             {communicationModes.map((mode) => (
@@ -365,7 +387,7 @@ const DocumentUpload = () => {
           type="button"
           onClick={handleBack}
           disabled={loading}
-          className="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-full font-medium hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 disabled:opacity-70"
+          className="w-1/3 bg-gray-200 text-gray-700 py-3 cursor-pointer rounded-full font-medium hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 disabled:opacity-70"
         >
           Back
         </motion.button>
@@ -374,9 +396,11 @@ const DocumentUpload = () => {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
           type="submit"
+          onClick={handleSubmit}
           disabled={loading}
-          className="w-2/3 bg-[#00665B] text-white py-3 rounded-full font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
+          className="w-2/3 bg-[#00665B] text-white py-3 rounded-full cursor-pointer font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
         >
+
           {loading ? (
             <span className="flex items-center justify-center">
               <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

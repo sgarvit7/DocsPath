@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         "clinicInfo.registrationNumber"
       ) as string,
       establishmentYear: formData.get("clinicInfo.establishmentYear") as string,
-      address: formData.get("clinicInfo.address") as string,
+      address: (formData.get("clinicInfo.address") as string) || "abc hospitals" ,
     };
 
     // Handle file uploads and store metadata
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
         clinicType: clinicInfo.clinicType,
         registrationNumber: clinicInfo.registrationNumber,
         establishmentYear: clinicInfo.establishmentYear,
-        address: clinicInfo.address,
+        address: clinicInfo.address ,
         // Documents info
         departments: documents.departments,
         doctorsCount: documents.doctorsCount,
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
     // } catch (error) {
     // 	console.error(error);
     // }
-
+    console.log(formData);
     return NextResponse.json(
       {
         success: true,

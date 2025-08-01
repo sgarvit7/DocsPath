@@ -73,7 +73,7 @@ export default function CountrySelect({
     setIsValid(null);
     try {
       const response = await fetch(
-        `https://apilayer.net/api/validate?access_key=7862bb87c187e6cef6c118efd1453885&number=${encodeURIComponent(
+        `https://apilayer.net/api/validate?access_key=961503d32a1556e3bfc02ff12055aee4&number=${encodeURIComponent(
           phone
         )}&country_code=${countryCode}&format=1`
       );
@@ -151,7 +151,7 @@ export default function CountrySelect({
   <div className="flex flex-col md:flex-row gap-2 md:gap-3 w-full">
 
   {/* Phone Input Group */}
-  <div className="flex flex-1 items-center border border-gray-300 rounded-lg px-2 py-2 gap-2">
+  <div className="flex flex-1 items-center border border-gray-300  rounded-lg px-2 py-2 gap-2">
     <Image
       src={`https://flagsapi.com/${countryCode}/flat/32.png`}
       alt={`${countryCode} flag`}

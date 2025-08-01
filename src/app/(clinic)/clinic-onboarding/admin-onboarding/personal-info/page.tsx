@@ -46,16 +46,17 @@ const fileInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
       const localData = window.localStorage.getItem('userData');
+      const phone  = window.localStorage.getItem('phoneNumber');
       const parsedData = localData ? JSON.parse(localData) : {};
 
       setFormData(prev => ({
         ...prev,
         fullName: user?.displayName || parsedData.name || prev.fullName,
         email: user?.email || parsedData.email || prev.email,
-        phone: user?.phoneNumber || parsedData.phone || prev.phone,
+        phone: phone|| parsedData.phone || prev.phone,
       }));
 
-      if (user?.phoneNumber || parsedData.phone) {
+      if (user?.phoneNumber || parsedData.phone || phone) {
         // setIsPhoneVerified(true);
       }
     } catch (err) {
@@ -70,7 +71,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
 
   const reader = new FileReader();
   reader.onloadend = () => {
-    const base64 = (reader.result as string).split(',')[1]; // strip the data:...prefix
+    // const base64 = (reader.result as string).split(',')[1]; // strip the data:...prefix
     dispatch(updatePersonalInfo({
       ...personalInfo,
       profilePhoto: {
@@ -78,7 +79,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
         size: file.size,
         type: file.type,
         lastModified: file.lastModified,
-        base64,
+        
       },
     }));
     setIsUploading(false);
@@ -401,7 +402,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
                 {personalInfo.profilePhoto && !isUploading && (
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                     <Image
-                      src={`data:${personalInfo.profilePhoto.type};base64,${personalInfo.profilePhoto.base64}`}
+                      src={`data:${personalInfo.profilePhoto.type};base64,${personalInfo.profilePhoto}`}
                       alt="Profile preview"
                       width={40}
                       height={40}
@@ -469,7 +470,7 @@ const fileInputRef = useRef<HTMLInputElement>(null);
           whileTap={{ scale: 0.98 }}
           type="submit"
           disabled={isLoading}
-          className="w-full bg-[#00665B] text-white py-3 rounded-full font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
+          className="w-full bg-[#00665B] text-white py-3 cursor-pointer  rounded-full font-medium hover:bg-[#005249] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00665B] disabled:opacity-70"
         >
           {isLoading ? (
             <span className="flex items-center justify-center">

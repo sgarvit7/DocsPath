@@ -21,7 +21,7 @@ export default function VerifyEmailPage() {
           setStatus('success')
           
           // Get the email from localStorage (set during magic link sending)
-          const emailForSignIn = window.localStorage.getItem('emailForSignIn')
+          const emailForSignIn = window.localStorage.getItem('emailAddress')
           
           if (emailForSignIn) {
             // Store the verified email in sessionStorage to match SignUpPage

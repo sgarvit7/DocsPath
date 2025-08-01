@@ -203,7 +203,9 @@ export default function Navbar({ darkMode }: NavbarProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
+              <a href="/clinic-onboarding/doctor-onboarding">
               Join us
+              </a>
             </motion.button>
           </div>
 

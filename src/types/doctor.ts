@@ -1,13 +1,17 @@
-// Types
+// Store actual File object (not base64) to be used in FormData uploads
+export type FileData = File | null;
+
+// Personal Info
 export interface PersonalInfo {
   fullName: string;
   emailAddress: string;
   phoneNumber: string;
   dateOfBirth: string;
   gender: string;
-  profilePhoto?: FileData | null;
+  profilePhoto?: FileData; // File instead of base64
 }
 
+// Professional Details
 export interface ProfessionalDetails {
   medicalLicenseNumber: string;
   specialization: string;
@@ -16,21 +20,15 @@ export interface ProfessionalDetails {
   consultationType: string;
 }
 
-// New type to store file data in a serializable format
-export interface FileData {
-  name: string;
-  size: number;
-  type: string;
-  lastModified: number;
-  base64: string; // Base64 encoded file content
-}
+// Verification Documents (all optional FileData)
 export interface VerificationDocument {
-  governmentIssuedId?: FileData | null;
-  medicalDegreeCertificate?: FileData | null;
-  medicalCouncilRegistrationCertificate?: FileData | null;
-  experienceCertificate?: FileData | null;
+  governmentIssuedId?: FileData;
+  medicalDegreeCertificate?: FileData;
+  medicalCouncilRegistrationCertificate?: FileData;
+  experienceCertificate?: FileData;
 }
 
+// Work Schedule Preferences
 export interface WorkSchedulePreferences {
   availableConsultationHours: string;
   preferredModeOfConsultation: string;
@@ -40,7 +38,7 @@ export interface WorkSchedulePreferences {
   personalBio: string;
 }
 
-// Type for a complete doctor record
+// Type for formatted Doctor data (with Cloudinary URLs)
 export interface Doctor {
   id?: string;
   personalInfo: {
@@ -49,7 +47,7 @@ export interface Doctor {
     phoneNumber: string;
     dateOfBirth: string;
     gender: string;
-    profilePhoto?: string | null;
+    profilePhoto?: string | null; // Cloudinary URL after upload
   };
   professionalDetails: {
     medicalLicenseNumber: string;
@@ -74,19 +72,19 @@ export interface Doctor {
     preferredModeOfConsultation: string;
     languageSpoken: string;
     additionalInformation?: string | null;
-    emergencyContactDetails: string | null;
+    emergencyContactDetails: string;
     personalBio?: string | null;
   };
   createdAt?: Date;
   updatedAt?: Date;
 }
 
+// This is the raw DB response type (used in GET API and formatters)
 export interface DoctorDB {
   id: string;
   createdAt: Date;
   updatedAt: Date;
 
-  // Personal Information
   fullName: string;
   emailAddress: string;
   phoneNumber: string;
@@ -94,37 +92,30 @@ export interface DoctorDB {
   gender: string;
   profilePhoto?: string | null;
 
-  // Professional Details
   medicalLicenseNumber: string;
   specialization: string;
   yearsOfExperience: string;
   associatedClinicHospitalName: string;
   consultationType: string;
 
-  // Education Details
   medicalSchoolName?: string | null;
   medicalSchoolGraduationYear?: string | null;
   medicalSchoolDegree?: string | null;
 
-  // Verification Documents
   governmentIssuedId?: string | null;
   medicalDegreeCertificate?: string | null;
   medicalCouncilRegistrationCertificate?: string | null;
   experienceCertificate?: string | null;
 
-  // Work Schedule Preferences
   availableConsultationHours: string;
   preferredModeOfConsultation: string;
   languageSpoken: string;
   additionalInformation?: string | null;
   emergencyContactDetails: string;
   personalBio?: string | null;
-
-  // Status and Verification (commented in schema, but included optionally)
-  // isVerified?: boolean;
-  // isActive?: boolean;
 }
 
+// Redux Slice State
 export interface DoctorOnboardingState {
   currentStep: number;
   personalInfo: PersonalInfo;
@@ -138,7 +129,7 @@ export interface DoctorOnboardingState {
   isLoadingDoctors: boolean;
 }
 
-// Initial state
+// Initial state for Redux
 export const initialState: DoctorOnboardingState = {
   currentStep: 1,
   personalInfo: {
