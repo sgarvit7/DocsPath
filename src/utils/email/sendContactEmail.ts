@@ -12,15 +12,19 @@ interface ContactEmailData {
 export async function sendContactEmail(data: ContactEmailData) {
   const { name, email, phone, subject, message } = data;
 
+  // Validate env vars
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error("Missing email credentials in environment variables.");
+  }
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.EMAIL_USER, // "ankbtg@gmail.com"
-      pass: process.env.EMAIL_PASS, // App password
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
-  // Confirmation email to the user
   const userMail = {
     from: `"Docspath Support" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -40,7 +44,6 @@ export async function sendContactEmail(data: ContactEmailData) {
     `,
   };
 
-  // Notification email to the host
   const hostMail = {
     from: `"Docspath System" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER,
@@ -59,16 +62,9 @@ export async function sendContactEmail(data: ContactEmailData) {
     `,
   };
 
-  try {
-    await Promise.all([
-      transporter.sendMail(userMail),
-      transporter.sendMail(hostMail),
-    ]);
-
-    console.log("✅ Emails sent to user and host.");
-    return { success: true };
-  } catch (error) {
-    console.error("❌ Error sending emails:", error);
-    return { success: false, error };
-  }
+  // Send both emails
+  await Promise.all([
+    transporter.sendMail(userMail),
+    transporter.sendMail(hostMail),
+  ]);
 }
