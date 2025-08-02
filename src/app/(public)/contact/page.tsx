@@ -111,11 +111,17 @@ const ContactUs: React.FC = () => {
     try {
       console.log("try1")
       /** 📌 POST everything to /api/contact */
-      const response = await axios.post("/api/contact", {
-        ...formData,
-        email,
-        phone,
-      });
+     const response = await fetch("/api/contact", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    ...formData,
+    email,
+    phone,
+  }),
+});
       console.log("try4")
 
       console.log(response);  
