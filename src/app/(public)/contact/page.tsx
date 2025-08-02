@@ -109,25 +109,29 @@ const ContactUs: React.FC = () => {
     setStatus("idle");
     console.log( loading, status)
     try {
+      console.log("try1")
       /** 📌 POST everything to /api/contact */
       const response = await axios.post("/api/contact", {
         ...formData,
         email,
         phone,
       });
+      console.log("try1")
 
       console.log(response);  
       console.log(phoneOk);
-
+      console.log("try2")
       /* success feedback */
       setStatus("success");
       setFormData({ name: "", subject: "", message: "" });
       setEmail("");
+      console.log("try3")
       setPhone("");
     } catch (err) {
       console.error(err);
       console.log("error 1")
       setStatus("error");
+      console.log("try5")
     } finally {
       setLoading(false);
     }

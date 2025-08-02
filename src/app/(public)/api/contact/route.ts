@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("running 1")
     const body = await req.json();
     console.log(body);
 
