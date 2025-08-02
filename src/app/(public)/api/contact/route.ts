@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     await prisma.contactMessage.create({
       data: { name, email, phone, subject, message },
     });
-
+console.log("writting to db")
     await sendContactEmail({
       name,
       email,
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Contact API error ▶", err);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error from contact route" },
       { status: 500 }
     );
   }

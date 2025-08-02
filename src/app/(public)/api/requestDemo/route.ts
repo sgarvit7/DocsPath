@@ -28,6 +28,7 @@ export async function POST(req: Request) {
 
     // Send emails
     await sendRequestDemoEmails(newRequest);
+  
     console.log(NextResponse.json(newRequest));
     return NextResponse.json(newRequest, { status: 201 });
     
