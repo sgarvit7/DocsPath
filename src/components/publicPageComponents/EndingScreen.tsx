@@ -24,7 +24,7 @@ export default function EndingScreen({ name, link, delay = 3000 }: EndingScreenP
   }, [link, delay, router]);
 
   return (
-    <div className="flex items-center justify-center h-screen teal-50">
+    <div className="flex items-center justify-center h-screen bg-teal-50">
       <Image
               src="/assets/bg-pattern.png"
               alt=""
