@@ -118,8 +118,8 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
     return (
       <EndingScreen
         name="Self Onboarding"
-        link="/clinic-management/dashboard/clinic-onboarding"
-        delay={5000}
+        link="/clinic-management/dashboard/clinical-admin"
+        delay={3000}
       />
     );
   }
@@ -140,7 +140,7 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
           {/* Day selection and time input */}
           <div>
             <label className="block text-xs text-gray-500 mt-1 ml-4">
-              Select Days & Timings*
+              Available Consultation Hours*
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
               {weekdays.map((day) => (
@@ -224,9 +224,18 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
                 backgroundPosition: "right 12px center",
               }}
             >
-              <option value="hin">Hindi</option>
+              <option value="">Select</option>
+             
               <option value="eng">English</option>
-              <option value="Both">Both</option>
+              <option value="hin">Hindi</option>
+               <option value="tam">Tamil</option>
+              <option value="tel">Telugu</option>
+              <option value="guj">Gujarati</option>
+              <option value="mar">Marathi</option>
+              <option value="mal">Malyalam</option>
+              <option value="kan">Kannad</option>
+              <option value="ben">Bengali</option>
+              
             </select>
           </div>
 

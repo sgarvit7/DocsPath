@@ -6,7 +6,6 @@ import { updateVerificationDocument, nextStep, previousStep } from "@/store/doct
 import { RootState } from "@/store/store";
 import OnboardingLayout from "../OnboardingLayout";
 import { useRouter } from "next/navigation";
-import { FilePlus } from "lucide-react";
 
 const VerificationDocumentPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -83,7 +82,18 @@ const VerificationDocumentPage: React.FC = () => {
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-            <FilePlus className="w-6 h-6 text-[#086861]" />
+             <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8 text-teal-600 bg-white p-1 rounded-full"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path d="M16 16l-4-4-4 4" />
+                <path d="M12 12v9" />
+                <path d="M20.39 18.39A5.5 5.5 0 0018 9h-1.26A8 8 0 104 16.3" />
+              </svg>
           )}
         </div>
       </div>

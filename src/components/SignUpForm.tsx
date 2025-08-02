@@ -44,7 +44,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const isChecking = useState(false);
-  const [passwordError, setPasswordError] = useState("");
+const [passwordError, setPasswordError] = useState<string[]>([]);
   const [role, setRole] = useState<"admin" | "clinic-owner">("admin");
   const [clinicName, setClinicName] = useState("");
   const [location, setLocation] = useState("");
@@ -134,58 +134,6 @@ export default function SignUpPage() {
     }
   }, [verifiedEmails]);
 
-  // const checkPhoneExists = async (phoneNumber: string): Promise<boolean> => {
-  //   try {
-  //     setIsChecking(true);
-  //     const { data } = await axios.post("/api/check-phone", { phoneNumber });
-  //     return data.exists;
-  //   } catch (e) {
-  //     console.error("Error checking phone number:", e);
-  //     setError("Error verifying phone number. Please try again.");
-  //     return false;
-  //   } finally {
-  //     setIsChecking(false);
-  //   }
-  // };
-
-  // const handleSendVerification = async () => {
-  //   if (!form.email) return setError("Please enter your email address first");
-
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(form.email))
-  //     return setError("Please enter a valid email");
-
-  //   if (verifiedEmails.has(form.email))
-  //     return setError("This email is already verified");
-
-  //   setIsSendingVerification(true);
-  //   const result = await sendMagicLink(form.email);
-
-  //   if (result.success) {
-  //     setEmailVerificationSent(true);
-
-  //     // ✅ Update state and persist to sessionStorage
-  //     setVerifiedEmails((prev) => {
-  //       const updated = new Set(prev);
-  //       updated.add(form.email);
-
-  //       // Save to sessionStorage as JSON array
-  //       if (typeof window !== "undefined") {
-  //         window.sessionStorage.setItem(
-  //           "verifiedEmails",
-  //           JSON.stringify([...updated])
-  //         );
-  //       }
-
-  //       return updated;
-  //     });
-  //   } else {
-  //     setError(result.error || "Failed to send verification email");
-  //   }
-
-  //   setIsSendingVerification(false);
-  // };
-
   const handleSubmit = async () => {
     setError("");
     const { name, email, phone, password, confirmPassword } = form;
@@ -250,20 +198,24 @@ export default function SignUpPage() {
   };
 
   const validatePassword = (value: string) => {
-    if (value.length < 8) {
-      return "Password must be at least 8 characters";
-    }
-    if (!/[A-Z]/.test(value)) {
-      return "Password must include at least one capital letter";
-    }
-    if (!/[0-9]/.test(value)) {
-      return "Password must include at least one number";
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must include at least one special character";
-    }
-    return "";
-  };
+  const errors: string[] = [];
+
+  if (value.length < 8) {
+    errors.push("Password must be at least 8 characters");
+  }
+  if (!/[A-Z]/.test(value)) {
+    errors.push("Password must include at least one capital letter");
+  }
+  if (!/[0-9]/.test(value)) {
+    errors.push("Password must include at least one number");
+  }
+  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(value)) {
+    errors.push("Password must include at least one special character");
+  }
+
+  return errors;
+};
+
 
   const handleGoogleSignIn = async () => {
     try {
@@ -304,16 +256,7 @@ export default function SignUpPage() {
 
   return (
     <div className=" flex items-center justify-center bg-teal-50 px-4">
-      {/* {showModal && (
-        <EmailOtpModal
-          email={form.email}
-          onClose={() => setShowModal(false)}
-          onVerified={() => {
-            setIsEmailVerified(true);
-            setShowModal(false);
-          }}s
-        />
-      )} */}
+      
       <div className="fixed top-4 right-4 z-50">
         <a
           href="/clinic-onboarding/doctor-onboarding"
@@ -349,7 +292,7 @@ export default function SignUpPage() {
           <div className="">
             <div className="h-full">
               <Image
-                src="/assets/onboarding/sign-up.png"
+                src="/assets/onboarding/docs/yo.jpg"
                 alt="Docspath"
                 width={500}
                 height={200}
@@ -416,29 +359,35 @@ export default function SignUpPage() {
 
 
             {/* Password */}
-            <div className="relative">
-              <input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={form.password}
-                onChange={(e) => {
-                  handleField("password", e.target.value);
-                  setPasswordError(validatePassword(e.target.value));
-                }}
-                placeholder="Password"
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
-              />
-              {passwordError && (
-                <p className="text-red-500 text-xs mt-1">{passwordError}</p>
-              )}
-              <button
-                type="button"
-                onClick={() => setShowPassword((p) => !p)}
-                className="absolute right-3 top-3 text-gray-400"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
+<div className="relative">
+  <input
+    name="password"
+    type={showPassword ? "text" : "password"}
+    value={form.password}
+    onChange={(e) => {
+      handleField("password", e.target.value);
+      setPasswordError(validatePassword(e.target.value));
+    }}
+    placeholder="Password"
+    className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 pl-10"
+  />
+  {Array.isArray(passwordError) && passwordError.length > 0 && (
+    <div className="mt-1 space-y-1">
+      {passwordError.map((err, idx) => (
+        <p key={idx} className="text-red-500 text-xs">
+          {err}
+        </p>
+      ))}
+    </div>
+  )}
+  <button
+    type="button"
+    onClick={() => setShowPassword((p) => !p)}
+    className="absolute right-3 top-3 text-gray-400"
+  >
+    {showPassword ? <FaEyeSlash /> : <FaEye />}
+  </button>
+</div>
 
             {/* Confirm */}
             <div className="relative">
@@ -529,11 +478,11 @@ export default function SignUpPage() {
               // disabled={isChecking || !isEmailVerified || !phoneOk || (form.password !== form.confirmPassword)}
               className={`w-full ${
                 isChecking || !phoneOk
-                  ? "bg-gray-400 cursor-not-allowed"
+                  ? "bg-teal-700 hover:bg-teal-800"
                   : "bg-teal-700 hover:bg-teal-800"
               } text-white py-3 rounded-lg font-medium transition duration-300`}
             >
-              {isChecking ? "Checking..." : "Sign Up"}
+              {isChecking ? "sign up" : "Sign Up"}
             </motion.button>
 
             {/* Sign‑in instead */}
