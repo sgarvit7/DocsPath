@@ -116,7 +116,7 @@ const ContactUs: React.FC = () => {
         email,
         phone,
       });
-      console.log("try1")
+      console.log("try4")
 
       console.log(response);  
       console.log(phoneOk);
