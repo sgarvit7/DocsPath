@@ -183,9 +183,10 @@ const VerificationDocumentPage: React.FC = () => {
         profilePhoto: profilePhoto ? await urlToFile(profilePhoto) : undefined,
       };
 
+      setSubmitted(true);
 await dispatch(submitAdminData(files)).unwrap(); 
 
-      setSubmitted(true);
+      
     } catch (err) {
       console.error("Final Submission Error:", err);
       alert("Submission failed");
