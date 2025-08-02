@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ThumbsUp } from "lucide-react"; // you can swap with any icon
+import Image from "next/image";
 
 interface EndingScreenProps {
   name: string;
@@ -23,7 +24,21 @@ export default function EndingScreen({ name, link, delay = 3000 }: EndingScreenP
   }, [link, delay, router]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-teal-100 to-blue-200">
+    <div className="flex items-center justify-center h-screen teal-50">
+      <Image
+              src="/assets/bg-pattern.png"
+              alt=""
+              width={500}
+              height={350}
+              className="absolute -top-10 -left-10 z-0 opacity-50 rotate-180"
+            />
+            <Image
+              src="/assets/lower-bg-pattern.png"
+              alt=""
+              width={500}
+              height={350}
+              className="absolute bottom-0 right-0 z-0 hidden lg:block opacity-50"
+            />
       <div className="text-center p-8 bg-white rounded-2xl shadow-lg max-w-md">
         {/* Animated Icon */}
         <motion.div
