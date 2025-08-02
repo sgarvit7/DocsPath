@@ -7,6 +7,7 @@ import {
   previousStep,
 } from "@/store/selfSlice";
 import { AppDispatch, RootState } from "@/store/store";
+import { submitDoctorOnboarding } from "@/store/doctorSlice";
 import OnboardingLayout from "../OnboardingLayout";
 import { useRouter } from "next/navigation";
 import EndingScreen from "@/components/publicPageComponents/EndingScreen";
@@ -97,7 +98,13 @@ const WorkSchedulePage: React.FC = () => {
       alert("Please fill in all required fields and timings.");
       return;
     }
-
+try {
+    const doctorData = await dispatch(submitDoctorOnboarding()).unwrap();
+    console.log(doctorData);
+    setSubmitted(true);
+  } catch (error) {
+    console.error("Submission failed:", error);
+  }
     setSubmitted(true);
   };
 
@@ -109,15 +116,15 @@ const WorkSchedulePage: React.FC = () => {
   if (submitted) {
     return (
       <EndingScreen
-        name="Self Onboarding"
-        link="/clinic-management/dashboard/clinic-onboarding"
+        name="Doctor Onboarding"
+        link="/clinic-management/dashboard/doctor"
         delay={5000}
       />
     );
   }
 
   return (
-    <OnboardingLayout currentStep={6}>
+    <OnboardingLayout currentStep={4}>
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -217,9 +224,17 @@ const WorkSchedulePage: React.FC = () => {
               }}
             >
               <option value="">Select</option>
-              <option value="hin">Hindi</option>
+             
               <option value="eng">English</option>
-              <option value="Both">Both</option>
+              <option value="hin">Hindi</option>
+              <option value="tam">Tamil</option>
+              <option value="tel">Telugu</option>
+              <option value="guj">Gujarati</option>
+              <option value="mar">Marathi</option>
+              <option value="mal">Malyalam</option>
+              <option value="kan">Kannad</option>
+              <option value="ben">Bengali</option>
+              
             </select>
           </div>
 

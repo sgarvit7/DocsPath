@@ -34,17 +34,17 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
     const getImage = () => {
     switch (currentStep) {
       case 1:
-        return "/assets/onboarding/clinic/admin2.jpeg";
+        return "/assets/onboarding/docs/abc.webp";
       case 2:
         return "/assets/onboarding/admin/clinic.jpg";
       case 3:
         return "/assets/onboarding/docs/doc8.avif";
       case 4:
-        return "/assets/onboarding/clinic/docu.jpg";
+        return "/assets/onboarding/docs/doc111.jpg";
         case 5:
-        return "/assets/onboarding/clinic/docu2.jpeg";
+        return "/assets/onboarding/docs/doc22.webp";
         case 6:
-        return "/assets/onboarding/clinic/admin5.jpeg";
+        return "/assets/onboarding/docs/doc77.png";
       default:
         return "/assets/onboarding/docs/doc10.jpeg";
     }

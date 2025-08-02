@@ -67,12 +67,14 @@ export const submitDoctorOnboarding = createAsyncThunk(
         if (value instanceof File) {
           formData.append(key, value);
         } else if (value !== null && value !== undefined) {
-          formData.append(key, value as string);
+          formData.append(key, String(value));
         }
       });
 
       Object.entries(professionalDetails).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (value !== null && value !== undefined) {
+          formData.append(key, String(value));
+        }
       });
 
       Object.entries(verificationDocument).forEach(([key, value]) => {
@@ -82,7 +84,12 @@ export const submitDoctorOnboarding = createAsyncThunk(
       });
 
       Object.entries(workSchedulePreferences).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (value !== null && value !== undefined) {
+          formData.append(
+            key,
+            typeof value === "object" ? JSON.stringify(value) : String(value)
+          );
+        }
       });
 
       const response = await fetch("http://localhost:3000/api/doctor", {
@@ -108,6 +115,7 @@ export const submitDoctorOnboarding = createAsyncThunk(
     }
   }
 );
+
 
 export const getDoctors = createAsyncThunk(
   "doctorOnboarding/getDoctors",

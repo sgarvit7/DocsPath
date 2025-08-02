@@ -33,9 +33,9 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
       case 2:
         return "/assets/onboarding/docs/doc8.avif";
       case 3:
-        return "/assets/onboarding/clinic/docu.jpg";
+        return "/assets/onboarding/docs/doc22.webp";
       case 4:
-        return "/assets/onboarding/docs/doc7.jpg";
+        return "/assets/onboarding/docs/doc77.png";
       default:
         return "/assets/onboarding/docs/doc10.jpeg";
     }

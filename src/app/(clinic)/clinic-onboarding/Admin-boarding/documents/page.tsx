@@ -204,7 +204,7 @@ await dispatch(submitAdminData(files)).unwrap();
       <EndingScreen
         name="Admin Onboarding"
         link="/clinic-management/dashboard/admin"
-        delay={3000}
+        delay={1000}
       />
     );
   }
@@ -237,7 +237,7 @@ await dispatch(submitAdminData(files)).unwrap();
           />
           <div
             className={`w-full p-2 border text-sm rounded-full bg-[#F4F9F9] flex justify-between items-center cursor-pointer ${
-              formErrors.governmentId ? "border-red-500" : "border-[#086861]"
+              formErrors.governmentId ? "border-red-500" : ""
             }`}
             onClick={() => govIdInputRef.current?.click()}
           >
@@ -283,7 +283,7 @@ await dispatch(submitAdminData(files)).unwrap();
             className={`w-full p-2 border text-sm rounded-full bg-[#F4F9F9] flex justify-between items-center cursor-pointer ${
               formErrors.registrationCertificate
                 ? "border-red-500"
-                : "border-[#086861]"
+                : ""
             }`}
             onClick={() => regCertInputRef.current?.click()}
           >

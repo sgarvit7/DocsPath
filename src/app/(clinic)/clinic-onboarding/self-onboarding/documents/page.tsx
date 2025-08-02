@@ -12,7 +12,7 @@ import { FileMetadata } from "@/store/selfSlice";
 import { RootState } from "@/store/store";
 import OnboardingLayout from "../OnboardingLayout";
 import { useRouter } from "next/navigation";
-import EndingScreen from "@/components/publicPageComponents/EndingScreen";
+// import EndingScreen from "@/components/publicPageComponents/EndingScreen";
 
 interface FormState {
   governmentId: FileMetadata | null;
@@ -27,7 +27,7 @@ const VerificationDocumentPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const submitted = useState(false);
+  // const submitted = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const documents = useSelector((state: RootState) => state.admin.documents);
@@ -182,17 +182,6 @@ const VerificationDocumentPage: React.FC = () => {
     dispatch(previousStep());
     router.back();
   };
-
-  if (submitted) {
-    return (
-      <EndingScreen
-        name="Self Onboarding"
-        link="/clinic-management/dashboard/admin"
-        delay={3000}
-      />
-    );
-  }
-
   const communicationModes = [
     "Email",
     "Phone",
@@ -202,7 +191,7 @@ const VerificationDocumentPage: React.FC = () => {
 
 
   return (
-    <OnboardingLayout currentStep={3}>
+    <OnboardingLayout currentStep={4}>
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -225,7 +214,7 @@ const VerificationDocumentPage: React.FC = () => {
           />
           <div
             className={`w-full p-2 border text-sm rounded-full bg-[#F4F9F9] flex justify-between items-center cursor-pointer ${
-              formErrors.governmentId ? 'border-red-500' : 'border-[#086861]'
+              formErrors.governmentId ? 'border-red-500' : ''
             }`}
             onClick={() => govIdInputRef.current?.click()}
           >
@@ -266,7 +255,7 @@ const VerificationDocumentPage: React.FC = () => {
           />
           <div
             className={`w-full p-2 border text-sm rounded-full bg-[#F4F9F9] flex justify-between items-center cursor-pointer ${
-              formErrors.registrationCertificate ? 'border-red-500' : 'border-[#086861]'
+              formErrors.registrationCertificate ? 'border-red-500' : ''
             }`}
             onClick={() => regCertInputRef.current?.click()}
           >
