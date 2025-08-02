@@ -126,6 +126,7 @@ const ContactUs: React.FC = () => {
       setPhone("");
     } catch (err) {
       console.error(err);
+      console.log("error 1")
       setStatus("error");
     } finally {
       setLoading(false);
