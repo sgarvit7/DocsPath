@@ -273,7 +273,7 @@ export default function EmailVerificationInput({ value = "", onVerified, onChang
               ? "bg-green-600 text-white cursor-default"
               : isSendingVerification || !isEmailValid
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-teal-700 text-white hover:bg-teal-800"
+              : "bg-teal-700 text-white hover:bg-teal-600"
           }`}
         >
           {isVerified
@@ -288,11 +288,11 @@ export default function EmailVerificationInput({ value = "", onVerified, onChang
 
       {showMethodChoice && (
         <div className="flex gap-3">
-          <button onClick={handleMagicLink} className="flex-1 bg-purple-600 text-white p-2 rounded">
+          <button onClick={handleMagicLink} className="flex-1 bg-teal-600 text-white p-2 rounded">
             Magic Link
           </button>
-          <button onClick={handleSendOtp} className="flex-1 bg-green-600 text-white p-2 rounded">
-            OTP
+          <button onClick={handleSendOtp} className="flex-1 bg-teal-600 text-white p-2 rounded">
+            Code
           </button>
         </div>
       )}
