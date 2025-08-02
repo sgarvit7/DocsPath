@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import  PhoneInput from "@/components/publicPageComponents/PhoneInput";
 import EmailInput from "@/components/publicPageComponents/EmailInput";
-import axios from "axios";
+// import axios from "axios";
 
 interface FormData {
   name: string;
