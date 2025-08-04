@@ -187,7 +187,7 @@ export default function SignInForm() {
         <div className="flex-1 p-8 md:p-12">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-teal-800">
-              Sign in to Docspath
+              Sign in
             </h2>
             <p className="text-gray-500 mt-2">Begin Your Journey!</p>
           </div>
