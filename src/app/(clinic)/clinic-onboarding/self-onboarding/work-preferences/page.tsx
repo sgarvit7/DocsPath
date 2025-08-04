@@ -22,32 +22,30 @@ const weekdays = [
   "Sunday",
 ];
 
-type DayTiming = {
-  start: string;
-  end: string;
-};
+type TimeRange = { start: string; end: string };
+type DayTimings = Record<string, TimeRange[]>;
 
 const WorkSchedulePage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [dayTimings, setDayTimings] = useState<Record<string, DayTiming>>({});
+  const [dayTimings, setDayTimings] = useState<DayTimings>({});
 
   const dispatch = useDispatch<AppDispatch>();
   const { workSchedulePreferences, isLoading, error, isSubmitted } =
     useSelector((state: RootState) => state.selfOnboarding);
   const router = useRouter();
 
-const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
-  field: K,
-  value: typeof workSchedulePreferences[K]
-) => {
-  dispatch(
-    updateWorkSchedulePreferences({
-      ...workSchedulePreferences,
-      [field]: value,
-    })
-  );
-};
+  const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
+    field: K,
+    value: typeof workSchedulePreferences[K]
+  ) => {
+    dispatch(
+      updateWorkSchedulePreferences({
+        ...workSchedulePreferences,
+        [field]: value,
+      })
+    );
+  };
 
   const handleDaySelect = (day: string) => {
     if (selectedDays.includes(day)) {
@@ -58,52 +56,72 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
       setDayTimings(newTimings);
     } else {
       setSelectedDays([...selectedDays, day]);
+      setDayTimings((prev) => ({ ...prev, [day]: [{ start: "", end: "" }] }));
     }
   };
 
   const handleTimeChange = (
     day: string,
+    index: number,
     field: "start" | "end",
     value: string
   ) => {
+    setDayTimings((prev) => {
+      const updated = [...(prev[day] || [])];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, [day]: updated };
+    });
+  };
+
+  const addTimeSlot = (day: string) => {
     setDayTimings((prev) => ({
       ...prev,
-      [day]: {
-        ...prev[day],
-        [field]: value,
-      },
+      [day]: [...(prev[day] || []), { start: "", end: "" }],
     }));
+  };
+
+  const removeTimeSlot = (day: string, index: number) => {
+    setDayTimings((prev) => {
+      const updated = [...(prev[day] || [])];
+      updated.splice(index, 1);
+      return { ...prev, [day]: updated };
+    });
   };
 
   useEffect(() => {
     const scheduleStr = selectedDays
       .map((day) => {
-        const timing = dayTimings[day];
-        if (timing?.start && timing?.end) {
-          return `${day}: ${timing.start}–${timing.end}`;
-        }
-        return null;
+        const slots = dayTimings[day] || [];
+        const validSlots = slots
+          .filter((s) => s.start && s.end)
+          .map((s) => `${s.start}–${s.end}`)
+          .join(", ");
+        return validSlots ? `${day}: ${validSlots}` : null;
       })
       .filter(Boolean)
-      .join(", ");
+      .join(" | ");
 
     handleInputChange("availableConsultationHours", scheduleStr);
   }, [dayTimings, selectedDays]);
 
   const handleSubmit = async () => {
-    console.log(workSchedulePreferences.availableConsultationHours);
+    const allFilled = selectedDays.every((day) =>
+      (dayTimings[day] || []).every((slot) => slot.start && slot.end)
+    );
+
     if (
       !workSchedulePreferences.availableConsultationHours ||
-      !workSchedulePreferences.languageSpoken
+      !workSchedulePreferences.languageSpoken ||
+      !allFilled
     ) {
       alert("Please fill in the required fields");
       return;
     }
 
     try {
+      setSubmitted(true);
       const doctorData = await dispatch(submitselfOnboarding()).unwrap();
       console.log(doctorData);
-      setSubmitted(true);
     } catch (error) {
       console.error("Submission failed:", error);
     }
@@ -117,7 +135,7 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
   if (submitted) {
     return (
       <EndingScreen
-        name="Self Onboarding"
+        name="DocMin Onboarding"
         link="/clinic-management/dashboard/clinical-admin"
         delay={3000}
       />
@@ -137,7 +155,6 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
         </h3>
 
         <div className="space-y-4">
-          {/* Day selection and time input */}
           <div>
             <label className="block text-xs text-gray-500 mt-1 ml-4">
               Available Consultation Hours*
@@ -162,61 +179,66 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
             {selectedDays.map((day) => (
               <div key={day} className="mt-3">
                 <label className="block text-xs text-gray-500 ml-2 mb-1">
-                  {day} Timing
+                  {day} Timings
                 </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="time"
-                    required
-                    value={dayTimings[day]?.start || ""}
-                    onChange={(e) =>
-                      handleTimeChange(day, "start", e.target.value)
-                    }
-                    className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                     focus:outline-none focus:ring-2 focus:ring-teal-500 
-                     focus:border-transparent bg-[#F4F9F9] text-gray-700"
-                  />
-                  <span className="text-gray-500 text-sm">to</span>
-                  <input
-                    type="time"
-                    required
-                    value={dayTimings[day]?.end || ""}
-                    onChange={(e) =>
-                      handleTimeChange(day, "end", e.target.value)
-                    }
-                    className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                     focus:outline-none focus:ring-2 focus:ring-teal-500 
-                     focus:border-transparent bg-[#F4F9F9] text-gray-700"
-                  />
-                </div>
+                {(dayTimings[day] || []).map((range, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <input
+                      type="time"
+                      value={range.start}
+                      onChange={(e) =>
+                        handleTimeChange(day, index, "start", e.target.value)
+                      }
+                      className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs bg-[#F4F9F9] text-gray-700"
+                    />
+                    <span className="text-gray-500 text-sm">to</span>
+                    <input
+                      type="time"
+                      value={range.end}
+                      onChange={(e) =>
+                        handleTimeChange(day, index, "end", e.target.value)
+                      }
+                      className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs bg-[#F4F9F9] text-gray-700"
+                    />
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => removeTimeSlot(day, index)}
+                        className="text-xs text-red-500 font-semibold"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => addTimeSlot(day)}
+                  className="text-xs text-teal-600 ml-2 font-medium"
+                >
+                  + Add another time
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Available Consultation Hours (read-only) */}
           <div>
             <input
               type="text"
               placeholder="Available Consultation Hours*"
               value={workSchedulePreferences.availableConsultationHours}
               readOnly
-              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                 focus:outline-none focus:ring-2 focus:ring-teal-500 
-                 focus:border-transparent bg-[#F4F9F9] text-gray-700 
-                 placeholder-[#086861]"
+              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
             />
           </div>
 
-          {/* Language Spoken */}
           <div>
             <label className="block text-xs text-gray-500 mt-1 ml-4">
               Language Spoken*
             </label>
             <select
               value={workSchedulePreferences.languageSpoken}
-              onChange={(e) =>
-                handleInputChange("languageSpoken", e.target.value)
-              }
+              onChange={(e) => handleInputChange("languageSpoken", e.target.value)}
               className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 appearance-none bg-no-repeat bg-right pr-10"
               style={{
                 backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")`,
@@ -225,67 +247,39 @@ const handleInputChange = <K extends keyof typeof workSchedulePreferences>(
               }}
             >
               <option value="">Select</option>
-             
               <option value="eng">English</option>
               <option value="hin">Hindi</option>
-               <option value="tam">Tamil</option>
+              <option value="tam">Tamil</option>
               <option value="tel">Telugu</option>
               <option value="guj">Gujarati</option>
               <option value="mar">Marathi</option>
-              <option value="mal">Malyalam</option>
-              <option value="kan">Kannad</option>
+              <option value="mal">Malayalam</option>
+              <option value="kan">Kannada</option>
               <option value="ben">Bengali</option>
-              
             </select>
           </div>
 
-          {/* Additional Information */}
-          <div>
-            <textarea
-              placeholder="Additional Information"
-              value={workSchedulePreferences.additionalInformation}
-              onChange={(e) =>
-                handleInputChange("additionalInformation", e.target.value)
-              }
-              rows={3}
-              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                 focus:outline-none focus:ring-2 focus:ring-teal-500 
-                 focus:border-transparent bg-[#F4F9F9] text-gray-700 
-                 placeholder-[#086861] resize-none"
-            />
-          </div>
-
-          {/* Emergency Contact Details */}
-          <div>
-            <input
-              type="number"
-              placeholder="Emergency Contact Details"
-              value={workSchedulePreferences.emergencyContactDetails}
-              onChange={(e) =>
-                handleInputChange("emergencyContactDetails", e.target.value)
-              }
-              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                 focus:outline-none focus:ring-2 focus:ring-teal-500 
-                 focus:border-transparent bg-[#F4F9F9] text-gray-700 
-                 placeholder-[#086861]"
-            />
-          </div>
-
-          {/* Personal Bio */}
-          <div>
-            <textarea
-              placeholder="Personal Bio"
-              value={workSchedulePreferences.personalBio}
-              onChange={(e) =>
-                handleInputChange("personalBio", e.target.value)
-              }
-              rows={3}
-              className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                 focus:outline-none focus:ring-2 focus:ring-teal-500 
-                 focus:border-transparent bg-[#F4F9F9] text-gray-700 
-                 placeholder-[#086861] resize-none"
-            />
-          </div>
+          <textarea
+            placeholder="Additional Information"
+            value={workSchedulePreferences.additionalInformation}
+            onChange={(e) => handleInputChange("additionalInformation", e.target.value)}
+            rows={3}
+            className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 resize-none"
+          />
+          <input
+            type="number"
+            placeholder="Emergency Contact Details"
+            value={workSchedulePreferences.emergencyContactDetails}
+            onChange={(e) => handleInputChange("emergencyContactDetails", e.target.value)}
+            className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700"
+          />
+          <textarea
+            placeholder="Personal Bio"
+            value={workSchedulePreferences.personalBio}
+            onChange={(e) => handleInputChange("personalBio", e.target.value)}
+            rows={3}
+            className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-[#F4F9F9] text-gray-700 resize-none"
+          />
         </div>
 
         {error && (

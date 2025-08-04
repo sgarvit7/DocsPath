@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,15 +23,13 @@ const weekdays = [
   "Sunday",
 ];
 
-type DayTiming = {
-  start: string;
-  end: string;
-};
+type TimeRange = { start: string; end: string };
+type DayTimings = Record<string, TimeRange[]>;
 
 const WorkSchedulePage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [dayTimings, setDayTimings] = useState<Record<string, DayTiming>>({});
+  const [dayTimings, setDayTimings] = useState<DayTimings>({});
 
   const dispatch = useDispatch<AppDispatch>();
   const { workSchedulePreferences, isLoading, error, isSubmitted } =
@@ -53,41 +52,57 @@ const WorkSchedulePage: React.FC = () => {
       setDayTimings(updatedTimings);
     } else {
       setSelectedDays([...selectedDays, day]);
+      setDayTimings((prev) => ({ ...prev, [day]: [{ start: "", end: "" }] }));
     }
   };
 
   const handleTimeChange = (
     day: string,
+    index: number,
     field: "start" | "end",
     value: string
   ) => {
+    setDayTimings((prev) => {
+      const updated = [...(prev[day] || [])];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, [day]: updated };
+    });
+  };
+
+  const addTimeSlot = (day: string) => {
     setDayTimings((prev) => ({
       ...prev,
-      [day]: {
-        ...prev[day],
-        [field]: value,
-      },
+      [day]: [...(prev[day] || []), { start: "", end: "" }],
     }));
+  };
+
+  const removeTimeSlot = (day: string, index: number) => {
+    setDayTimings((prev) => {
+      const updated = [...(prev[day] || [])];
+      updated.splice(index, 1);
+      return { ...prev, [day]: updated };
+    });
   };
 
   useEffect(() => {
     const scheduleStr = selectedDays
       .map((day) => {
-        const timing = dayTimings[day];
-        if (timing?.start && timing?.end) {
-          return `${day}: ${timing.start}–${timing.end}`;
-        }
-        return null;
+        const slots = dayTimings[day] || [];
+        const validSlots = slots
+          .filter((s) => s.start && s.end)
+          .map((s) => `${s.start}–${s.end}`)
+          .join(", ");
+        return validSlots ? `${day}: ${validSlots}` : null;
       })
       .filter(Boolean)
-      .join(", ");
+      .join(" | ");
 
     handleInputChange("availableConsultationHours", scheduleStr);
   }, [dayTimings, selectedDays]);
 
   const handleSubmit = async () => {
-    const allFilled = selectedDays.every(
-      (day) => dayTimings[day]?.start && dayTimings[day]?.end
+    const allFilled = selectedDays.every((day) =>
+      (dayTimings[day] || []).every((slot) => slot.start && slot.end)
     );
 
     if (
@@ -98,14 +113,15 @@ const WorkSchedulePage: React.FC = () => {
       alert("Please fill in all required fields and timings.");
       return;
     }
-try {
-    const doctorData = await dispatch(submitDoctorOnboarding()).unwrap();
-    console.log(doctorData);
+
     setSubmitted(true);
-  } catch (error) {
-    console.error("Submission failed:", error);
-  }
-    setSubmitted(true);
+    try {
+      const doctorData = await dispatch(submitDoctorOnboarding()).unwrap();
+      console.log(doctorData);
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Submission failed:", error);
+    }
   };
 
   const handleBack = () => {
@@ -136,7 +152,6 @@ try {
         </h3>
 
         <div className="space-y-4">
-          {/* Day selection */}
           <div>
             <label className="block text-xs text-gray-500 mt-1 ml-4">
               Select Days & Timings*
@@ -161,38 +176,49 @@ try {
             {selectedDays.map((day) => (
               <div key={day} className="mt-3">
                 <label className="block text-xs text-gray-500 ml-2 mb-1">
-                  {day} Timing
+                  {day} Timings
                 </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="time"
-                    required
-                    value={dayTimings[day]?.start || ""}
-                    onChange={(e) =>
-                      handleTimeChange(day, "start", e.target.value)
-                    }
-                    className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                     focus:outline-none focus:ring-2 focus:ring-teal-500 
-                     focus:border-transparent bg-[#F4F9F9] text-gray-700"
-                  />
-                  <span className="text-gray-500 text-sm">to</span>
-                  <input
-                    type="time"
-                    required
-                    value={dayTimings[day]?.end || ""}
-                    onChange={(e) =>
-                      handleTimeChange(day, "end", e.target.value)
-                    }
-                    className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs 
-                     focus:outline-none focus:ring-2 focus:ring-teal-500 
-                     focus:border-transparent bg-[#F4F9F9] text-gray-700"
-                  />
-                </div>
+                {(dayTimings[day] || []).map((range, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <input
+                      type="time"
+                      value={range.start}
+                      onChange={(e) =>
+                        handleTimeChange(day, index, "start", e.target.value)
+                      }
+                      className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs bg-[#F4F9F9] text-gray-700"
+                    />
+                    <span className="text-gray-500 text-sm">to</span>
+                    <input
+                      type="time"
+                      value={range.end}
+                      onChange={(e) =>
+                        handleTimeChange(day, index, "end", e.target.value)
+                      }
+                      className="w-full p-3 pl-4 border border-gray-200 rounded-full text-xs bg-[#F4F9F9] text-gray-700"
+                    />
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => removeTimeSlot(day, index)}
+                        className="text-xs text-red-500 font-semibold"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => addTimeSlot(day)}
+                  className="text-xs text-teal-600 ml-2 font-medium"
+                >
+                  + Add another time
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Read-only summary input */}
           <div>
             <input
               type="text"
@@ -206,7 +232,6 @@ try {
             />
           </div>
 
-          {/* Language Spoken */}
           <div>
             <label className="block text-xs text-gray-500 mt-1 ml-4">
               Language Spoken*
@@ -224,21 +249,18 @@ try {
               }}
             >
               <option value="">Select</option>
-             
               <option value="eng">English</option>
               <option value="hin">Hindi</option>
               <option value="tam">Tamil</option>
               <option value="tel">Telugu</option>
               <option value="guj">Gujarati</option>
               <option value="mar">Marathi</option>
-              <option value="mal">Malyalam</option>
-              <option value="kan">Kannad</option>
+              <option value="mal">Malayalam</option>
+              <option value="kan">Kannada</option>
               <option value="ben">Bengali</option>
-              
             </select>
           </div>
 
-          {/* Additional Fields */}
           <textarea
             placeholder="Additional Information"
             value={workSchedulePreferences.additionalInformation}

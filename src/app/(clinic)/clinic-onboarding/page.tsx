@@ -95,7 +95,7 @@ const handleSelection = (type: 'admin' | 'doctor') => {
                   </div>
                 </div>
                 <div className="">
-                  <p className="mx-auto text-center text-gray-500">Self</p>
+                  <p className="mx-auto text-center text-gray-500">DocMin</p>
                 
                 <button 
                   onClick={() => handleSelection('doctor')} 

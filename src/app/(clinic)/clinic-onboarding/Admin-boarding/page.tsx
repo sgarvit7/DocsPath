@@ -116,9 +116,9 @@ const PersonalInfoPage: React.FC = () => {
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
-        className="space-y-6"
+        className="space-y-6 max-w-lg mx-auto px-4 sm:px-6 md:px-8 lg:px-12"
       >
-        <h3 className="text-xl text-center font-medium text-gray-400 mb-6">
+        <h3 className="text-lg sm:text-xl md:text-2xl text-center font-medium text-gray-400 mb-6">
           Personal & Contact Information
         </h3>
 
@@ -126,33 +126,36 @@ const PersonalInfoPage: React.FC = () => {
           <input
             type="text"
             placeholder="Full Name*"
+            readOnly
             value={personalInfo.fullName}
             onChange={(e) => handleInputChange("fullName", e.target.value)}
-            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+            className="w-full p-2 sm:p-3 text-xs sm:text-sm cursor-not-allowed md:text-base pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
           />
-          {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
+          {errors.fullName && <p className="text-red-500 text-xs sm:text-sm">{errors.fullName}</p>}
 
           <input
             type="email"
             placeholder="E-mail*"
+            readOnly
             value={personalInfo.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+            className="w-full p-2 sm:p-3 cursor-not-allowed text-xs sm:text-sm md:text-base pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
           />
-          {errors.emailAddress && <p className="text-red-500 text-xs">{errors.emailAddress}</p>}
+          {errors.emailAddress && <p className="text-red-500 text-xs sm:text-sm">{errors.emailAddress}</p>}
 
           <input
             type="tel"
             placeholder="Mobile No*"
             value={personalInfo.phone}
+            readOnly
             onChange={(e) => handleInputChange("phone", e.target.value)}
-            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+            className="w-full cursor-not-allowed p-2 sm:p-3 text-xs sm:text-sm md:text-base pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
           />
-          {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber}</p>}
+          {errors.phoneNumber && <p className="text-red-500 text-xs sm:text-sm">{errors.phoneNumber}</p>}
 
-          <div className="grid grid-cols-2 gap-4">
-           <div> 
-               <label className="block text-xs text-gray-500 mt-1">Date Of Birth *</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div> 
+              <label className="block text-xs sm:text-sm text-gray-500 mt-1">Date Of Birth *</label>
               <DatePicker
                 selected={personalInfo.dateOfBirth ? new Date(personalInfo.dateOfBirth) : null}
                 onChange={(date) => {
@@ -166,28 +169,26 @@ const PersonalInfoPage: React.FC = () => {
                 dropdownMode="select"
                 dateFormat="dd-MM-yyyy"
                 placeholderText="Select Date of Birth"
-                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700"
+                className="w-full p-2 sm:p-3 text-xs sm:text-sm md:text-base pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700"
               />
-             
-              {errors.dateOfBirth && <p className="text-red-500 text-xs">{errors.dateOfBirth}</p>}
+              {errors.dateOfBirth && <p className="text-red-500 text-xs sm:text-sm">{errors.dateOfBirth}</p>}
             </div>
 
             <div>
-
-              <label className="block text-xs text-gray-500 mt-1">Gender</label>
+              <label className="block text-xs sm:text-sm text-gray-500 mt-1">Gender</label>
               <select
                 value={personalInfo.gender}
                 onChange={(e) => handleInputChange("gender", e.target.value)}
-                className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 appearance-none pr-10"
+                className="w-full p-2 sm:p-3 text-xs sm:text-sm md:text-base pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 appearance-none pr-10"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
-              
             </div>
           </div>
-           <label className="block text-xs text-gray-500 mt-1">profilePhoto(optional)</label>      
+
+          <label className="block text-xs sm:text-sm text-gray-500 mt-1">Profile Photo (optional)</label>      
           <input
             ref={fileInputRef}
             type="file"
@@ -199,13 +200,13 @@ const PersonalInfoPage: React.FC = () => {
 
           <div
             onClick={() => !isUploading && fileInputRef.current?.click()}
-            className={`w-full p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 flex items-center justify-between ${
+            className={`w-full p-2 sm:p-3 border border-gray-200 rounded-full bg-[#F4F9F9] cursor-pointer hover:bg-gray-100 flex items-center justify-between ${
               isUploading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
             <div className="flex items-center space-x-3">
               {personalInfo.profilePhoto?.url && (
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                   <Image
                     src={personalInfo.profilePhoto.url}
                     alt="Profile preview"
@@ -215,7 +216,7 @@ const PersonalInfoPage: React.FC = () => {
                   />
                 </div>
               )}
-              <span className={personalInfo.profilePhoto?.url ? "text-gray-700" : "text-[#086861]"}>
+              <span className={personalInfo.profilePhoto?.url ? "text-gray-700 text-xs sm:text-sm" : "text-[#086861] text-xs sm:text-sm"}>
                 {isUploading
                   ? "Uploading..."
                   : personalInfo.profilePhoto?.name || "Choose File"}
@@ -223,7 +224,7 @@ const PersonalInfoPage: React.FC = () => {
             </div>
 
             {isUploading ? (
-              <svg className="w-5 h-5 text-teal-500 animate-spin" viewBox="0 0 24 24" fill="none">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500 animate-spin" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path
                   fill="currentColor"
@@ -231,8 +232,17 @@ const PersonalInfoPage: React.FC = () => {
                 />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8 text-teal-600 bg-white p-1 rounded-full"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path d="M16 16l-4-4-4 4" />
+                <path d="M12 12v9" />
+                <path d="M20.39 18.39A5.5 5.5 0 0018 9h-1.26A8 8 0 104 16.3" />
               </svg>
             )}
           </div>
@@ -243,7 +253,7 @@ const PersonalInfoPage: React.FC = () => {
             onClick={handleNext}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-[#086861] text-lg text-white py-3 px-6 rounded-full font-bold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#086861] text-sm sm:text-base md:text-lg text-white py-2 sm:py-3 px-4 sm:px-6 rounded-full font-bold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isUploading}
           >
             Next

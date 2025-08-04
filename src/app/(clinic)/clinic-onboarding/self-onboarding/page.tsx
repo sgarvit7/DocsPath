@@ -113,26 +113,29 @@ const PersonalInfoPage: React.FC = () => {
           <input
             type="text"
             placeholder="Full Name*"
+            readOnly
             value={personalInfo.fullName}
             onChange={(e) => handleInputChange("fullName", e.target.value)}
-            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+            className="w-full p-3 text-xs pl-4 border cursor-not-allowed border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
           />
 
           <input
             type="text"
             placeholder="Mobile Number*"
             value={personalInfo.phoneNumber}
+            readOnly
             onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-            className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+            className="w-full p-3 text-xs pl-4 border cursor-not-allowed border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
           />
 
           <div className="flex gap-3">
             <input
               type="email"
               placeholder="Email Address*"
+              readOnly
               value={personalInfo.emailAddress}
               onChange={(e) => handleInputChange("emailAddress", e.target.value)}
-              className="w-full p-3 text-xs pl-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
+              className="w-full p-3 text-xs pl-4 cursor-not-allowed border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 bg-[#F4F9F9] text-gray-700 placeholder-[#086861]"
             />
           </div>
 

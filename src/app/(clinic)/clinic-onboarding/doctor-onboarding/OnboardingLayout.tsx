@@ -29,11 +29,11 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
   const getImage = () => {
     switch (currentStep) {
       case 1:
-        return "/assets/onboarding/docs/doc10.jpeg";
+        return "/assets/onboarding/docs/doc.jpeg";
       case 2:
         return "/assets/onboarding/docs/doc8.avif";
       case 3:
-        return "/assets/onboarding/docs/doc22.webp";
+        return "/assets/onboarding/docs/doc100.webp";
       case 4:
         return "/assets/onboarding/docs/doc77.png";
       default:
@@ -42,7 +42,7 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-teal-50  overflow-hidden">
+    <div className="min-h-screen bg-teal-50 overflow-hidden">
       <div className="fixed top-4 right-4 z-50">
         <a
           href="/sign-up"
@@ -51,6 +51,7 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
           Register as a Admin
         </a>
       </div>
+
       {/* Background decorative elements */}
       <Image
         src="/assets/bg-pattern.png"
@@ -68,73 +69,63 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
       />
 
       {/* Main container */}
-      <div className="flex  items-center z-50 justify-center  p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white rounded-2xl mt-15 h-[72vh] shadow-2xl z-50 overflow-hidden max-w-4xl w-full"
-          style={{ minHeight: "500px" }}
-        >
-          <div className="flex h-full">
-            {/* Left side - Branding */}
-            <div className="w-[380px] bg-[#086861] relative overflow-hidden h-full text-white ">
-              
-                {/* Medical icon */}
-                <div className="h-full ">
-                  <Image
-                    src= {getImage()}
-                    alt="Docspath"
-                    width={1100}
-                    height={100}
-                  // fill
-                  className="object-cover"
-                  />
-                </div>
+      <div className="flex items-center justify-center p-4 z-50">
+       <motion.div
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.3 }}
+  className="bg-white rounded-2xl mt-10 shadow-2xl z-50 overflow-hidden w-full max-w-4xl"
+  style={{ minHeight: "500px" }}
+>
+  <div className="flex flex-col lg:flex-row h-full">
+    {/* Left side - Branding */}
+    <div className="w-full lg:w-[380px] h-60 lg:h-auto bg-[white] relative overflow-hidden text-white">
+      <div className="h-full">
+        <Image
+          src={getImage()}
+          alt="Docspath"
+          width={1100}
+          height={100}
+          className="object-cover w-full h-full"
+        />
+      </div>
+    </div>
 
-                {/* <h1 className="text-2xl font-bold mb-4">Join Us</h1>
-                <p className="text-teal-100 text-sm leading-relaxed">
-                  to keep connected with us
-                  <br />
-                  please enter your personal info
-                </p> */}
-              
-            </div>
+    {/* Right side - Form content */}
+    <div className="w-full lg:w-2/3 p-6 sm:p-8 overflow-y-auto max-h-[75vh] flex flex-col">
+      {/* Header */}
+      <div className="text-center mb-6 sm:mb-8">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#086861] mb-1 sm:mb-2">
+          Doctor onboarding
+        </h2>
+        <p className="text-gray-500 text-xs sm:text-sm">
+          Sign Up & Begin Your Journey!
+        </p>
 
-            {/* Right side - Form content */}
-            <div className="w-2/3 p-8 overflow-y-auto max-h-screen flex flex-col">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold text-[#086861] mb-2">
-                  Doctor onboarding
-                </h2>
-                <p className="text-gray-500 text-sm">
-                  Sign Up & Begin Your Journey!
-                </p>
-
-                {/* Progress bar */}
-                <div className="mt-6">
-                  <div className="w-full bg-gray-200 rounded-full h-1">
-                    <motion.div
-                      className="bg-[#086861] h-1 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${getProgressPercentage()}%` }}
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                    />
-                  </div>
-                  <div className="flex justify-center items-center m-2">
-                    <div className="text-right text-[#086861] font-bold text-sm">
-                      {getProgressPercentage()}%
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Form content */}
-              <div className="flex-1">{children}</div>
+        {/* Progress bar */}
+        <div className="mt-4 sm:mt-6">
+          <div className="w-full bg-gray-200 rounded-full h-1">
+            <motion.div
+              className="bg-[#086861] h-1 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${getProgressPercentage()}%` }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            />
+          </div>
+          <div className="flex justify-center items-center m-2">
+            <div className="text-right text-[#086861] font-bold text-xs sm:text-sm">
+              {getProgressPercentage()}%
             </div>
           </div>
-        </motion.div>
+        </div>
+      </div>
+
+      {/* Form content */}
+      <div className="flex-1">{children}</div>
+    </div>
+  </div>
+</motion.div>
+
       </div>
     </div>
   );

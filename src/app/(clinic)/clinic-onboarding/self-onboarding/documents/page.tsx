@@ -319,23 +319,68 @@ const VerificationDocumentPage: React.FC = () => {
         </div>
 
         {/* Dropdowns */}
-        <div>
-          <select
-            name="departments"
-            value={formData.departments}
+       <div>
+         <select
+           name="departments"
+           value={formData.departments}
+           onChange={handleChange}
+           className="w-full p-3 rounded-full bg-[#F4F9F9] text-[#086861] border border-gray-200"
+         >
+           <option value="">Select Speciality Offered</option>
+           {[
+             "Allergy and Immunology",
+             "Anesthesiology",
+             "Cardiology",
+             "Dermatology",
+             "Diabetology",
+             "Emergency Medicine",
+             "Endocrinology",
+             "ENT",
+             "Family Medicine",
+             "Gastroenterology",
+             "General Medicine",
+             "Gynecology",
+             "Hematology",
+             "Infectious Disease",
+             "Internal Medicine",
+             "Nephrology",
+             "Neurology",
+             "Oncology",
+             "Ophthalmology",
+             "Orthopedics",
+             "Pathology",
+             "Pediatrics",
+             "Plastic Surgery",
+             "Psychiatry",
+             "Pulmonology",
+             "Radiology",
+             "Rheumatology",
+             "Sports Medicine",
+             "Urology",
+             "Other", // Added Other option
+           ].map((dept) => (
+             <option key={dept} value={dept}>
+               {dept}
+             </option>
+           ))}
+         </select>
+       </div>
+       
+       {/* Show input if Other is selected */}
+       {formData.departments === "Other" && (
+         <div className="mt-3">
+           <input
+             type="text"
+             name="customDepartment"
+             placeholder="Please specify your speciality"
+            value={((formData as unknown) as Record<string, string>)["customDepartment"] ?? ""}
             onChange={handleChange}
-            className="w-full p-3 rounded-full bg-[#F4F9F9] text-[#086861] border border-gray-200"
-          >
-            <option value="">Select Speciality Offered</option>
-            {[
-              'Cardiology', 'Orthopedics', 'Neurology', 'Pediatrics', 'Radiology',
-              'Dermatology', 'Gynecology', 'ENT', 'Urology', 'General Medicine', 'Psychiatry'
-            ].map((dept) => (
-              <option key={dept} value={dept}>{dept}</option>
-            ))}
-          </select>
-        </div>
-
+             className="w-full p-3 rounded-full bg-[#F4F9F9] text-[#086861] border border-gray-200 placeholder-gray-400"
+           />
+         </div>
+       )}
+      
+       
         <div>
           <select
             name="doctorsCount"

@@ -31,25 +31,24 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
     }
   };
 
-    const getImage = () => {
+  const getImage = () => {
     switch (currentStep) {
       case 1:
-        return "/assets/onboarding/docs/abc.webp";
+        return "/assets/onboarding/docs/docc.jpg";
       case 2:
         return "/assets/onboarding/admin/clinic.jpg";
       case 3:
         return "/assets/onboarding/docs/doc8.avif";
       case 4:
         return "/assets/onboarding/docs/doc111.jpg";
-        case 5:
-        return "/assets/onboarding/docs/doc22.webp";
-        case 6:
+      case 5:
+        return "/assets/onboarding/docs/doc100.webp";
+      case 6:
         return "/assets/onboarding/docs/doc77.png";
       default:
         return "/assets/onboarding/docs/doc10.jpeg";
     }
   };
-
 
   return (
     <div className="min-h-screen bg-teal-50 relative overflow-hidden">
@@ -75,33 +74,33 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-2xl h-[70vh] shadow-2xl z-50 overflow-hidden max-w-4xl w-full"
-          // style={{ minHeight: "600px" }}
+          className="bg-white rounded-2xl h-auto lg:h-[70vh] shadow-2xl z-50 overflow-hidden max-w-4xl w-full"
         >
-          <div className="flex h-full">
+          <div className="flex flex-col lg:flex-row h-full">
             {/* Left side - Branding */}
-            <div className="w-[380px] bg-[#086861] text-white flex flex-col justify-center h-full items-center relative">
+            <div className="w-full lg:w-[380px] bg-white text-white flex flex-col justify-center items-center relative p-0 lg:p-0">
               <div className="text-center flex flex-col justify-center items-center h-full">
                 {/* Medical icon */}
-                <div className="">
+                <div>
                   <Image
                     src={getImage()}
                     alt="Docspath"
                     width={800}
                     height={100}
+                    className="w-full h-auto object-contain"
                   />
                 </div>
               </div>
             </div>
 
             {/* Right side - Form content */}
-            <div className="w-2/3 p-8 overflow-y-auto max-h-screen flex flex-col">
+            <div className="w-full lg:w-2/3 p-4 sm:p-6 md:p-8 overflow-y-auto max-h-screen flex flex-col">
               {/* Header */}
               <div className="text-center mb-3">
-                <h2 className="text-4xl font-bold text-[#086861] mb-2">
-                  Self onboarding
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#086861] mb-2">
+                  DocMin onboarding
                 </h2>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-xs sm:text-sm md:text-base">
                   Sign Up & Begin Your Journey!
                 </p>
 
@@ -116,7 +115,7 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
                     />
                   </div>
                   <div className="flex justify-center items-center m-2">
-                    <div className="text-right text-[#086861] font-bold text-sm">
+                    <div className="text-right text-[#086861] font-bold text-xs sm:text-sm">
                       {getProgressPercentage()}%
                     </div>
                   </div>
