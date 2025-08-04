@@ -180,7 +180,7 @@ const HowItWorks: React.FC<Props> = ({ darkMode = false }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, type: "spring" }}
-              onClick={() => router.push("/sign-up")}
+              onClick={() => router.push("/free-trail")}
               className={clsx(
                 "mt-2 sm:mt-4 px-4 sm:px-6 py-2 sm:py-3 text-md cursor-pointer sm:text-base md:w-full lg:w-sm rounded-full font-bold w-fit",
                 darkMode

@@ -62,6 +62,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
   );
 
   return (
+    
     <section
       id={id}
       className={clsx(
@@ -178,7 +179,9 @@ const PricingSection: React.FC<PricingSectionProps> = ({
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-between items-center max-w-2xl mx-auto">
+                <a href="/free-trail">
                 <button
+                // onClick={() => router.push("/free-trail")}
                   className={clsx(
                     "w-full sm:w-auto cursor-pointer bg-[#086861] hover:bg-teal-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-20 rounded-full transition-all duration-200 transform hover:scale-105 shadow-xl hover:shadow-xl",
                     roboto.className
@@ -186,7 +189,10 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 >
                   Start Free Trial
                 </button>
+                </a>
+                <a href="/request-demo">
                 <button
+                // onClick={() => router.push("/request-demo")}
                   className={clsx(
                     "w-full sm:w-auto cursor-pointer border-2 border-[#086861] font-semibold py-3 sm:py-4 px-6 sm:px-20 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105",
                     darkMode
@@ -197,6 +203,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 >
                   Request a Demo
                 </button>
+                </a>
               </div>
             </div>
           </div>

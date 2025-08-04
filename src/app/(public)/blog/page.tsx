@@ -66,9 +66,9 @@ export default function Home() {
           />
         </button>
       </div>
-
+<div className="pt-16 lg:pt-0">
       <HeroSection />
-
+</div>
       <section className="px-4 md:px-12 py-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {blogData.map((post, i) => (
           <BlogCard key={i} {...post} />

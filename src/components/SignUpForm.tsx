@@ -231,7 +231,7 @@ export default function SignUpPage() {
         alt=""
         width={450}
         height={200}
-        className="absolute bottom-0 right-0 z-0 hidden lg:block opacity-50"
+        className="absolute bottom-0 right-0 z-0  lg:block opacity-50"
       />
 
       {/* Card */}
@@ -239,10 +239,10 @@ export default function SignUpPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-4xl h-auto md:h-[77vh] bg-white rounded-lg z-50 shadow-xl overflow-hidden flex flex-col md:flex-row"
+        className="w-full max-w-4xl h-auto md:h-[77vh] bg-white mt-10 lg:mt-0  rounded-lg z-50 shadow-xl overflow-hidden flex flex-col md:flex-row"
       >
         {/* Left */}
-        <div className="bg-teal-700 text-white w-full md:w-[380px] flex items-center justify-center p-6 md:p-0">
+        <div className="bg-teal-700 text-white w-full md:w-[380px] flex items-center justify-center  md:p-0">
           <Image
             src="/assets/onboarding/docs/yo.jpg"
             alt="Docspath"
@@ -285,7 +285,7 @@ export default function SignUpPage() {
                 value={form.name}
                 onChange={(e) => handleField("name", e.target.value)}
                 placeholder="Name"
-                className="w-full p-2 sm:p-3 border z-999 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 lg:pl-8 text-sm sm:text-base"
+                className="w-full py-2 pl-8 lg:pl-0 sm:p-3 border z-999 border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:border-teal-500 lg:pl-8 text-sm sm:text-base"
               />
               
             </div>

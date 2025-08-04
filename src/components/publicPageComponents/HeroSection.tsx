@@ -178,7 +178,9 @@ const HomeHero: React.FC<HomeHeroProps> = ({ darkMode = false }) => {
                     , geist.className
                 )}
               >
+                <a href="/request-demo">
                 Request a Demo
+                </a>
               </button>
             </motion.div>
           </div>

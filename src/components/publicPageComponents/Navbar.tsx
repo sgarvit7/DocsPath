@@ -185,7 +185,7 @@ export default function Navbar({ darkMode }: NavbarProps) {
           <div className="hidden md:flex ml-0 items-center space-x-4">
             <motion.button
               onClick={() => router.push("/sign-in")}
-              className="text-white dark:text-teal-300 hover:text-teal-200 dark:hover:text-teal-100 transition-colors duration-200"
+              className="text-white dark:text-teal-300 hover:text-teal-200 cursor-pointer dark:hover:text-teal-100 transition-colors duration-200"
               whileHover={{ y: -2 }}
             >
               Sign In
@@ -199,7 +199,7 @@ export default function Navbar({ darkMode }: NavbarProps) {
               //     // ? () => setIsJoinModalOpen(true)
               //     : () => router.push("/sign-up")
               // }
-              className="bg-white text-teal-700 dark:bg-teal-600 dark:text-white px-4 py-2 rounded-lg font-semibold hover:bg-teal-50 dark:hover:bg-teal-700 transition-colors duration-200"
+              className="bg-white text-teal-700 dark:bg-teal-600 dark:text-white px-4 py-2 cursor-pointer rounded-lg font-semibold hover:bg-teal-50 dark:hover:bg-teal-700 transition-colors duration-200"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -286,7 +286,9 @@ export default function Navbar({ darkMode }: NavbarProps) {
 
         <button
           className="bg-white text-teal-700 px-4 py-2 rounded-lg font-semibold hover:bg-teal-50 transition-colors duration-200 w-fit"
+         onClick={() => router.push("/clinic-onboarding/doctor-onboarding")}
         >
+
           Join us
         </button>
       </div>
